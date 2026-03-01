@@ -154,7 +154,7 @@ transform:translateY(-10px);
 box-shadow:0 0 25px #a855f7;
 }
 
-.card img{
+.card > img{
 width:100%;
 height:220px;
 object-fit:cover;
@@ -244,6 +244,93 @@ transition:0.3s;
 box-shadow:0 0 10px #0ea5e9;
 }
   
+ .image-slider{
+  position:relative;
+  width:100%;
+  height:220px;
+  overflow:hidden;
+}
+
+.image-slider img{
+  width:100%;
+  height:220px;
+  object-fit:cover;
+  display:none;
+}
+
+ .main-image{
+  width:100%;
+  height:220px;
+  object-fit:cover;
+  border-radius:10px;
+  transition:0.4s ease;
+  display:block;   /* ADD THIS */
+}
+ 
+.image-slider img.active{
+  display:block;
+}
+
+.image-slider button{
+  position:absolute;
+  top:50%;
+  transform:translateY(-50%);
+  background:rgba(0,0,0,0.5);
+  color:white;
+  border:none;
+  padding:5px 10px;
+  cursor:pointer;
+  border-radius:5px;
+}
+
+.image-slider .prev{
+  left:10px;
+}
+
+.image-slider .next{
+  right:10px;
+} 
+  
+ .product-gallery{
+  width:100%;
+}
+
+.main-image{
+  width:100%;
+  height:220px;
+  object-fit:cover;
+  border-radius:10px;
+  transition:0.4s ease;
+}
+
+.thumbnails{
+  display:flex;
+  gap:8px;
+  margin-top:8px;
+}
+
+.thumb{
+  width:50px;
+  height:50px;
+  object-fit:cover;
+  border-radius:6px;
+  cursor:pointer;
+  opacity:0.6;
+  border:2px solid transparent;
+  transition:0.3s;
+}
+
+.thumb:hover{
+  opacity:1;
+  transform:scale(1.05);
+}
+
+.thumb.active{
+  opacity:1;
+  border:2px solid #a855f7;
+  box-shadow:0 0 10px #a855f7;
+}
+ 
 </style>
 </head>
 <body>
@@ -454,6 +541,353 @@ Details
 <a href="https://share.temu.com/DvJ8bsZHrvB" class="btn">Buy Now</a>
 </div>
 </div>
+  
+  <!-- PRODUCT 10 -->
+  
+  <div class="card">
+<img src="https://s.alicdn.com/@sc04/kf/Hf66ff37ad0ce4142817b4d1086d170dbD.jpg?avif=close&webp=close" alt="">
+<div class="card-content">
+<h3> Press On Nails</h3>
+<p class="short-desc">
+W821 Pastel Press on Nails Beauty Product False Nails Easter Spring Soft Colors Discounted
+</p>
+
+<p class="full-desc">
+
+</p>
+
+<button class="details-btn" onclick="toggleDetails(this)">
+Details
+</button>
+<div class="price">Rs.258</div>
+<a href="https://offer.alibaba.com/cps/0ciah0q6?bm=cps&src=saf&productId=1601164459006" class="btn">Buy Now</a>
+</div>
+</div>
+  
+  <!-- PRODUCT 11 -->
+  
+  <div class="card">
+<img src="https://s.alicdn.com/@sc04/kf/H26644f50f63e432eafe2cec9e86a72849.jpg?avif=close&webp=close" alt="">
+<div class="card-content">
+<h3> Short Square Press on Nails Soft Gel Handmade</h3>
+<p class="short-desc">
+Wholesale Custom Logo Short Square Press on Nails 
+</p>
+<p class="full-desc">
+Soft Gel Handmade French Tip Nails Kit for Manicure Beauty Nail Art Sticker
+</p>
+
+<button class="details-btn" onclick="toggleDetails(this)">
+Details
+</button>
+<div class="price">Rs.1408</div>
+<a href="https://offer.alibaba.com/cps/0ciah0q6?bm=cps&src=saf&productId=1601690117848" class="btn">Buy Now</a>
+</div>
+</div>
+  
+  <!-- PRODUCT 12 -->
+  
+ <div class="card">
+
+  <div class="product-gallery">
+
+    <!-- MAIN IMAGE -->
+    <img src="https://s.alicdn.com/@sc04/kf/H5be7ab10764e43e588f27625ab7237031.jpg?avif=close&webp=close" class="main-image">
+
+    <!-- THUMBNAILS -->
+    <div class="thumbnails">
+      <img src="https://s.alicdn.com/@sc04/kf/Hdab4569fa181479ca6233248d078b718S.jpg?avif=close&webp=close" class="thumb active" onclick="changeImage(this)">
+      <img src="https://s.alicdn.com/@sc04/kf/Hbd4152a9f1994e5d8136d7afaa5f1054h.jpg?avif=close&webp=close" class="thumb" onclick="changeImage(this)">
+      <img src="https://s.alicdn.com/@sc04/kf/H42dd3e302d9c419b89f1d3317ea6cc68k.jpg?avif=close&webp=close" class="thumb" onclick="changeImage(this)">
+<img src="https://s.alicdn.com/@sc04/kf/H5be7ab10764e43e588f27625ab7237031.jpg?avif=close&webp=close" class="thumb" onclick="changeImage(this)">     
+    </div>
+
+  </div>
+
+  <div class="card-content">
+    <h3>Pure Polish Gel Nail Stickers</h3>
+    <p class="short-desc">
+100% Pure Polish Gel Nail Stickers New 
+</p>
+<p class="full-desc">
+ Technique UV Bake Easy Application Without Gel Easter Used Strip Nail Product
+</p>
+   <button class="details-btn" onclick="toggleDetails(this)">
+Details
+</button>
+    <div class="price">Rs.490</div>
+    <a href="https://offer.alibaba.com/cps/0ciah0q6?bm=cps&src=saf&productId=1601164459006" class="btn">Buy Now</a>
+  </div>
+
+</div>
+  
+  
+  <!-- PRODUCT 13 -->
+  
+  <div class="card">
+
+  <div class="product-gallery">
+
+    <!-- MAIN IMAGE -->
+    <img src="https://s.alicdn.com/@sc04/kf/H08d9c1cbd152437185ae47fef6b76b1cS.jpg?avif=close&webp=close" class="main-image">
+
+    <!-- THUMBNAILS -->
+    <div class="thumbnails">
+      <img src="https://s.alicdn.com/@sc04/kf/Ha65b6fc437094bbd84622d5ac793490aw.jpg?avif=close&webp=close" class="thumb active" onclick="changeImage(this)">
+      <img src="https://s.alicdn.com/@sc04/kf/H4c8e654dcfb346178074285c93a8e542F.jpg?avif=close&webp=close" class="thumb" onclick="changeImage(this)">
+      <img src="https://s.alicdn.com/@sc04/kf/Hbb9e9cfbff1b40aeab8a0842c31bde6da.jpg?avif=close&webp=close" class="thumb" onclick="changeImage(this)">
+      <img src="https://s.alicdn.com/@sc04/kf/H08d9c1cbd152437185ae47fef6b76b1cS.jpg?avif=close&webp=close" class="thumb" onclick="changeImage(this)">
+    </div>
+
+  </div>
+
+  <div class="card-content">
+    <h3>Reusable False Nails</h3>
+    <p class="short-desc">
+ 
+</p>
+<p class="full-desc">Wholesale High Quality Reusable False Nails Artificial Nails Artificial False Nails</p>
+   <button class="details-btn" onclick="toggleDetails(this)">
+Details
+</button>
+    <div class="price">Rs.95</div>
+    <a href="https://offer.alibaba.com/cps/0ciah0q6?bm=cps&src=saf&productId=1601245722136" class="btn">Buy Now</a>
+  </div>
+
+</div>
+  
+  <!-- PRODUCT 14 -->
+  
+  <div class="card">
+<!-- MAIN IMAGE -->
+    <img src="https://s.alicdn.com/@sc04/kf/Hd2852a0a683a4ae69baf69906680ddacS.jpg?avif=close&webp=close" class="main-image">
+
+    <!-- THUMBNAILS -->
+    <div class="thumbnails">
+     
+      <img src="https://s.alicdn.com/@sc04/kf/H7bc18c4798db4c1c9f5afe9cb25b8fa4z.jpg?avif=close&webp=close" class="thumb active" onclick="changeImage(this)">
+     
+      <img src="https://s.alicdn.com/@sc04/kf/Hb46959444a03440482274c69af2a5bf2D.jpg?avif=close&webp=close" class="thumb" onclick="changeImage(this)">
+     
+      <img src="https://s.alicdn.com/@sc04/kf/H57cd010c3e5c49b79f10cae73c5458d4g.jpg?avif=close&webp=close" class="thumb" onclick="changeImage(this)">
+     
+     
+      <img src="https://s.alicdn.com/@sc04/kf/Hd2852a0a683a4ae69baf69906680ddacS.jpg?avif=close&webp=close" class="thumb" onclick="changeImage(this)">
+     
+    </div>
+   
+
+<div class="card-content">
+<h3> Saint Patrick's Day Nail Decals</h3>
+
+<p class="short-desc">
+New Spring 3D Plastic Four-leaf Clover 
+</p>
+
+<p class="full-desc">
+Clover Laser Nail Art Sticker Decal with Self-adhesive Design Saint Patrick's Day Nail Decals
+</p>
+
+<button class="details-btn" onclick="toggleDetails(this)">
+Details
+</button>
+
+<div class="price">Rs.79</div>
+
+<a href="https://offer.alibaba.com/cps/0ciah0q6?bm=cps&src=saf&productId=1601684091012" class="btn">Buy Now</a>
+
+</div>
+</div>
+  
+  <!-- PRODUCT 15 -->
+  
+  <div class="card">
+<img src="https://s.alicdn.com/@sc04/kf/H1d2213e1d17e42d3b64cde39adbeaf76b.jpg?avif=close&webp=close" alt="">
+<div class="card-content">
+<h3>  Natural Keratin Hair Treatment</h3>
+<p class="short-desc">
+Brazilian Natural Keratin Hair Treatment 
+</p>
+<p class="full-desc">
+Wholesale by Carton 800ml Hair Smoothing Cream Produc
+</p>
+
+<button class="details-btn" onclick="toggleDetails(this)">
+Details
+</button>
+<div class="price">Rs.20,241</div>
+<a href="https://offer.alibaba.com/cps/0ciah0q6?bm=cps&src=saf&productId=1601418772610" class="btn">Buy Now</a>
+</div>
+</div>
+  
+  <!-- PRODUCT 16 -->
+  
+  <div class="card">
+<img src="https://s.alicdn.com/@sc04/kf/Hccefdd6833904838b6b72625e13233ecy.png?avif=close&webp=close" alt="">
+<div class="card-content">
+<h3> Brazilian Straightening Keratin</h3>
+<p class="short-desc">
+Brazilian Straightening Keratin Treatment 
+</p>
+<p class="full-desc">
+Brazilian Straightening Keratin Treatment for Hair Without Formaldehyde Hiar Care Straighten Product Manufacturer
+</p>
+
+<button class="details-btn" onclick="toggleDetails(this)">
+Details
+</button>
+<div class="price">Rs.4705</div>
+<a href="https://offer.alibaba.com/cps/0ciah0q6?bm=cps&src=saf&productId=1600770633202" class="btn">Buy Now</a>
+</div>
+</div>
+  
+  <!-- PRODUCT 17 -->
+  
+  <div class="card">
+<img src="https://s.alicdn.com/@sc04/kf/H23f7a5c36f1b4c58a6648e771ecd1dc65.jpg?avif=close&webp=close" alt="">
+<div class="card-content">
+<h3> OEM Waterproof Root Touch up Hair </h3>
+<p class="short-desc">
+OEM Waterproof Root Touch up Hair 
+</p>
+<p class="full-desc">
+Dye Stick 2 in 1 Comb & Color Quick Gray Hair Cover Up, Ammonia Free Portable
+</p>
+
+<button class="details-btn" onclick="toggleDetails(this)">
+Details
+</button>
+<div class="price">Rs.258</div>
+<a href="https://offer.alibaba.com/cps/0ciah0q6?bm=cps&src=saf&productId=1601594093666" class="btn">Buy Now</a>
+</div>
+</div>
+  
+  <!-- PRODUCT 18 -->
+  
+  <div class="card">
+<img src="https://s.alicdn.com/@sc04/kf/H0011b1e1158b45fbad3b4aecdca6fa7bX.jpg?avif=close&webp=close" alt="">
+<div class="card-content">
+<h3> Hydrolyzed Keratin Hair Care</h3>
+<p class="short-desc">
+MOCHEQI Wholesale Factory Latest Hydrolyzed 
+</p>
+<p class="full-desc">
+Keratin Hair Care Hair Mask for Hair Repair Nourishment and Rejuvenation
+</p>
+
+<button class="details-btn" onclick="toggleDetails(this)">
+Details
+</button>
+<div class="price">Rs.534</div>
+<a href="https://offer.alibaba.com/cps/3c8koa1s?bm=cps&src=saf" class="btn">Buy Now</a>
+</div>
+</div>
+  
+  <!-- PRODUCT 19 -->
+  
+  <div class="card">
+<img src="https://s.alicdn.com/@sc04/kf/Hd72be7a87f524e41b826989e25d84680J.jpg?avif=close&webp=close" alt="">
+<div class="card-content">
+<h3> Keratin Complex Smoothing Therapy</h3>
+<p class="short-desc">
+Organic Formaldehyde-Free Keratin 
+</p>
+<p class="full-desc">
+Complex Smoothing Therapy Safe Cosmetics for Nourishment Beauty Hyaluronic Acid Hair Product
+</p>
+
+<button class="details-btn" onclick="toggleDetails(this)">
+Details
+</button>
+<div class="price">Rs.4705</div>
+<a href="https://offer.alibaba.com/cps/utoo2oun?bm=cps&src=saf" class="btn">Buy Now</a>
+</div>
+</div>
+  
+  <!-- PRODUCT 20 -->
+  
+  <div class="card">
+<img src="https://s.alicdn.com/@sc04/kf/Hf478ba7c77f34b5e83ca0a5fa26989a7k.jpg?avif=close&webp=close" alt="">
+<div class="card-content">
+<h3> OEM Coconut Oil</h3>
+<p class="short-desc">
+OEM Coconut Oil Hair & Scalp Treatment 
+</p>
+<p class="full-desc">
+Oil-Anti-Dandruff Damaged Hair Repair & Nourishing
+</p>
+
+<button class="details-btn" onclick="toggleDetails(this)">
+Details
+</button>
+<div class="price">Rs.719</div>
+<a href="https://offer.alibaba.com/cps/0ciah0q6?bm=cps&src=saf&productId=1601658608932" class="btn">Buy Now</a>
+</div>
+</div>
+  
+ <!-- PRODUCT 21 -->
+ 
+  <div class="card">
+<img src="https://s.alicdn.com/@sc04/kf/H6c4a7006354d487890e4a19212aa92b4S.jpg?avif=close&webp=close" alt="">
+<div class="card-content">
+<h3> OEM Shampoo</h3>
+<p class="short-desc">
+OEM Shampoo Manufacturers 
+</p>
+<p class="full-desc">
+Rosemary Extract Peppermint Oil Refreshing Oil-Control Rosemary Shampoo
+</p>
+
+<button class="details-btn" onclick="toggleDetails(this)">
+Details
+</button>
+<div class="price">Rs.703</div>
+<a href="https://offer.alibaba.com/cps/0ciah0q6?bm=cps&src=saf&productId=1601661844082" class="btn">Buy Now</a>
+</div>
+</div>
+ 
+ <!-- PRODUCT 22 -->
+ 
+ <div class="card">
+<img src="https://s.alicdn.com/@sc04/kf/H530ea104003c43f2a6ddf75246b2e306i.jpg?avif=close&webp=close" alt="">
+<div class="card-content">
+<h3>Rose Hair Loss Regrowth Care Oil </h3>
+<p class="short-desc">
+Customize Hair Organic Rose Hair 
+</p>
+<p class="full-desc">
+Loss Regrowth Care Oil Bulk for Black Women Fast Argan Hair Repairing Growth Oil Products
+</p>
+
+<button class="details-btn" onclick="toggleDetails(this)">
+Details
+</button>
+<div class="price">Rs.1224</div>
+<a href="https://offer.alibaba.com/cps/0ciah0q6?bm=cps&src=saf&productId=1601558398841" class="btn">Buy Now</a>
+</div>
+</div>
+  
+ <!-- PRODUCT 23 --> 
+ 
+  <div class="card">
+<img src="https://s.alicdn.com/@sc04/kf/H8f83b699c6c644b99904a3d298e4f452a.jpg?avif=close&webp=close" alt="">
+<div class="card-content">
+<h3> Hair Dye Permanent Hair Color</h3>
+<p class="short-desc">
+Organic Professional Salon 
+</p>
+<p class="full-desc">
+Professional Hair Dye Permanent Hair Color
+</p>
+
+<button class="details-btn" onclick="toggleDetails(this)">
+Details
+</button>
+<div class="price">Rs.314</div>
+<a href="https://offer.alibaba.com/cps/0ciah0q6?bm=cps&src=saf&productId=1601252719587" class="btn">Buy Now</a>
+</div>
+</div>
+  
   </div>
 </section>
 
@@ -648,7 +1082,7 @@ Details
 <h3>Sifu Epic Games Account</h3>
 <p>Epic Games Account with Sifu</p>
 <div class="price">$25</div>
-<a href="#" class="btn">Buy Now</a>
+<a href="https://www.instagram.com/zoro_affiliates?igsh=MXd4ODg3eTlmbW80bw==" class="btn">Buy Now</a>
 </div>
 </div>
 
@@ -659,7 +1093,7 @@ Details
 <p>Dead Island 2 is a brutal first-person action RPG set in a quarantined Los Angeles overrun by terrifying zombies.
 Fight, explore, and survive using creative weapons, intense combat, and dark humor in a vibrant yet deadly open world.Buyers can buy these aacounts through our insta just dm and know the prices pay first and get instant access</p>
 <div class="price">Rs.3199</div>
-<a href="" class="btn">Buy Now</a>
+<a href="https://www.instagram.com/zoro_affiliates?igsh=MXd4ODg3eTlmbW80bw==" class="btn">Buy Now</a>
 </div>
 </div>
   
@@ -669,7 +1103,7 @@ Fight, explore, and survive using creative weapons, intense combat, and dark hum
 <h3>Lego Star Wars Skywalker Saga</h3>
 <p>Lego Star Wars: The Skywalker Saga is a fun-filled action-adventure game that lets you relive all nine main Star Wars films in one epic LEGO experience.</p>
 <div class="price">Rs.2999</div>
-<a href="" class="btn">Buy Now</a>
+<a href="https://www.instagram.com/zoro_affiliates?igsh=MXd4ODg3eTlmbW80bw==" class="btn">Buy Now</a>
 </div>
 </div>
   
@@ -708,33 +1142,155 @@ Zenova is your premium destination for beauty, tech, and gaming products. We par
 © 2026 Zenova Store. All rights reserved.
 </footer>
 
-<script>
-function openSection(sectionId){
-  document.querySelectorAll('.section').forEach(sec => sec.classList.remove('active'));
-  document.querySelectorAll('.tab-btn').forEach(btn => btn.classList.remove('active'));
-  document.getElementById(sectionId).classList.add('active');
-  document.querySelectorAll('.tab-btn').forEach(btn => {
-    if(btn.textContent.toLowerCase() === sectionId) btn.classList.add('active');
+ <script>
+
+// CHANGE PRODUCT IMAGE WHEN CLICKING THUMBNAIL
+function changeImage(element){
+
+  const gallery = element.closest(".product-gallery") || element.closest(".card");
+
+  const mainImage = gallery.querySelector(".main-image");
+
+  mainImage.src = element.src;
+
+  gallery.querySelectorAll(".thumb").forEach(img=>{
+    img.classList.remove("active");
   });
-  document.getElementById(sectionId).scrollIntoView({behavior:'smooth'});
-}
-  
-  function toggleDetails(button){
 
-const fullDesc = button.previousElementSibling;
-
-if(fullDesc.style.display === "block"){
-fullDesc.style.display = "none";
-button.textContent = "Details";
-}
-else{
-fullDesc.style.display = "block";
-button.textContent = "Hide";
+  element.classList.add("active");
 }
 
+
+// TOGGLE PRODUCT DETAILS
+function toggleDetails(button){
+
+  const card = button.closest(".card-content");
+
+  const fullDesc = card.querySelector(".full-desc");
+
+  if(fullDesc.style.display === "block"){
+    fullDesc.style.display = "none";
+    button.innerText = "Details";
+  }else{
+    fullDesc.style.display = "block";
+    button.innerText = "Hide";
+  }
+
 }
-  
+
+
+// SWITCH BETWEEN SECTIONS
+function openSection(sectionId){
+
+  document.querySelectorAll(".section").forEach(section=>{
+    section.classList.remove("active");
+  });
+
+  document.getElementById(sectionId).classList.add("active");
+
+
+  document.querySelectorAll(".tab-btn").forEach(btn=>{
+    btn.classList.remove("active");
+  });
+
+  document.querySelectorAll(".tab-btn").forEach(btn=>{
+    if(btn.innerText.toLowerCase() === sectionId){
+      btn.classList.add("active");
+    }
+  });
+
+}
+
+
+function openSection(sectionId){
+
+  document.querySelectorAll('.section').forEach(sec =>
+    sec.classList.remove('active')
+  );
+
+  document.querySelectorAll('.tab-btn').forEach(btn =>
+    btn.classList.remove('active')
+  );
+
+  document.getElementById(sectionId).classList.add('active');
+
+  document.querySelectorAll('.tab-btn').forEach(btn => {
+    if(btn.textContent.toLowerCase() === sectionId){
+      btn.classList.add('active');
+    }
+  });
+
+  document.getElementById(sectionId).scrollIntoView({
+    behavior:'smooth'
+  });
+
+}
+
+
+// DETAILS BUTTON
+function toggleDetails(button){
+
+  const fullDesc = button.previousElementSibling;
+
+  if(fullDesc.style.display === "block"){
+    fullDesc.style.display = "none";
+    button.textContent = "Details";
+  }
+  else{
+    fullDesc.style.display = "block";
+    button.textContent = "Hide";
+  }
+
+}
+
+
+// IMAGE SLIDER
+function changeSlide(button, direction){
+
+  const slider = button.parentElement;
+  const images = slider.querySelectorAll("img");
+
+  let activeIndex = 0;
+
+  images.forEach((img, index) => {
+    if(img.classList.contains("active")){
+      activeIndex = index;
+      img.classList.remove("active");
+    }
+  });
+
+  let newIndex = activeIndex + direction;
+
+  if(newIndex < 0) newIndex = images.length - 1;
+  if(newIndex >= images.length) newIndex = 0;
+
+  images[newIndex].classList.add("active");
+
+}
+
+
+function changeImage(element){
+
+  const gallery = element.closest(".product-gallery");
+  const mainImage = gallery.querySelector(".main-image");
+  const thumbnails = gallery.querySelectorAll(".thumb");
+
+  // prevent blank image
+  if(element.src && element.src !== ""){
+    mainImage.src = element.src;
+  }
+
+  thumbnails.forEach(thumb => thumb.classList.remove("active"));
+
+  element.classList.add("active");
+}
 </script>
 
 </body>
 </html>
+ 
+
+
+
+
+   
