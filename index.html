@@ -479,9 +479,8 @@ display:block;
 
 <h2>All Products</h2>
 
-<input type="text" class="search-bar"
-placeholder="Search any product..."
-onkeyup="globalSearch(this)">
+
+<input type="text" class="search-bar" placeholder="Search products)" onkeydown="if(event.key==='Enter') searchProducts(this)" oninput="if(this.value==='') searchProducts(this)">
 
 <div class="products" id="home-products">
 
@@ -494,8 +493,8 @@ onkeyup="globalSearch(this)">
 <!-- ===================== BEAUTY SECTION ===================== -->
 <section class="section active" id="beauty">
 <h2>Beauty Products</h2>
-<div class="products">
-
+<input type="text" class="search-bar" placeholder="Search products)" onkeydown="if(event.key==='Enter') searchProducts(this)" oninput="if(this.value==='') searchProducts(this)">
+  <div class="products">
   <div class="card">
     <img src="https://img.kwcdn.com/product/fancy/c6c11aec-30ce-4a25-b5e2-18d8b9fb6d12.jpg?imageView2/2/w/1300/q/90/format/avif">
     <div class="card-content">
@@ -806,8 +805,8 @@ onkeyup="globalSearch(this)">
 <!-- ===================== TECH SECTION ===================== -->
 <section class="section" id="tech">
 <h2>Tech Products</h2>
+  <input type="text" class="search-bar" placeholder="Search products)" onkeydown="if(event.key==='Enter') searchProducts(this)" oninput="if(this.value==='') searchProducts(this)">
 <div class="products">
-
   <div class="card">
     <img src="https://img.kwcdn.com/product/fancy/061a9ef9-e1da-4160-8867-381e592eeb14.jpg?imageView2/2/w/800/q/70/format/avif" alt="Luxurious Wrist Watch">
     <div class="card-content">
@@ -1258,9 +1257,61 @@ function loadHomeProducts() {
 
 window.addEventListener('load', loadHomeProducts);
 </script>
-  
+  <script>
 
-  
+function globalSearch(input){
+
+let value = input.value.toLowerCase();
+
+const sections = ["beauty","tech","gaming"];
+
+sections.forEach(section => {
+
+let cards = document.querySelectorAll("#"+section+" .card");
+
+cards.forEach(card => {
+
+let name = card.querySelector("h3").innerText.toLowerCase();
+
+if(value === ""){
+card.style.display = "block";
+}
+else if(name.includes(value)){
+card.style.display = "block";
+openSection(section);
+}
+else{
+card.style.display = "none";
+}
+
+});
+
+});
+
+}
+
+</script>
+     <script>
+
+function loadHomeProducts(){
+
+const homeContainer = document.getElementById("home-products");
+
+const cards = document.querySelectorAll("#beauty .card, #tech .card, #gaming .card");
+
+let cardsArray = Array.from(cards);
+
+cardsArray.sort(() => Math.random() - 0.5);
+
+cardsArray.forEach(card=>{
+homeContainer.appendChild(card.cloneNode(true));
+});
+
+}
+
+window.onload = loadHomeProducts;
+
+</script>
 </body>
 </html>
 
