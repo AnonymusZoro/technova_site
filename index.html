@@ -1,4 +1,6 @@
-<!DOCTYPE html>
+
+
+  <!DOCTYPE html>
 <html lang="en">
 <head>
 <meta charset="UTF-8">
@@ -425,6 +427,24 @@ display:none;
 .section.active{
 display:block;
 }
+  .search-bar{
+  width:100%;
+  max-width:420px;
+  margin:0 auto 35px auto;
+  display:block;
+  padding:12px 18px;
+  border-radius:6px;
+  border:1px solid var(--maroon-mid);
+  background:rgba(0,0,0,0.35);
+  color:var(--text-main);
+  font-size:14px;
+  outline:none;
+}
+
+.search-bar:focus{
+  border-color:var(--accent);
+  box-shadow:0 0 12px var(--accent-glow);
+}
 </style>
 </head>
 <body>
@@ -433,6 +453,7 @@ display:block;
 <header>
   <div class="logo">Zenova</div>
   <nav>
+    <a onclick="openSection('home')">Home</a>
     <a onclick="openSection('beauty')">Beauty</a>
     <a onclick="openSection('tech')">Tech</a>
     <a onclick="openSection('gaming')">Gaming</a>
@@ -444,18 +465,36 @@ display:block;
 <section class="hero">
   <h1>Welcome to Zenova</h1>
   <p>Beauty, Tech & Gaming — All in One Place</p>
-  <button onclick="openSection('beauty')">Shop Now</button>
+  <button onclick="openSection('home')">Shop Now</button>
   
   <div class="tabs">
-    <button class="tab-btn active" onclick="openSection('beauty')">Beauty</button>
+    
+    <button class="tab-btn" onclick="openSection('beauty')">Beauty</button>
     <button class="tab-btn" onclick="openSection('tech')">Tech</button>
     <button class="tab-btn" onclick="openSection('gaming')">Gaming</button>
   </div>
 </section>
+  
+  <section class="section active" id="home">
 
+<h2>All Products</h2>
+
+<input type="text" class="search-bar"
+placeholder="Search any product..."
+onkeyup="globalSearch(this)">
+
+<div class="products" id="home-products">
+
+<!-- PRODUCTS WILL BE AUTO COPIED HERE -->
+
+</div>
+
+</section>
+  
 <!-- ===================== BEAUTY SECTION ===================== -->
 <section class="section active" id="beauty">
 <h2>Beauty Products</h2>
+  <input type="text" class="search-bar" placeholder="Search products..." onkeyup="searchProducts(this)">
 <div class="products">
 
   <div class="card">
@@ -1159,173 +1198,71 @@ display:block;
 <footer>
   © 2026 Zenova Store. All rights reserved.
 </footer>
-  <script>
-
-// SECTION SWITCHING
-function openSection(sectionId){
-
-  document.querySelectorAll(".section")
-  sections.forEach(section=>{
-    section.classList.remove("active");
-  });
-
-  document.getElementById(sectionId).classList.add("active");
-
-  const tabs = document.querySelectorAll(".tab-btn");
-  tabs.forEach(tab=>{
-    tab.classList.remove("active");
-  });
-
-  tabs.forEach(tab=>{
-    if(tab.textContent.toLowerCase() === sectionId){
-      tab.classList.add("active");
+  
+<script>
+// ── openSection ──────────────────────────────────────────────
+function openSection(sectionId) {
+  document.querySelectorAll('.section').forEach(s => s.classList.remove('active'));
+  document.querySelectorAll('.tab-btn').forEach(b => b.classList.remove('active'));
+  document.getElementById(sectionId).classList.add('active');
+  document.querySelectorAll('.tab-btn').forEach(b => {
+    if (b.textContent.trim().toLowerCase() === sectionId.toLowerCase()) {
+      b.classList.add('active');
     }
   });
-
-  window.scrollTo({
-    top: document.querySelector("#"+sectionId).offsetTop - 80,
-    behavior: "smooth"
-  });
-
+  document.getElementById(sectionId).scrollIntoView({ behavior: 'smooth' });
 }
 
-
-// DETAILS TOGGLE
-function toggleDetails(button){
-
-  const card = button.closest(".card");
-  const desc = card.querySelector(".full-desc");
-
-  if(desc.style.display === "block"){
-    desc.style.display = "none";
-    button.innerText = "Details";
-  }else{
-    desc.style.display = "block";
-    button.innerText = "Hide";
-  }
-
-}
-
-
-// IMAGE GALLERY
-function changeImage(thumb){
-
-  const gallery = thumb.closest(".product-gallery");
-  const main = gallery.querySelector(".main-image");
-
-  main.src = thumb.src;
-
-  const thumbs = gallery.querySelectorAll(".thumb");
-  thumbs.forEach(t=>t.classList.remove("active"));
-
-  thumb.classList.add("active");
-
-}
-<script>
-
-function openSection(sectionId){
-
-  // hide all sections
-  document.querySelectorAll(".section").forEach(section=>{
-    section.classList.remove("active");
-  });
-
-  // show selected section
-  document.getElementById(sectionId.toLowerCase()).classList.add("active");
-
-  // update active tab
-  document.querySelectorAll(".tab-btn").forEach(btn=>{
-    btn.classList.remove("active");
-  });
-
-}
-
-function toggleDetails(button){
-  const desc = button.parentElement.querySelector(".full-desc");
-
-  if(desc.style.display === "block"){
-    desc.style.display = "none";
-    button.textContent = "Details";
+// ── toggleDetails ────────────────────────────────────────────
+function toggleDetails(button) {
+  const fullDesc = button.closest('.card-content').querySelector('.full-desc');
+  if (fullDesc.style.display === 'block') {
+    fullDesc.style.display = 'none';
+    button.textContent = 'Details';
   } else {
-    desc.style.display = "block";
-    button.textContent = "Hide";
+    fullDesc.style.display = 'block';
+    button.textContent = 'Hide';
   }
 }
 
-function changeImage(img){
-  const gallery = img.closest(".product-gallery");
-  const mainImage = gallery.querySelector(".main-image");
-
-  mainImage.src = img.src;
-
-  gallery.querySelectorAll(".thumb").forEach(t=>{
-    t.classList.remove("active");
-  });
-
-  img.classList.add("active");
+// ── changeImage ──────────────────────────────────────────────
+function changeImage(thumb) {
+  const gallery = thumb.closest('.product-gallery');
+  gallery.querySelector('.main-image').src = thumb.src;
+  gallery.querySelectorAll('.thumb').forEach(t => t.classList.remove('active'));
+  thumb.classList.add('active');
 }
 
+// ── searchProducts ────────────────────────────────────────────
+// Works for both the Home section and individual category sections
+function searchProducts(input) {
+  const filter = input.value.toLowerCase();
+  const section = input.closest('.section');
+  section.querySelectorAll('.card').forEach(card => {
+    const title = card.querySelector('h3') ? card.querySelector('h3').textContent.toLowerCase() : '';
+    const desc  = card.querySelector('.short-desc') ? card.querySelector('.short-desc').textContent.toLowerCase() : '';
+    card.style.display = (title.includes(filter) || desc.includes(filter)) ? 'block' : 'none';
+  });
+}
+
+// ── loadHomeProducts ──────────────────────────────────────────
+// Clones all cards into the Home section on page load
+// Uses innerHTML clone so onclick handlers still work
+function loadHomeProducts() {
+  const homeGrid = document.getElementById('home-products');
+  ['beauty', 'tech', 'gaming'].forEach(id => {
+    document.querySelectorAll('#' + id + ' .card').forEach(card => {
+      homeGrid.appendChild(card.cloneNode(true));
+    });
+  });
+}
+
+window.addEventListener('load', loadHomeProducts);
 </script>
-</script>
-<script>
+  
 
-function openSection(sectionId){
-
-  document.querySelectorAll(".section").forEach(section=>{
-    section.classList.remove("active");
-  });
-
-  document.getElementById(sectionId).classList.add("active");
-
-  document.querySelectorAll(".tab-btn").forEach(btn=>{
-    btn.classList.remove("active");
-  });
-
-  document.querySelectorAll(".tab-btn").forEach(btn=>{
-    if(btn.textContent.toLowerCase() === sectionId){
-      btn.classList.add("active");
-    }
-  });
-
-}
-
-function toggleDetails(button){
-  const desc = button.parentElement.querySelector(".full-desc");
-
-  if(desc.style.display === "block"){
-    desc.style.display = "none";
-    button.textContent = "Details";
-  } else {
-    desc.style.display = "block";
-    button.textContent = "Hide";
-  }
-}
-
-function changeImage(img){
-  const gallery = img.closest(".product-gallery");
-  const mainImage = gallery.querySelector(".main-image");
-
-  mainImage.src = img.src;
-
-  gallery.querySelectorAll(".thumb").forEach(t=>{
-    t.classList.remove("active");
-  });
-
-  img.classList.add("active");
-}
-
-</script>  
+  
 </body>
 </html>
 
  
-
-
-
-   
-
-
-   
-
-
-   
