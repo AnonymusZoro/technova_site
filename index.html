@@ -444,6 +444,148 @@ display:block;
   box-shadow:0 0 12px var(--accent-glow);
 }
 .search-bar::placeholder{color:var(--text-muted);}
+  
+  /* ===========================
+   ADMIN PANEL
+   =========================== */
+#admin-toggle{position:fixed;
+  bottom:24px;
+  right:24px;
+  z-index:9999;
+  background:var(--accent);
+  color:var(--bg-deep);
+  border:none;
+  border-radius:50px;
+  padding:12px 22px;
+  font-family:Orbitron,sans-serif;
+  font-size:12px;
+  font-weight:700;
+  letter-spacing:1px;
+  cursor:pointer;
+  box-shadow:0 0 20px var(--accent-glow);
+  transition:all .3s;}
+#admin-toggle:hover{box-shadow:0 0 40px var(--accent-glow);
+  transform:scale(1.05);
+}
+#admin-panel{display:none;
+  position:fixed;
+  inset:0;z-index:9998;
+  background:rgba(0,0,0,0.85);
+  backdrop-filter:blur(6px);
+  justify-content:center;
+  align-items:center;}
+#admin-panel.open{display:flex;
+  
+}
+.admin-box{background:var(--bg-card);
+  border:1px solid var(--accent);
+  border-radius:12px;
+  padding:36px 32px;
+  width:100%;
+  max-width:520px;
+  max-height:90vh;
+  overflow-y:auto;
+  box-shadow:0 0 60px var(--accent-glow);
+  position:relative;
+}
+.admin-box h2{font-family:Orbitron,sans-serif;
+  font-size:18px;
+  color:var(--accent);
+  margin-bottom:24px;
+  letter-spacing:2px;
+}
+.admin-close{position:absolute;
+  top:16px;
+  right:20px;
+  background:none;
+  border:none;
+  color:var(--text-muted);
+  font-size:22px;
+  cursor:pointer;
+  line-height:1;
+}
+.admin-close:hover{color:var(--accent);
+  
+}
+.admin-field{margin-bottom:16px;
+  
+}
+.admin-field label{display:block;
+  font-size:12px;
+  font-weight:600;
+  letter-spacing:1px;
+  text-transform:uppercase;
+  color:var(--text-muted);
+  margin-bottom:6px;
+}
+.admin-field input,.admin-field select,.admin-field textarea
+  {
+    width:100%;
+  padding:10px 14px;
+    background:rgba(0,0,0,0.4);
+    border:1px solid var(--maroon-mid);
+    border-radius:6px;
+    color:var(--text-main);
+    font-size:13px;
+    font-family:Poppins,sans-serif;
+    outline:none;
+    transition:border-color .25s;
+  }
+.admin-field input:focus,.admin-field select:focus,.admin-field textarea:focus
+  {
+    border-color:var(--accent);
+  }
+.admin-field textarea
+  {
+    resize:vertical;
+    min-height:70px;
+  }
+.admin-field select option{background:var(--bg-card);
+  
+}
+.add-thumb-btn{
+  
+  margin-top:6px;
+  padding:6px 14px;
+  background:transparent;
+  border:1px solid var(--maroon-light);
+  color:var(--maroon-light);
+  border-radius:4px;
+  font-size:12px;
+  cursor:pointer;
+  transition:all .25s;
+}
+.add-thumb-btn:hover{
+  background:var(--maroon);
+    color:var(--accent);
+    border-color:var(--accent);
+  }
+.admin-submit{
+  width:100%;
+  padding:12px;
+  background:var(--accent);
+  color:var(--bg-deep);
+  border:none;
+  border-radius:6px;
+  font-family:Orbitron,sans-serif;
+  font-size:13px;
+  font-weight:700;
+  letter-spacing:1px;
+  cursor:pointer;
+  margin-top:8px;
+  transition:box-shadow .3s;
+}
+.admin-submit:hover{
+  box-shadow:0 0 24px var(--accent-glow);
+}
+.admin-msg{
+  text-align:center;
+  margin-top:12px;
+  font-size:13px;
+  color:var(--accent);
+  display:none;
+}
+  
 </style>
 </head>
 <body>
@@ -1327,7 +1469,7 @@ display:block;
 <footer>
   © 2026 Zenova Store. All rights reserved.
 </footer>
-  
+ 
 <script>
 // ── openSection ──────────────────────────────────────────────
 function openSection(sectionId) {
@@ -1389,7 +1531,144 @@ function loadHomeProducts() {
 window.addEventListener('load', loadHomeProducts);
 
 </script>
+ <script>
+
+// ── Admin Panel ──────────────────────────────────────────────
+function toggleAdmin() {
+  document.getElementById('admin-panel').classList.toggle('open');
+}
+
+function addThumbField() {
+  const container = document.getElementById('thumb-fields');
+  if (container.children.length >= 3) return;
+  const wrap = document.createElement('div');
+  wrap.style.marginTop = '8px';
+  const input = document.createElement('input');
+  input.type = 'url';
+  input.placeholder = 'Extra image URL ' + (container.children.length + 2);
+  input.className = 'admin-thumb-input';
+  input.style.cssText = 'width:100%;padding:10px 14px;background:rgba(0,0,0,0.4);border:1px solid var(--maroon-mid);border-radius:6px;color:var(--text-main);font-size:13px;outline:none;';
+  wrap.appendChild(input);
+  container.appendChild(wrap);
+}
+
+function addProduct() {
+  const name      = document.getElementById('ap-name').value.trim();
+  const price     = document.getElementById('ap-price').value.trim();
+  const section   = document.getElementById('ap-section').value;
+  const link      = document.getElementById('ap-link').value.trim();
+  const shortDesc = document.getElementById('ap-short').value.trim();
+  const fullDesc  = document.getElementById('ap-full').value.trim();
+  const mainImg   = document.getElementById('ap-img').value.trim();
+
+  if (!name || !mainImg || !section) {
+    alert('Please fill in at least: Product Name, Main Image URL, and Category.');
+    return;
+  }
+
+  const extraImgs = Array.from(document.querySelectorAll('.admin-thumb-input'))
+    .map(i => i.value.trim()).filter(Boolean);
+  const allImgs = [mainImg, ...extraImgs];
+  const hasMultiple = allImgs.length > 1;
+
+  let cardHTML = '';
+  if (hasMultiple) {
+    const thumbsHTML = allImgs.map((src, i) =>
+      `<img src="${src}" class="thumb ${i===0?'active':''}" onclick="changeImage(this)">`
+    ).join('');
+    cardHTML = `<div class="product-gallery"><img src="${mainImg}" class="main-image"><div class="thumbnails">${thumbsHTML}</div></div>`;
+  } else {
+    cardHTML = `<img src="${mainImg}" style="width:100%;max-height:220px;object-fit:cover;display:block;">`;
+  }
+
+  cardHTML += `<div class="card-content">
+    <h3>${name}</h3>
+    <p class="short-desc">${shortDesc}</p>
+    <p class="full-desc">${fullDesc}</p>
+    <button class="details-btn" onclick="toggleDetails(this)">Details</button>
+    <div class="price">${price}</div>
+    <a href="${link || '#'}" class="btn" target="_blank">Buy Now</a>
+  </div>`;
+
+  const card = document.createElement('div');
+  card.className = 'card';
+  card.innerHTML = cardHTML;
+
+  document.querySelector('#' + section + ' .products').appendChild(card);
+  document.getElementById('home-products').appendChild(card.cloneNode(true));
+
+  const msg = document.getElementById('admin-msg');
+  msg.style.display = 'block';
+  msg.textContent = '\u2713 "' + name + '" added to ' + section.charAt(0).toUpperCase() + section.slice(1) + '!';
+
+  ['ap-name','ap-price','ap-link','ap-short','ap-full','ap-img'].forEach(id => {
+    document.getElementById(id).value = '';
+  });
+  document.getElementById('thumb-fields').innerHTML = '';
+  setTimeout(() => { msg.style.display = 'none'; }, 3000);
+}
+
+</script>
+  <!-- ADMIN TOGGLE BUTTON -->
+<button id="admin-toggle" onclick="toggleAdmin()">+ Add Product</button>
+
+<!-- ADMIN PANEL -->
+<div id="admin-panel">
+  <div class="admin-box">
+    <button class="admin-close" onclick="toggleAdmin()">&#x2715;</button>
+    <h2>Add New Product</h2>
+    <div class="admin-field"><label>Product Name *</label><input type="text" id="ap-name" placeholder="e.g. Rose Face Serum"></div>
+    <div class="admin-field"><label>Category *</label><select id="ap-section"><option value="beauty">Beauty</option><option value="tech">Tech</option><option value="gaming">Gaming</option></select></div>
+    <div class="admin-field"><label>Price</label><input type="text" id="ap-price" placeholder="e.g. Rs.999"></div>
+    <div class="admin-field"><label>Buy Now Link</label><input type="url" id="ap-link" placeholder="https://..."></div>
+    <div class="admin-field"><label>Short Description</label><input type="text" id="ap-short" placeholder="One-line summary shown on card"></div>
+    <div class="admin-field"><label>Full Description</label><textarea id="ap-full" placeholder="Detailed product info..."></textarea></div>
+    <div class="admin-field">
+      <label>Main Image URL *</label>
+      <input type="url" id="ap-img" placeholder="https://...">
+      <div id="thumb-fields"></div>
+      <button class="add-thumb-btn" onclick="addThumbField()">+ Add another image</button>
+    </div>
+    <button class="admin-submit" onclick="addProduct()">Add Product to Store</button>
+    <div id="admin-msg" class="admin-msg"></div>
+  </div>
+</div>
+
+  <script>
+  function changeImage(img){
+
+const gallery = img.closest(".product-gallery");
+
+const mainImage = gallery.querySelector(".main-image");
+
+mainImage.src = img.src;
+
+gallery.querySelectorAll(".thumb").forEach(t=>{
+t.classList.remove("active");
+});
+
+img.classList.add("active");
+
+}
+  </script>
+  <script>
+  function toggleDetails(btn){
+
+const desc = btn.parentElement.querySelector(".long-desc");
+
+if(desc.style.display === "none"){
+desc.style.display = "block";
+btn.textContent = "Hide";
+}else{
+desc.style.display = "none";
+btn.textContent = "Details";
+}
+
+}
+  </script>
+  
 </body>
+
 </html>
 
  
