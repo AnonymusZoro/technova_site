@@ -165,7 +165,8 @@ nav a:hover::after{ width:100%; }
   font-family: Orbitron, sans-serif;
 }
 .tabs button.active,
-.tabs button:hover{
+.tabs button:hover
+  {
   background: var(--accent);
   border-color: var(--accent);
   color: var(--bg-deep);
@@ -591,6 +592,126 @@ display:block;
     color:var(--accent);
     display:none;
     
+  }
+.admin-tabs
+  {
+    display:flex;
+    gap:0;
+    margin-bottom:24px;
+    border-radius:6px;
+    overflow:hidden;
+    border:1px solid var(--maroon-mid);
+  }
+.admin-tab
+  {
+    flex:1;
+    padding:10px;
+    background:transparent;
+    border:none;
+    color:var(--text-muted);
+    font-family:Orbitron,sans-serif;
+    font-size:11px;
+    letter-spacing:1px;
+    cursor:pointer;
+    transition:all .2s;
+  }
+.admin-tab.active
+  {
+    background:var(--accent);
+    color:var(--bg-deep);
+    font-weight:700;
+  }
+#edit-list
+  {
+    display:flex;
+    flex-direction:column;
+    gap:10px;
+    max-height:400px;
+    overflow-y:auto;
+  }
+.edit-item
+  {
+    background:rgba(0,0,0,0.3);
+    border:1px solid var(--maroon-mid);
+    border-radius:8px;
+    padding:12px 14px;
+    display:flex;
+    align-items:center;
+    gap:12px;
+  }
+.edit-item img
+  {
+    width:54px;
+    height:54px;
+    object-fit:cover;
+    border-radius:6px;
+    flex-shrink:0;
+    border:1px solid var(--maroon-mid);
+  }
+.edit-item-info
+  {
+    flex:1;
+    min-width:0;
+  }
+.edit-item-info strong
+  {
+    display:block;
+    color:var(--text-main);
+    font-size:13px;
+    white-space:nowrap;
+    overflow:hidden;
+    text-overflow:ellipsis;
+  }
+.edit-item-info span
+  {
+    color:var(--text-muted);
+    font-size:11px;
+  }
+.edit-item-btns
+  {
+    display:flex;
+    gap:6px;
+    flex-shrink:0;
+  }
+.edit-btn
+  {
+    padding:6px 12px;
+    border-radius:4px;
+    font-size:11px;
+    font-weight:700;
+    cursor:pointer;
+    letter-spacing:1px;
+    border:1px solid;
+    transition:all .2s;
+  }
+.edit-btn.edit
+  {
+    background:transparent;
+    color:var(--accent);
+    border-color:var(--accent);
+  }
+.edit-btn.edit:hover
+  {
+    background:var(--accent);
+    color:var(--bg-deep);
+  }
+.edit-btn.del
+  {
+    background:transparent;
+    color:var(--maroon-light);
+    border-color:var(--maroon-light);
+  }
+.edit-btn.del:hover
+  {
+    background:var(--maroon-light);
+    color:#fff;
+  }
+#edit-empty
+  {
+    text-align:center;
+    color:var(--text-muted);
+    font-size:13px;
+    padding:30px 0;
   }
 
 </style>
@@ -1476,212 +1597,7 @@ display:block;
 <footer>
   © 2026 Zenova Store. All rights reserved.
 </footer>
-  <script>
-// ══════════════════════════════════════════════
-//  ALL JAVASCRIPT — ONE BLOCK, NO DUPLICATES
-// ══════════════════════════════════════════════
-
-function openSection(sectionId) {
-  // Hide all sections and clear active tabs
-  document.querySelectorAll('.section').forEach(s => s.classList.remove('active'));
-  document.querySelectorAll('.tab-btn').forEach(b => b.classList.remove('active'));
-  // Show the chosen section
-  document.getElementById(sectionId).classList.add('active');
-  // Highlight matching tab button
-  document.querySelectorAll('.tab-btn').forEach(b => {
-    if (b.textContent.trim().toLowerCase() === sectionId.toLowerCase()) {
-      b.classList.add('active');
-    }
-  });
-  // Scroll to section (offset for sticky header)
-  const el = document.getElementById(sectionId);
-  const top = el.getBoundingClientRect().top + window.scrollY - 80;
-  window.scrollTo({ top, behavior: 'smooth' });
-}
-
-function toggleDetails(button) {
-  const fullDesc = button.closest('.card-content').querySelector('.full-desc');
-  if (fullDesc.style.display === 'block') {
-    fullDesc.style.display = 'none';
-    button.textContent = 'Details';
-  } else {
-    fullDesc.style.display = 'block';
-    button.textContent = 'Hide';
-  }
-}
-
-function changeImage(thumb) {
-  const gallery = thumb.closest('.product-gallery');
-  gallery.querySelector('.main-image').src = thumb.src;
-  gallery.querySelectorAll('.thumb').forEach(t => t.classList.remove('active'));
-  thumb.classList.add('active');
-}
-
-// Search runs ONLY on Enter key press (or when input is cleared)
-function searchProducts(input) {
-  const filter = input.value.trim().toLowerCase();
-  const section = input.closest('.section');
-  section.querySelectorAll('.card').forEach(card => {
-    const title = card.querySelector('h3') ? card.querySelector('h3').textContent.toLowerCase() : '';
-    const desc  = card.querySelector('.short-desc') ? card.querySelector('.short-desc').textContent.toLowerCase() : '';
-    // Show all if empty; otherwise only matching cards
-    card.style.display = (!filter || title.includes(filter) || desc.includes(filter)) ? '' : 'none';
-  });
-}
-
-// Populate the Home section with clones of all cards on page load
-function loadHomeProducts() {
-  const homeGrid = document.getElementById('home-products');
-  homeGrid.innerHTML = '';
-  ['beauty', 'tech', 'gaming'].forEach(id => {
-    document.querySelectorAll('#' + id + ' .card').forEach(card => {
-      homeGrid.appendChild(card.cloneNode(true));
-    });
-  });
-}
-
-// Build a card element from a saved product object
-function buildCard(p) {
-  const allImgs = [p.mainImg, ...p.extraImgs];
-  const hasMultiple = allImgs.length > 1;
-  let cardHTML = '';
-  if (hasMultiple) {
-    const thumbsHTML = allImgs.map((src, i) =>
-      `<img src="${src}" class="thumb ${i===0?'active':''}" onclick="changeImage(this)">`
-    ).join('');
-    cardHTML = `<div class="product-gallery"><img src="${p.mainImg}" class="main-image"><div class="thumbnails">${thumbsHTML}</div></div>`;
-  } else {
-    cardHTML = `<img src="${p.mainImg}" style="width:100%;max-height:220px;object-fit:cover;display:block;">`;
-  }
-  cardHTML += `<div class="card-content">
-    <h3>${p.name}</h3>
-    <p class="short-desc">${p.shortDesc}</p>
-    <p class="full-desc">${p.fullDesc}</p>
-    <button class="details-btn" onclick="toggleDetails(this)">Details</button>
-    <div class="price">${p.price}</div>
-    <a href="${p.link || '#'}" class="btn" target="_blank">Buy Now</a>
-  </div>`;
-  const card = document.createElement('div');
-  card.className = 'card';
-  card.innerHTML = cardHTML;
-  return card;
-}
-
-// Load saved products from localStorage and inject them into the page
-function loadSavedProducts() {
-  const saved = JSON.parse(localStorage.getItem('zenova_products') || '[]');
-  saved.forEach(p => {
-    const card = buildCard(p);
-    const sectionGrid = document.querySelector('#' + p.section + ' .products');
-    if (sectionGrid) sectionGrid.appendChild(card);
-  });
-}
-
-window.addEventListener('load', function() {
-  loadSavedProducts();   // inject saved products first
-  loadHomeProducts();    // then clone everything (including saved) into Home
-});
-
-// ── Admin Panel — open with Ctrl+Shift+A ─────────────────────
-document.addEventListener('keydown', function(e) {
-  if (e.ctrlKey && e.shiftKey && e.key === 'A') {
-    e.preventDefault();
-    document.getElementById('admin-panel').classList.toggle('open');
-  }
-});
-
-function closeAdmin() {
-  document.getElementById('admin-panel').classList.remove('open');
-}
-
-function addThumbField() {
-  const container = document.getElementById('thumb-fields');
-  if (container.children.length >= 3) return;
-  const wrap = document.createElement('div');
-  wrap.style.marginTop = '8px';
-  const input = document.createElement('input');
-  input.type = 'url';
-  input.placeholder = 'Extra image URL ' + (container.children.length + 2);
-  input.className = 'admin-thumb-input';
-  input.style.cssText = 'width:100%;padding:10px 14px;background:rgba(0,0,0,0.4);border:1px solid var(--maroon-mid);border-radius:6px;color:var(--text-main);font-size:13px;outline:none;';
-  wrap.appendChild(input);
-  container.appendChild(wrap);
-}
-
-function addProduct() {
-  const name      = document.getElementById('ap-name').value.trim();
-  const price     = document.getElementById('ap-price').value.trim();
-  const section   = document.getElementById('ap-section').value;
-  const link      = document.getElementById('ap-link').value.trim();
-  const shortDesc = document.getElementById('ap-short').value.trim();
-  const fullDesc  = document.getElementById('ap-full').value.trim();
-  const mainImg   = document.getElementById('ap-img').value.trim();
-
-  if (!name || !mainImg || !section) {
-    alert('Please fill in at least: Product Name, Main Image URL, and Category.');
-    return;
-  }
-
-  const extraImgs = Array.from(document.querySelectorAll('.admin-thumb-input'))
-    .map(i => i.value.trim()).filter(Boolean);
-
-  // Save to localStorage so it persists after refresh
-  const product = { name, price, section, link, shortDesc, fullDesc, mainImg, extraImgs };
-  const saved = JSON.parse(localStorage.getItem('zenova_products') || '[]');
-  saved.push(product);
-  localStorage.setItem('zenova_products', JSON.stringify(saved));
-
-  // Add card to the section
-  const card = buildCard(product);
-  document.querySelector('#' + section + ' .products').appendChild(card);
-
-  // Add clone to Home section too
-  document.getElementById('home-products').appendChild(card.cloneNode(true));
-
-  // Switch to section so card is visible
-  openSection(section);
-
-  const msg = document.getElementById('admin-msg');
-  msg.style.display = 'block';
-  msg.textContent = '\u2713 "' + name + '" added to ' + section.charAt(0).toUpperCase() + section.slice(1) + '!';
-
-  ['ap-name','ap-price','ap-link','ap-short','ap-full','ap-img'].forEach(id => {
-    document.getElementById(id).value = '';
-  });
-  document.getElementById('thumb-fields').innerHTML = '';
-  setTimeout(() => { msg.style.display = 'none'; }, 3000);
-}
-
-</script>
-
-
-<!-- ADMIN TOGGLE BUTTON -->
-<button id="admin-toggle">+ Add Product</button>
-
-<!-- ADMIN PANEL -->
-<div id="admin-panel">
-  <div class="admin-box">
-    <button class="admin-close" onclick="closeAdmin()">&#x2715;</button>
-    <h2>Add New Product</h2>
-    <div class="admin-field"><label>Product Name *</label><input type="text" id="ap-name" placeholder="e.g. Rose Face Serum"></div>
-    <div class="admin-field"><label>Category *</label><select id="ap-section"><option value="beauty">Beauty</option><option value="tech">Tech</option><option value="gaming">Gaming</option></select></div>
-    <div class="admin-field"><label>Price</label><input type="text" id="ap-price" placeholder="e.g. Rs.999"></div>
-    <div class="admin-field"><label>Buy Now Link</label><input type="url" id="ap-link" placeholder="https://..."></div>
-    <div class="admin-field"><label>Short Description</label><input type="text" id="ap-short" placeholder="One-line summary shown on card"></div>
-    <div class="admin-field"><label>Full Description</label><textarea id="ap-full" placeholder="Detailed product info..."></textarea></div>
-    <div class="admin-field">
-      <label>Main Image URL *</label>
-      <input type="url" id="ap-img" placeholder="https://...">
-      <div id="thumb-fields"></div>
-      <button class="add-thumb-btn" onclick="addThumbField()">+ Add another image</button>
-    </div>
-    <button class="admin-submit" onclick="addProduct()">Add Product to Store</button>
-    <div id="admin-msg" class="admin-msg"></div>
-  </div>
-</div>
-
-
-</body>
+ </body>
 
 </html>
 
