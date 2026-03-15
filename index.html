@@ -1597,6 +1597,335 @@ display:block;
 <footer>
   © 2026 Zenova Store. All rights reserved.
 </footer>
+  
+<script>
+// ══════════════════════════════════════════════
+//  ALL JAVASCRIPT — ONE BLOCK, NO DUPLICATES
+// ══════════════════════════════════════════════
+
+function openSection(sectionId) {
+  // Hide all sections and clear active tabs
+  document.querySelectorAll('.section').forEach(s => s.classList.remove('active'));
+  document.querySelectorAll('.tab-btn').forEach(b => b.classList.remove('active'));
+  // Show the chosen section
+  document.getElementById(sectionId).classList.add('active');
+  // Highlight matching tab button
+  document.querySelectorAll('.tab-btn').forEach(b => {
+    if (b.textContent.trim().toLowerCase() === sectionId.toLowerCase()) {
+      b.classList.add('active');
+    }
+  });
+  // Scroll to section (offset for sticky header)
+  const el = document.getElementById(sectionId);
+  const top = el.getBoundingClientRect().top + window.scrollY - 80;
+  window.scrollTo({ top, behavior: 'smooth' });
+}
+
+function toggleDetails(button) {
+  const fullDesc = button.closest('.card-content').querySelector('.full-desc');
+  if (fullDesc.style.display === 'block') {
+    fullDesc.style.display = 'none';
+    button.textContent = 'Details';
+  } else {
+    fullDesc.style.display = 'block';
+    button.textContent = 'Hide';
+  }
+}
+
+function changeImage(thumb) {
+  const gallery = thumb.closest('.product-gallery');
+  gallery.querySelector('.main-image').src = thumb.src;
+  gallery.querySelectorAll('.thumb').forEach(t => t.classList.remove('active'));
+  thumb.classList.add('active');
+}
+
+// Search runs ONLY on Enter key press (or when input is cleared)
+function searchProducts(input) {
+  const filter = input.value.trim().toLowerCase();
+  const section = input.closest('.section');
+  section.querySelectorAll('.card').forEach(card => {
+    const title = card.querySelector('h3') ? card.querySelector('h3').textContent.toLowerCase() : '';
+    const desc  = card.querySelector('.short-desc') ? card.querySelector('.short-desc').textContent.toLowerCase() : '';
+    // Show all if empty; otherwise only matching cards
+    card.style.display = (!filter || title.includes(filter) || desc.includes(filter)) ? '' : 'none';
+  });
+}
+
+// Populate the Home section with clones of all cards on page load
+function loadHomeProducts() {
+  const homeGrid = document.getElementById('home-products');
+  homeGrid.innerHTML = '';
+  ['beauty', 'tech', 'gaming'].forEach(id => {
+    document.querySelectorAll('#' + id + ' .card').forEach(card => {
+      homeGrid.appendChild(card.cloneNode(true));
+    });
+  });
+}
+
+// Build a card element from a saved product object
+function buildCard(p) {
+  const allImgs = [p.mainImg, ...p.extraImgs];
+  const hasMultiple = allImgs.length > 1;
+  let cardHTML = '';
+  if (hasMultiple) {
+    const thumbsHTML = allImgs.map((src, i) =>
+      `<img src="${src}" class="thumb ${i===0?'active':''}" onclick="changeImage(this)">`
+    ).join('');
+    cardHTML = `<div class="product-gallery"><img src="${p.mainImg}" class="main-image"><div class="thumbnails">${thumbsHTML}</div></div>`;
+  } else {
+    cardHTML = `<img src="${p.mainImg}" style="width:100%;max-height:220px;object-fit:cover;display:block;">`;
+  }
+  cardHTML += `<div class="card-content">
+    <h3>${p.name}</h3>
+    <p class="short-desc">${p.shortDesc}</p>
+    <p class="full-desc">${p.fullDesc}</p>
+    <button class="details-btn" onclick="toggleDetails(this)">Details</button>
+    <div class="price">${p.price}</div>
+    <a href="${p.link || '#'}" class="btn" target="_blank">Buy Now</a>
+  </div>`;
+  const card = document.createElement('div');
+  card.className = 'card';
+  card.setAttribute('data-saved', '1');
+  card.innerHTML = cardHTML;
+  return card;
+}
+
+// Load saved products from localStorage and inject them into the page
+function loadSavedProducts() {
+  const saved = JSON.parse(localStorage.getItem('zenova_products') || '[]');
+  saved.forEach(p => {
+    const card = buildCard(p);
+    const sectionGrid = document.querySelector('#' + p.section + ' .products');
+    if (sectionGrid) sectionGrid.appendChild(card);
+  });
+}
+
+window.addEventListener('load', function() {
+  loadSavedProducts();   // inject saved products first
+  loadHomeProducts();    // then clone everything (including saved) into Home
+});
+
+// ── Admin Panel — open with Ctrl+Shift+A ─────────────────────
+document.addEventListener('keydown', function(e) {
+  if (e.ctrlKey && e.shiftKey && e.key === 'A') {
+    e.preventDefault();
+    document.getElementById('admin-panel').classList.toggle('open');
+  }
+});
+
+function closeAdmin() {
+  document.getElementById('admin-panel').classList.remove('open');
+}
+
+function addThumbField() {
+  const container = document.getElementById('thumb-fields');
+  if (container.children.length >= 3) return;
+  const wrap = document.createElement('div');
+  wrap.style.marginTop = '8px';
+  const input = document.createElement('input');
+  input.type = 'url';
+  input.placeholder = 'Extra image URL ' + (container.children.length + 2);
+  input.className = 'admin-thumb-input';
+  input.style.cssText = 'width:100%;padding:10px 14px;background:rgba(0,0,0,0.4);border:1px solid var(--maroon-mid);border-radius:6px;color:var(--text-main);font-size:13px;outline:none;';
+  wrap.appendChild(input);
+  container.appendChild(wrap);
+}
+
+function addProduct() {
+  const name      = document.getElementById('ap-name').value.trim();
+  const price     = document.getElementById('ap-price').value.trim();
+  const section   = document.getElementById('ap-section').value;
+  const link      = document.getElementById('ap-link').value.trim();
+  const shortDesc = document.getElementById('ap-short').value.trim();
+  const fullDesc  = document.getElementById('ap-full').value.trim();
+  const mainImg   = document.getElementById('ap-img').value.trim();
+
+  if (!name || !mainImg || !section) {
+    alert('Please fill in at least: Product Name, Main Image URL, and Category.');
+    return;
+  }
+
+  const extraImgs = Array.from(document.querySelectorAll('.admin-thumb-input'))
+    .map(i => i.value.trim()).filter(Boolean);
+
+  // Save to localStorage so it persists after refresh
+  const product = { name, price, section, link, shortDesc, fullDesc, mainImg, extraImgs };
+  const saved = JSON.parse(localStorage.getItem('zenova_products') || '[]');
+
+  const editIndex = parseInt(document.getElementById('ap-edit-index').value);
+  if (editIndex >= 0) {
+    // Editing existing product
+    saved[editIndex] = product;
+    localStorage.setItem('zenova_products', JSON.stringify(saved));
+    rebuildAllCards();
+  } else {
+    // Adding new product
+    saved.push(product);
+    localStorage.setItem('zenova_products', JSON.stringify(saved));
+    const card = buildCard(product);
+    document.querySelector('#' + section + ' .products').appendChild(card);
+    document.getElementById('home-products').appendChild(card.cloneNode(true));
+    openSection(section);
+  }
+
+  const msg = document.getElementById('admin-msg');
+  msg.style.display = 'block';
+  msg.textContent = editIndex >= 0
+    ? '\u2713 "' + name + '" updated!'
+    : '\u2713 "' + name + '" added to ' + section.charAt(0).toUpperCase() + section.slice(1) + '!';
+
+  ['ap-name','ap-price','ap-link','ap-short','ap-full','ap-img'].forEach(id => {
+    document.getElementById(id).value = '';
+  });
+  document.getElementById('thumb-fields').innerHTML = '';
+  document.getElementById('ap-edit-index').value = '-1';
+  document.getElementById('ap-submit-btn').textContent = 'Add Product to Store';
+  setTimeout(() => { msg.style.display = 'none'; }, 3000);
+}
+
+// ── Admin Tab Switching ───────────────────────────────────────
+function switchAdminTab(tab) {
+  document.querySelectorAll('.admin-tab').forEach(b => b.classList.remove('active'));
+  if (tab === 'add') {
+    document.getElementById('tab-add').style.display = '';
+    document.getElementById('tab-edit').style.display = 'none';
+    document.querySelectorAll('.admin-tab')[0].classList.add('active');
+    // Reset to Add mode
+    document.getElementById('ap-edit-index').value = '-1';
+    document.getElementById('ap-submit-btn').textContent = 'Add Product to Store';
+  } else {
+    document.getElementById('tab-add').style.display = 'none';
+    document.getElementById('tab-edit').style.display = '';
+    document.querySelectorAll('.admin-tab')[1].classList.add('active');
+    renderEditList();
+  }
+}
+
+// ── Render Edit List ──────────────────────────────────────────
+function renderEditList() {
+  const saved = JSON.parse(localStorage.getItem('zenova_products') || '[]');
+  const list = document.getElementById('edit-list');
+  const empty = document.getElementById('edit-empty');
+  list.innerHTML = '';
+  if (saved.length === 0) {
+    empty.style.display = 'block';
+    return;
+  }
+  empty.style.display = 'none';
+  saved.forEach((p, i) => {
+    const item = document.createElement('div');
+    item.className = 'edit-item';
+    item.innerHTML = `
+      <img src="${p.mainImg}" onerror="this.src='https://via.placeholder.com/54x54/1e0510/f5c518?text=?'">
+      <div class="edit-item-info">
+        <strong>${p.name}</strong>
+        <span>${p.section.charAt(0).toUpperCase()+p.section.slice(1)} · ${p.price}</span>
+      </div>
+      <div class="edit-item-btns">
+        <button class="edit-btn edit" onclick="editProduct(${i})">Edit</button>
+        <button class="edit-btn del" onclick="deleteProduct(${i})">Delete</button>
+      </div>`;
+    list.appendChild(item);
+  });
+}
+
+// ── Load product into form for editing ───────────────────────
+function editProduct(index) {
+  const saved = JSON.parse(localStorage.getItem('zenova_products') || '[]');
+  const p = saved[index];
+  // Switch to Add tab (which is actually the edit form)
+  switchAdminTab('add');
+  document.getElementById('ap-name').value    = p.name;
+  document.getElementById('ap-price').value   = p.price;
+  document.getElementById('ap-section').value = p.section;
+  document.getElementById('ap-link').value    = p.link;
+  document.getElementById('ap-short').value   = p.shortDesc;
+  document.getElementById('ap-full').value    = p.fullDesc;
+  document.getElementById('ap-img').value     = p.mainImg;
+  document.getElementById('ap-edit-index').value = index;
+  document.getElementById('ap-submit-btn').textContent = 'Save Changes';
+  // Load extra images
+  const thumbContainer = document.getElementById('thumb-fields');
+  thumbContainer.innerHTML = '';
+  p.extraImgs.forEach((src, i) => {
+    const wrap = document.createElement('div');
+    wrap.style.marginTop = '8px';
+    const input = document.createElement('input');
+    input.type = 'url';
+    input.placeholder = 'Extra image URL ' + (i + 2);
+    input.className = 'admin-thumb-input';
+    input.value = src;
+    input.style.cssText = 'width:100%;padding:10px 14px;background:rgba(0,0,0,0.4);border:1px solid var(--maroon-mid);border-radius:6px;color:var(--text-main);font-size:13px;outline:none;';
+    wrap.appendChild(input);
+    thumbContainer.appendChild(wrap);
+  });
+}
+
+// ── Delete a product ──────────────────────────────────────────
+function deleteProduct(index) {
+  if (!confirm('Delete this product? This cannot be undone.')) return;
+  const saved = JSON.parse(localStorage.getItem('zenova_products') || '[]');
+  saved.splice(index, 1);
+  localStorage.setItem('zenova_products', JSON.stringify(saved));
+  // Rebuild all cards on page
+  rebuildAllCards();
+  renderEditList();
+}
+
+// ── Rebuild all product cards after edit/delete ───────────────
+function rebuildAllCards() {
+  // Remove all dynamically saved cards — keep only hardcoded ones
+  // We track saved cards with data-saved attribute
+  document.querySelectorAll('.card[data-saved]').forEach(c => c.remove());
+  document.getElementById('home-products').innerHTML = '';
+  loadSavedProducts();
+  loadHomeProducts();
+}
+
+  </script>
+
+<!-- ADMIN TOGGLE BUTTON -->
+<button id="admin-toggle">+ Add Product</button>
+
+<!-- ADMIN PANEL -->
+<div id="admin-panel">
+  <div class="admin-box">
+    <button class="admin-close" onclick="closeAdmin()">&#x2715;</button>
+    <h2 id="admin-title">Add New Product</h2>
+
+    <!-- TABS -->
+    <div class="admin-tabs">
+      <button class="admin-tab active" onclick="switchAdminTab('add')">➕ Add</button>
+      <button class="admin-tab" onclick="switchAdminTab('edit')">✏️ Edit / Delete</button>
+    </div>
+
+    <!-- ADD TAB -->
+    <div id="tab-add">
+      <div class="admin-field"><label>Product Name *</label><input type="text" id="ap-name" placeholder="e.g. Rose Face Serum"></div>
+      <div class="admin-field"><label>Category *</label><select id="ap-section"><option value="beauty">Beauty</option><option value="tech">Tech</option><option value="gaming">Gaming</option></select></div>
+      <div class="admin-field"><label>Price</label><input type="text" id="ap-price" placeholder="e.g. Rs.999"></div>
+      <div class="admin-field"><label>Buy Now Link</label><input type="url" id="ap-link" placeholder="https://..."></div>
+      <div class="admin-field"><label>Short Description</label><input type="text" id="ap-short" placeholder="One-line summary shown on card"></div>
+      <div class="admin-field"><label>Full Description</label><textarea id="ap-full" placeholder="Detailed product info..."></textarea></div>
+      <div class="admin-field">
+        <label>Main Image URL *</label>
+        <input type="url" id="ap-img" placeholder="https://...">
+        <div id="thumb-fields"></div>
+        <button class="add-thumb-btn" onclick="addThumbField()">+ Add another image</button>
+      </div>
+      <input type="hidden" id="ap-edit-index" value="-1">
+      <button class="admin-submit" id="ap-submit-btn" onclick="addProduct()">Add Product to Store</button>
+      <div id="admin-msg" class="admin-msg"></div>
+    </div>
+
+    <!-- EDIT TAB -->
+    <div id="tab-edit" style="display:none;">
+      <div id="edit-list"></div>
+      <div id="edit-empty" style="display:none;">No saved products yet. Add some first!</div>
+    </div>
+
+  </div>
+</div>
  </body>
 
 </html>
