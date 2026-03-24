@@ -1354,20 +1354,20 @@ function renderHomeGrid() {
   const homeGrid = document.getElementById('home-products');
   if (!homeGrid) return;
 
-  // Pehle existing firestore cards hata do (static rehne do)
+  // Remove existing firestore cards
   homeGrid.querySelectorAll('.card[data-firestore]').forEach(c => c.remove());
 
-  // Firestore wale cards banao aur array mein rakho
+  // Make firestore card and store them in array
   const fsCards = window.firestoreProducts.map(p => {
     const card = window.buildCard(p, p.id);
     card.setAttribute('data-firestore', '1');
     return card;
   });
 
-  // Static cards collect karo
+  // Collect static cards
   const staticCards = Array.from(homeGrid.querySelectorAll('.card:not([data-firestore])'));
 
-  // Sab combine karo
+  // Combine all
   const allCards = [...staticCards, ...fsCards];
 
   // Fisher-Yates shuffle — random order
