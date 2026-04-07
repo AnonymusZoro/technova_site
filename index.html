@@ -1286,15 +1286,147 @@ button,a
     </div>
   </div>
 </div>
-<!-- ══════════════════════════════
-     FIREBASE MODULE SCRIPT — FIXED
-     Changes:
-     1. Single getFirestore import (removed duplicate)
-     2. Global window.productsArray shared with vanilla JS
-     3. onSnapshot se real-time sync + array update
-     4. Home grid mein randomly shuffle karke dikhana
-     5. Category grids bhi update hoti hain real-time
-══════════════════════════════ -->
+<!-- =====================================================
+     CURRENCY DETECTION SYSTEM
+     - Detects user's country via free IP geolocation API
+     - Converts PKR prices to local currency using exchange rates
+     - Updates all .price elements on the page automatically
+     - Falls back to PKR if detection fails
+     ===================================================== -->
+<script>
+// --------------------------------------------------
+// CURRENCY CONFIG
+// Each entry: { symbol, flag, rate (vs PKR) }
+// Rate = how many units of that currency = 1 PKR
+// Example: 1 PKR = 0.0036 USD, so USD rate = 0.0036
+// --------------------------------------------------
+const CURRENCY_MAP = {
+  // Pakistan — base currency, no conversion needed
+  PK: { code: 'PKR', symbol: 'Rs.',   flag: '🇵🇰', rate: 1 },
+
+  // United States
+  US: { code: 'USD', symbol: '$',     flag: '🇺🇸', rate: 0.0036 },
+
+  // United Kingdom
+  GB: { code: 'GBP', symbol: '£',     flag: '🇬🇧', rate: 0.0028 },
+
+  // European Union countries
+  DE: { code: 'EUR', symbol: '€',     flag: '🇩🇪', rate: 0.0033 },
+  FR: { code: 'EUR', symbol: '€',     flag: '🇫🇷', rate: 0.0033 },
+  IT: { code: 'EUR', symbol: '€',     flag: '🇮🇹', rate: 0.0033 },
+  ES: { code: 'EUR', symbol: '€',     flag: '🇪🇸', rate: 0.0033 },
+  NL: { code: 'EUR', symbol: '€',     flag: '🇳🇱', rate: 0.0033 },
+
+  // United Arab Emirates
+  AE: { code: 'AED', symbol: 'AED',   flag: '🇦🇪', rate: 0.013 },
+
+  // Saudi Arabia
+  SA: { code: 'SAR', symbol: 'SAR',   flag: '🇸🇦', rate: 0.0135 },
+
+  // India
+  IN: { code: 'INR', symbol: '₹',     flag: '🇮🇳', rate: 0.30 },
+
+  // Canada
+  CA: { code: 'CAD', symbol: 'CA$',   flag: '🇨🇦', rate: 0.0049 },
+
+  // Australia
+  AU: { code: 'AUD', symbol: 'A$',    flag: '🇦🇺', rate: 0.0055 },
+
+  // China
+  CN: { code: 'CNY', symbol: '¥',     flag: '🇨🇳', rate: 0.026 },
+
+  // Turkey
+  TR: { code: 'TRY', symbol: '₺',     flag: '🇹🇷', rate: 0.12 },
+
+  // Bangladesh
+  BD: { code: 'BDT', symbol: '৳',     flag: '🇧🇩', rate: 0.43 },
+
+  // Default fallback — if country not in the list above, show PKR
+  DEFAULT: { code: 'PKR', symbol: 'Rs.', flag: '🌍', rate: 1 }
+};
+
+// Store detected currency globally so Firestore cards can also use it
+window.userCurrency = CURRENCY_MAP['DEFAULT'];
+window.userCountry  = 'PK'; // default assumption
+
+// --------------------------------------------------
+// STEP 1: Detect user's country via IP geolocation
+// Using ip-api.com — free, no API key needed
+// --------------------------------------------------
+async function detectCountry() {
+  try {
+    const res  = await fetch('https://ip-api.com/json/?fields=countryCode');
+    const data = await res.json();
+    return data.countryCode || 'PK';
+  } catch (e) {
+    // If API fails (network issue etc.), default to PK
+    console.warn('Currency detection failed, defaulting to PKR');
+    return 'PK';
+  }
+}
+
+// --------------------------------------------------
+// STEP 2: Convert a PKR amount to user's currency
+// --------------------------------------------------
+function convertPrice(pkrAmount, currency) {
+  const converted = pkrAmount * currency.rate;
+
+  // Format nicely based on amount size
+  if (converted < 1) {
+    return currency.symbol + converted.toFixed(3);
+  } else if (converted < 10) {
+    return currency.symbol + converted.toFixed(2);
+  } else {
+    // Add comma separators for large numbers
+    return currency.symbol + Math.round(converted).toLocaleString();
+  }
+}
+
+// --------------------------------------------------
+// STEP 3: Update all static card prices on the page
+// Each static card has data-price-pkr="AMOUNT" attribute
+// --------------------------------------------------
+function updateAllPrices() {
+  const currency = window.userCurrency;
+
+  document.querySelectorAll('.card[data-price-pkr]').forEach(card => {
+    const pkrAmount  = parseFloat(card.getAttribute('data-price-pkr'));
+    const priceEl    = card.querySelector('.price');
+    if (priceEl && pkrAmount) {
+      priceEl.textContent = convertPrice(pkrAmount, currency);
+    }
+  });
+}
+
+// --------------------------------------------------
+// STEP 4: Update the currency badge in the header
+// --------------------------------------------------
+function updateBadge() {
+  const badge = document.getElementById('currency-badge');
+  if (badge) {
+    badge.textContent = window.userCurrency.flag + ' ' + window.userCurrency.code;
+  }
+}
+
+// --------------------------------------------------
+// MAIN: Run detection then update everything
+// --------------------------------------------------
+async function initCurrency() {
+  const countryCode    = await detectCountry();
+  window.userCountry   = countryCode;
+  window.userCurrency  = CURRENCY_MAP[countryCode] || CURRENCY_MAP['DEFAULT'];
+
+  updateBadge();
+  updateAllPrices();
+}
+
+// Run on page load
+initCurrency();
+</script>
+
+<!-- =====================================================
+     FIREBASE MODULE — Real-time product sync
+     ===================================================== -->
 <script type="module">
 import { initializeApp }
   from "https://www.gstatic.com/firebasejs/10.12.2/firebase-app.js";
@@ -1303,7 +1435,6 @@ import { getAuth, signInWithEmailAndPassword, signOut, onAuthStateChanged }
 import { getFirestore, collection, addDoc, getDocs, doc, updateDoc, deleteDoc, onSnapshot }
   from "https://www.gstatic.com/firebasejs/10.12.2/firebase-firestore.js";
 
-// ── Firebase config ──────────────────────────────────
 const firebaseConfig = {
   apiKey:            "AIzaSyD1H6TClrILVXaPX-7FidvVZmpJLsvumPk",
   authDomain:        "zenova-store.firebaseapp.com",
@@ -1318,79 +1449,74 @@ const auth = getAuth(app);
 const db   = getFirestore(app);
 const col  = collection(db, 'products');
 
-// ── Global products array — vanilla JS bhi access kar sakta hai ──
-window.firestoreProducts = []; // { id, ...data }
+// Global array accessible by vanilla JS functions
+window.firestoreProducts = [];
 
-// ── Auth state listener ───────────────────────────────
+// Auth state: show/hide admin screens
 onAuthStateChanged(auth, (user) => {
-  document.getElementById('admin-login-screen').style.display  = user ? 'none'  : 'block';
+  document.getElementById('admin-login-screen').style.display   = user ? 'none'  : 'block';
   document.getElementById('admin-content-screen').style.display = user ? 'block' : 'none';
 });
 
-// ── REAL-TIME LISTENER — onSnapshot ──────────────────
-// Jab bhi Firestore mein koi change ho (add/edit/delete),
-// yeh automatically fire hota hai aur array + UI update hoti hai
+// --------------------------------------------------
+// Real-time listener: fires on every Firestore change
+// Updates array, re-renders home grid and category grids
+// --------------------------------------------------
 onSnapshot(col, (snapshot) => {
-  // Array reset karo
   window.firestoreProducts = [];
+  snapshot.forEach(d => window.firestoreProducts.push({ id: d.id, ...d.data() }));
 
-  snapshot.forEach(docSnap => {
-    window.firestoreProducts.push({ id: docSnap.id, ...docSnap.data() });
-  });
-
-  // Home page pe randomly dikhao (static + firestore mix)
   renderHomeGrid();
-
-  // Category grids mein bhi firestore wale cards update karo
   renderCategoryFirestoreCards();
 
-  // Loading spinner band karo
+  // Hide loading spinner once data arrives
   const loader = document.getElementById('home-loading');
   if (loader) loader.style.display = 'none';
 });
 
-// ── Home grid: static cards + firestore cards randomly shuffle ──
+// --------------------------------------------------
+// Render home grid: static cards + Firestore cards shuffled
+// --------------------------------------------------
 function renderHomeGrid() {
   const homeGrid = document.getElementById('home-products');
   if (!homeGrid) return;
 
-  // Remove existing firestore cards
+  // Remove old Firestore cards (keep static ones)
   homeGrid.querySelectorAll('.card[data-firestore]').forEach(c => c.remove());
 
-  // Make firestore card and store them in array
+  // Build Firestore cards
   const fsCards = window.firestoreProducts.map(p => {
     const card = window.buildCard(p, p.id);
     card.setAttribute('data-firestore', '1');
     return card;
   });
 
-  // Collect static cards
+  // Collect existing static cards
   const staticCards = Array.from(homeGrid.querySelectorAll('.card:not([data-firestore])'));
 
-  // Combine all
+  // Shuffle all cards together using Fisher-Yates algorithm
   const allCards = [...staticCards, ...fsCards];
-
-  // Fisher-Yates shuffle — random order
   for (let i = allCards.length - 1; i > 0; i--) {
     const j = Math.floor(Math.random() * (i + 1));
     [allCards[i], allCards[j]] = [allCards[j], allCards[i]];
   }
 
-  // Grid saaf karo aur shuffled order mein daalo
   homeGrid.innerHTML = '';
   allCards.forEach(card => homeGrid.appendChild(card));
 }
 
-// ── Category grids: sirf firestore wale cards update karo ──
+// --------------------------------------------------
+// Render category grids: only Firestore cards per section
+// --------------------------------------------------
 function renderCategoryFirestoreCards() {
   ['beauty', 'tech', 'gaming'].forEach(section => {
     const grid = document.getElementById(section + '-products');
     if (!grid) return;
 
-    // Pehle purane firestore cards hata do
+    // Remove old Firestore cards from this category
     grid.querySelectorAll('.card[data-firestore]').forEach(c => c.remove());
 
-    // Iss category ke firestore products filter karo
+    // Add fresh Firestore cards for this category
     window.firestoreProducts
       .filter(p => p.section === section)
       .forEach(p => {
@@ -1401,14 +1527,14 @@ function renderCategoryFirestoreCards() {
   });
 }
 
-// ── Login ─────────────────────────────────────────────
+// Login
 window.adminLogin = function() {
-  const email    = document.getElementById('admin-email').value.trim();
-  const password = document.getElementById('admin-password').value;
-  const errEl    = document.getElementById('login-error');
+  const email  = document.getElementById('admin-email').value.trim();
+  const pass   = document.getElementById('admin-password').value;
+  const errEl  = document.getElementById('login-error');
   errEl.style.display = 'none';
 
-  signInWithEmailAndPassword(auth, email, password)
+  signInWithEmailAndPassword(auth, email, pass)
     .then(() => {
       document.getElementById('admin-email').value    = '';
       document.getElementById('admin-password').value = '';
@@ -1416,28 +1542,28 @@ window.adminLogin = function() {
     .catch(err => {
       const msgs = {
         'auth/invalid-email':      'Invalid email address.',
-        'auth/user-not-found':     'No account found with this email.',
+        'auth/user-not-found':     'No account found.',
         'auth/wrong-password':     'Incorrect password.',
         'auth/invalid-credential': 'Invalid email or password.',
-        'auth/too-many-requests':  'Too many attempts. Try again later.'
+        'auth/too-many-requests':  'Too many attempts. Try later.'
       };
       errEl.textContent   = msgs[err.code] || 'Login failed.';
       errEl.style.display = 'block';
     });
 };
 
-// ── Logout ────────────────────────────────────────────
+// Logout
 window.adminLogout = function() {
-  signOut(auth).then(() => {
-    closeAdmin();
-    showMsg('Logged out successfully.');
-  });
+  signOut(auth).then(() => { closeAdmin(); showMsg('Logged out.'); });
 };
 
-// ── Submit (Add or Update) ────────────────────────────
+// --------------------------------------------------
+// Submit: Add new product OR update existing one
+// Price is entered in PKR — stored as pricePkr in Firestore
+// --------------------------------------------------
 window.submitProduct = async function() {
   const name      = document.getElementById('ap-name').value.trim();
-  const price     = document.getElementById('ap-price').value.trim();
+  const pricePkr  = parseFloat(document.getElementById('ap-price-pkr').value);
   const section   = document.getElementById('ap-section').value;
   const link      = document.getElementById('ap-link').value.trim();
   const shortDesc = document.getElementById('ap-short').value.trim();
@@ -1445,50 +1571,51 @@ window.submitProduct = async function() {
   const mainImg   = document.getElementById('ap-img').value.trim();
   const editId    = document.getElementById('ap-edit-id').value;
 
-  if (!name || !mainImg) { alert('Please enter product name and img URL.'); return; }
+  if (!name || !mainImg || !pricePkr) {
+    alert('Name, Image URL, and Price are required.');
+    return;
+  }
 
   const extraImgs = Array.from(document.querySelectorAll('.admin-thumb-input'))
     .map(i => i.value.trim()).filter(Boolean);
 
-  const product = { name, price, section, link, shortDesc, fullDesc, mainImg, extraImgs, createdAt: Date.now() };
+  const product = { name, pricePkr, section, link, shortDesc, fullDesc, mainImg, extraImgs, createdAt: Date.now() };
 
   try {
     if (editId) {
       await updateDoc(doc(db, 'products', editId), product);
-      showMsg('✓ "' + name + '" update successful!');
+      showMsg('✓ "' + name + '" updated!');
     } else {
       await addDoc(col, product);
-      // onSnapshot automatically trigger hoga — manual card add ki zaroorat nahi
       openSection(section);
-      showMsg('✓ "' + name + '" Added to the store!');
+      showMsg('✓ "' + name + '" added to store!');
     }
     clearAdminForm();
   } catch (e) {
     console.error('Save error:', e);
-    alert('Product not saved. Check Console.');
+    alert('Could not save product. Check console.');
   }
 };
 
-// ── Edit ──────────────────────────────────────────────
+// Edit: Load product data into the form
 window.editProduct = function(docId) {
   const p = window.firestoreProducts.find(x => x.id === docId);
   if (!p) return;
-
   switchAdminTab('add');
-  document.getElementById('ap-name').value    = p.name      || '';
-  document.getElementById('ap-price').value   = p.price     || '';
-  document.getElementById('ap-section').value = p.section   || 'beauty';
-  document.getElementById('ap-link').value    = p.link      || '';
-  document.getElementById('ap-short').value   = p.shortDesc || '';
-  document.getElementById('ap-full').value    = p.fullDesc  || '';
-  document.getElementById('ap-img').value     = p.mainImg   || '';
-  document.getElementById('ap-edit-id').value = docId;
+  document.getElementById('ap-name').value      = p.name      || '';
+  document.getElementById('ap-price-pkr').value = p.pricePkr  || '';
+  document.getElementById('ap-section').value   = p.section   || 'beauty';
+  document.getElementById('ap-link').value      = p.link      || '';
+  document.getElementById('ap-short').value     = p.shortDesc || '';
+  document.getElementById('ap-full').value      = p.fullDesc  || '';
+  document.getElementById('ap-img').value       = p.mainImg   || '';
+  document.getElementById('ap-edit-id').value   = docId;
   document.getElementById('ap-submit-btn').textContent = 'Save Changes';
 
   const thumbContainer = document.getElementById('thumb-fields');
   thumbContainer.innerHTML = '';
   (p.extraImgs || []).forEach(src => {
-    const wrap = document.createElement('div'); wrap.style.marginTop = '8px';
+    const wrap  = document.createElement('div'); wrap.style.marginTop = '8px';
     const input = document.createElement('input');
     input.type = 'url'; input.className = 'admin-thumb-input'; input.value = src;
     input.style.cssText = 'width:100%;padding:10px 14px;background:rgba(0,0,0,0.4);border:1px solid var(--maroon-mid);border-radius:6px;color:var(--text-main);font-size:13px;outline:none;';
@@ -1496,37 +1623,36 @@ window.editProduct = function(docId) {
   });
 };
 
-// ── Delete ────────────────────────────────────────────
+// Delete product from Firestore
 window.deleteProduct = async function(docId) {
-  if (!confirm('Are you sure and want to delete this product? It cannot be recovered.')) return;
+  if (!confirm('Delete this product permanently?')) return;
   try {
     await deleteDoc(doc(db, 'products', docId));
-    // onSnapshot automatically cards hata dega
     if (window.renderEditList) window.renderEditList();
     showMsg('Product deleted.');
-  } catch(e) { console.error(e); alert('Product not deleted.'); }
+  } catch(e) { console.error(e); alert('Delete failed.'); }
 };
 
-// ── Render edit list ──────────────────────────────────
+// Render the edit/delete list in admin panel
 window.renderEditList = function() {
   const list  = document.getElementById('edit-list');
   const empty = document.getElementById('edit-empty');
   list.innerHTML = '';
 
-  if (!window.firestoreProducts.length) {
-    empty.style.display = 'block';
-    return;
-  }
+  if (!window.firestoreProducts.length) { empty.style.display = 'block'; return; }
   empty.style.display = 'none';
 
   window.firestoreProducts.forEach(p => {
+    const currency      = window.userCurrency || { symbol: 'Rs.', rate: 1 };
+    const displayPrice  = window.convertPrice ? window.convertPrice(p.pricePkr, currency) : 'Rs.' + p.pricePkr;
+
     const item = document.createElement('div');
     item.className = 'edit-item';
     item.innerHTML = `
       <img src="${p.mainImg}" onerror="this.src='https://placehold.co/54x54/1e0510/f5c518?text=?'">
       <div class="edit-item-info">
         <strong>${p.name}</strong>
-        <span>${capitalize(p.section)} · ${p.price}</span>
+        <span>${capitalize(p.section)} · ${displayPrice}</span>
       </div>
       <div class="edit-item-btns">
         <button class="edit-btn edit" onclick="editProduct('${p.id}')">Edit</button>
@@ -1536,20 +1662,20 @@ window.renderEditList = function() {
   });
 };
 
-// ── Page load: static cards ko home mein copy karo ───
+// On page load: copy static cards into the home grid
 window.addEventListener('load', () => {
   const homeGrid = document.getElementById('home-products');
   ['beauty-products','tech-products','gaming-products'].forEach(gridId => {
     document.querySelectorAll('#' + gridId + ' .card').forEach(card => {
-      const clone = card.cloneNode(true);
-      homeGrid.appendChild(clone);
+      homeGrid.appendChild(card.cloneNode(true));
     });
   });
-  // onSnapshot already chal raha hai — firestore cards automatically aayenge
 });
 </script>
 
-<!-- ── Vanilla JS helpers ─────────────────────────── -->
+<!-- =====================================================
+     VANILLA JS HELPERS
+     ===================================================== -->
 <script>
 function openSection(id) {
   document.querySelectorAll('.section').forEach(s => s.classList.remove('active'));
@@ -1584,10 +1710,19 @@ function searchProducts(input) {
   });
 }
 
-// buildCard — global taaki Firebase module bhi use kar sake
+// --------------------------------------------------
+// Build a product card — used for Firestore products
+// Automatically converts PKR price to user's currency
+// --------------------------------------------------
 window.buildCard = function(p, docId) {
-  const allImgs    = [p.mainImg, ...(p.extraImgs || [])].filter(Boolean);
+  const allImgs     = [p.mainImg, ...(p.extraImgs || [])].filter(Boolean);
   const hasMultiple = allImgs.length > 1;
+
+  // Convert price using detected currency
+  const currency    = window.userCurrency || { symbol: 'Rs.', rate: 1 };
+  const priceText   = p.pricePkr
+    ? window.convertPrice(p.pricePkr, currency)
+    : (p.price || 'N/A');
 
   let inner = hasMultiple
     ? `<div class="product-gallery">
@@ -1603,15 +1738,24 @@ window.buildCard = function(p, docId) {
     <p class="short-desc">${p.shortDesc || ''}</p>
     <p class="full-desc">${p.fullDesc || ''}</p>
     <button class="details-btn" onclick="toggleDetails(this)">Details</button>
-    <div class="price">${p.price}</div>
+    <div class="price">${priceText}</div>
     <a href="${p.link || '#'}" class="btn" target="_blank">Buy Now</a>
   </div>`;
 
   const card = document.createElement('div');
   card.className = 'card';
+  if (p.pricePkr) card.setAttribute('data-price-pkr', p.pricePkr);
   if (docId) card.setAttribute('data-id', docId);
   card.innerHTML = inner;
   return card;
+};
+
+// Make convertPrice available globally (used in renderEditList too)
+window.convertPrice = function(pkrAmount, currency) {
+  const converted = pkrAmount * currency.rate;
+  if (converted < 1)  return currency.symbol + converted.toFixed(3);
+  if (converted < 10) return currency.symbol + converted.toFixed(2);
+  return currency.symbol + Math.round(converted).toLocaleString();
 };
 
 function showMsg(text) {
@@ -1637,7 +1781,7 @@ function addThumbField() {
 }
 
 function clearAdminForm() {
-  ['ap-name','ap-price','ap-link','ap-short','ap-full','ap-img'].forEach(id => {
+  ['ap-name','ap-price-pkr','ap-link','ap-short','ap-full','ap-img'].forEach(id => {
     const el = document.getElementById(id); if (el) el.value = '';
   });
   document.getElementById('thumb-fields').innerHTML    = '';
@@ -1664,6 +1808,7 @@ function capitalize(str) {
   return str ? str.charAt(0).toUpperCase() + str.slice(1) : '';
 }
 
+// Open admin panel with Ctrl+Shift+A keyboard shortcut
 document.addEventListener('keydown', e => {
   if (e.ctrlKey && e.shiftKey && e.key.toLowerCase() === 'a') {
     e.preventDefault();
@@ -1671,6 +1816,7 @@ document.addEventListener('keydown', e => {
   }
 });
 </script>
+
 
 </body>
 </html>
