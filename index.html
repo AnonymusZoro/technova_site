@@ -1286,536 +1286,695 @@ button,a
     </div>
   </div>
 </div>
-<!-- =====================================================
-     CURRENCY DETECTION SYSTEM
-     - Detects user's country via free IP geolocation API
-     - Converts PKR prices to local currency using exchange rates
-     - Updates all .price elements on the page automatically
-     - Falls back to PKR if detection fails
-     ===================================================== -->
-<script>
-// --------------------------------------------------
-// CURRENCY CONFIG
-// Each entry: { symbol, flag, rate (vs PKR) }
-// Rate = how many units of that currency = 1 PKR
-// Example: 1 PKR = 0.0036 USD, so USD rate = 0.0036
-// --------------------------------------------------
-const CURRENCY_MAP = {
-  // Pakistan — base currency, no conversion needed
-  PK: { code: 'PKR', symbol: 'Rs.',   flag: '🇵🇰', rate: 1 },
 
-  // United States
-  US: { code: 'USD', symbol: '$',     flag: '🇺🇸', rate: 0.0036 },
+ <!-- =====================================================
+       CURRENCY SYSTEM (pure JS — no HTML changes needed)
 
-  // United Kingdom
-  GB: { code: 'GBP', symbol: '£',     flag: '🇬🇧', rate: 0.0028 },
+       Flow:
+       1. Detect user country via ip-api.com (free, no key)
+       2. Pick matching currency from config table
+       3. Read Rs. prices from all .price elements
+       4. Convert and update price text
+       5. MutationObserver auto-converts Firebase cards too
+       ===================================================== -->
+  <script>
+    (function () {
 
-  // European Union countries
-  DE: { code: 'EUR', symbol: '€',     flag: '🇩🇪', rate: 0.0033 },
-  FR: { code: 'EUR', symbol: '€',     flag: '🇫🇷', rate: 0.0033 },
-  IT: { code: 'EUR', symbol: '€',     flag: '🇮🇹', rate: 0.0033 },
-  ES: { code: 'EUR', symbol: '€',     flag: '🇪🇸', rate: 0.0033 },
-  NL: { code: 'EUR', symbol: '€',     flag: '🇳🇱', rate: 0.0033 },
+      // Currency config — rate = value of 1 PKR in that currency
+      const CURRENCIES = {
+        PK: { code: 'PKR', symbol: 'Rs.', flag: '🇵🇰', rate: 1       },
+        US: { code: 'USD', symbol: '$',   flag: '🇺🇸', rate: 0.0036  },
+        GB: { code: 'GBP', symbol: '£',   flag: '🇬🇧', rate: 0.0028  },
+        DE: { code: 'EUR', symbol: '€',   flag: '🇩🇪', rate: 0.0033  },
+        FR: { code: 'EUR', symbol: '€',   flag: '🇫🇷', rate: 0.0033  },
+        IT: { code: 'EUR', symbol: '€',   flag: '🇮🇹', rate: 0.0033  },
+        ES: { code: 'EUR', symbol: '€',   flag: '🇪🇸', rate: 0.0033  },
+        NL: { code: 'EUR', symbol: '€',   flag: '🇳🇱', rate: 0.0033  },
+        AE: { code: 'AED', symbol: 'AED ',flag: '🇦🇪', rate: 0.013   },
+        SA: { code: 'SAR', symbol: 'SAR ',flag: '🇸🇦', rate: 0.0135  },
+        IN: { code: 'INR', symbol: '₹',   flag: '🇮🇳', rate: 0.30    },
+        CA: { code: 'CAD', symbol: 'CA$', flag: '🇨🇦', rate: 0.0049  },
+        AU: { code: 'AUD', symbol: 'A$',  flag: '🇦🇺', rate: 0.0055  },
+        CN: { code: 'CNY', symbol: '¥',   flag: '🇨🇳', rate: 0.026   },
+        TR: { code: 'TRY', symbol: '₺',   flag: '🇹🇷', rate: 0.12    },
+        BD: { code: 'BDT', symbol: '৳',   flag: '🇧🇩', rate: 0.43    },
+        QA: { code: 'QAR', symbol: 'QAR ',flag: '🇶🇦', rate: 0.013   },
+        KW: { code: 'KWD', symbol: 'KD ', flag: '🇰🇼', rate: 0.0011  },
+      };
 
-  // United Arab Emirates
-  AE: { code: 'AED', symbol: 'AED',   flag: '🇦🇪', rate: 0.013 },
+      const DEFAULT = CURRENCIES['PK'];
 
-  // Saudi Arabia
-  SA: { code: 'SAR', symbol: 'SAR',   flag: '🇸🇦', rate: 0.0135 },
+      // Strip non-numeric chars from price text and return the number
+      function extractPkr(text) {
+        const num = parseFloat(text.replace(/[^\d.]/g, ''));
+        return isNaN(num) ? null : num;
+      }
 
-  // India
-  IN: { code: 'INR', symbol: '₹',     flag: '🇮🇳', rate: 0.30 },
+      // Convert PKR amount to display string in user's currency
+      function formatPrice(pkr, currency) {
+        const val = pkr * currency.rate;
+        if (val < 1)  return currency.symbol + val.toFixed(3);
+        if (val < 10) return currency.symbol + val.toFixed(2);
+        return currency.symbol + Math.round(val).toLocaleString();
+      }
 
-  // Canada
-  CA: { code: 'CAD', symbol: 'CA$',   flag: '🇨🇦', rate: 0.0049 },
+      // Convert a single .price element, skip if already done or non-PKR
+      function convertEl(el, currency) {
+        if (el.dataset.converted) return;
 
-  // Australia
-  AU: { code: 'AUD', symbol: 'A$',    flag: '🇦🇺', rate: 0.0055 },
+        const text  = el.textContent.trim();
+        const isPkr = /Rs|₨|\brs\b/i.test(text);
 
-  // China
-  CN: { code: 'CNY', symbol: '¥',     flag: '🇨🇳', rate: 0.026 },
+        if (!isPkr) {
+          el.dataset.converted = 'skip';
+          return;
+        }
 
-  // Turkey
-  TR: { code: 'TRY', symbol: '₺',     flag: '🇹🇷', rate: 0.12 },
+        const pkr = extractPkr(text);
+        if (!pkr) return;
 
-  // Bangladesh
-  BD: { code: 'BDT', symbol: '৳',     flag: '🇧🇩', rate: 0.43 },
+        el.dataset.pkr       = pkr;
+        el.dataset.converted = 'yes';
+        el.textContent       = formatPrice(pkr, currency);
+      }
 
-  // Default fallback — if country not in the list above, show PKR
-  DEFAULT: { code: 'PKR', symbol: 'Rs.', flag: '🌍', rate: 1 }
-};
+      // Convert all .price elements on the page right now
+      function convertAll(currency) {
+        document.querySelectorAll('.price').forEach(el => convertEl(el, currency));
+      }
 
-// Store detected currency globally so Firestore cards can also use it
-window.userCurrency = CURRENCY_MAP['DEFAULT'];
-window.userCountry  = 'PK'; // default assumption
+      // Inject currency flag badge next to logo in header
+      function showBadge(currency) {
+        if (document.getElementById('zn-badge')) return;
 
-// --------------------------------------------------
-// STEP 1: Detect user's country via IP geolocation
-// Using ip-api.com — free, no API key needed
-// --------------------------------------------------
-async function detectCountry() {
-  try {
-    const res  = await fetch('https://ip-api.com/json/?fields=countryCode');
-    const data = await res.json();
-    return data.countryCode || 'PK';
-  } catch (e) {
-    // If API fails (network issue etc.), default to PK
-    console.warn('Currency detection failed, defaulting to PKR');
-    return 'PK';
-  }
-}
+        const badge = document.createElement('span');
+        badge.id    = 'zn-badge';
+        badge.textContent = currency.flag + ' ' + currency.code;
+        badge.style.cssText = [
+          'font-size:11px',
+          'font-weight:700',
+          'letter-spacing:1px',
+          'color:var(--bg-deep,#0d0205)',
+          'background:var(--accent,#f5c518)',
+          'padding:3px 10px',
+          'border-radius:20px',
+          'margin-left:12px',
+          'vertical-align:middle',
+          'font-family:Orbitron,monospace',
+          'white-space:nowrap',
+        ].join(';');
 
-// --------------------------------------------------
-// STEP 2: Convert a PKR amount to user's currency
-// --------------------------------------------------
-function convertPrice(pkrAmount, currency) {
-  const converted = pkrAmount * currency.rate;
+        const logo   = document.querySelector('.logo');
+        const header = document.querySelector('header');
 
-  // Format nicely based on amount size
-  if (converted < 1) {
-    return currency.symbol + converted.toFixed(3);
-  } else if (converted < 10) {
-    return currency.symbol + converted.toFixed(2);
-  } else {
-    // Add comma separators for large numbers
-    return currency.symbol + Math.round(converted).toLocaleString();
-  }
-}
+        if (logo && logo.parentNode) {
+          logo.parentNode.insertBefore(badge, logo.nextSibling);
+        } else if (header) {
+          header.appendChild(badge);
+        }
+      }
 
-// --------------------------------------------------
-// STEP 3: Update all static card prices on the page
-// Each static card has data-price-pkr="AMOUNT" attribute
-// --------------------------------------------------
-function updateAllPrices() {
-  const currency = window.userCurrency;
+      // Watch for new cards added dynamically by Firebase and convert them
+      function watchNewCards(currency) {
+        const observer = new MutationObserver(mutations => {
+          mutations.forEach(mutation => {
+            mutation.addedNodes.forEach(node => {
+              if (node.nodeType !== 1) return;
 
-  document.querySelectorAll('.card[data-price-pkr]').forEach(card => {
-    const pkrAmount  = parseFloat(card.getAttribute('data-price-pkr'));
-    const priceEl    = card.querySelector('.price');
-    if (priceEl && pkrAmount) {
-      priceEl.textContent = convertPrice(pkrAmount, currency);
-    }
-  });
-}
+              if (node.classList && node.classList.contains('price')) {
+                convertEl(node, currency);
+              }
 
-// --------------------------------------------------
-// STEP 4: Update the currency badge in the header
-// --------------------------------------------------
-function updateBadge() {
-  const badge = document.getElementById('currency-badge');
-  if (badge) {
-    badge.textContent = window.userCurrency.flag + ' ' + window.userCurrency.code;
-  }
-}
+              node.querySelectorAll && node.querySelectorAll('.price').forEach(el => {
+                convertEl(el, currency);
+              });
+            });
+          });
+        });
 
-// --------------------------------------------------
-// MAIN: Run detection then update everything
-// --------------------------------------------------
-async function initCurrency() {
-  const countryCode    = await detectCountry();
-  window.userCountry   = countryCode;
-  window.userCurrency  = CURRENCY_MAP[countryCode] || CURRENCY_MAP['DEFAULT'];
+        observer.observe(document.body, { childList: true, subtree: true });
+      }
 
-  updateBadge();
-  updateAllPrices();
-}
+      // Entry point: detect country then run everything
+      // Tries 3 different free APIs in order — if one fails, tries next
+      async function detectCountry() {
+        // API 1: ipapi.co — HTTPS, free, no key needed
+        try {
+          const res  = await fetch('https://ipapi.co/json/', { signal: AbortSignal.timeout(4000) });
+          const data = await res.json();
+          if (data.country_code) return data.country_code;
+        } catch (e) {}
 
-// Run on page load
-initCurrency();
-</script>
+        // API 2: freeipapi.com — HTTPS, free backup
+        try {
+          const res  = await fetch('https://freeipapi.com/api/json', { signal: AbortSignal.timeout(4000) });
+          const data = await res.json();
+          if (data.countryCode) return data.countryCode;
+        } catch (e) {}
 
-<!-- =====================================================
-     FIREBASE MODULE — Real-time product sync
-     ===================================================== -->
+        // API 3: ip-api.com — HTTP fallback (works on HTTP sites)
+        try {
+          const res  = await fetch('http://ip-api.com/json/?fields=countryCode', { signal: AbortSignal.timeout(4000) });
+          const data = await res.json();
+          if (data.countryCode) return data.countryCode;
+        } catch (e) {}
+
+        return null; // All APIs failed — will use default PKR
+      }
+
+      async function init() {
+        let currency = DEFAULT;
+
+        try {
+          const countryCode = await detectCountry();
+          if (countryCode) {
+            currency = CURRENCIES[countryCode] || DEFAULT;
+          } else {
+            console.warn('[Zenova] All currency APIs failed, using PKR.');
+          }
+        } catch (e) {
+          console.warn('[Zenova] Currency detection error:', e);
+        }
+
+        // Store globally so Firebase buildCard and formatPrice can use it
+        window.userCurrency = currency;
+
+        showBadge(currency);
+        convertAll(currency);
+        watchNewCards(currency);
+      }
+
+      // Wait for DOM if still loading, otherwise run immediately
+      if (document.readyState === 'loading') {
+        document.addEventListener('DOMContentLoaded', init);
+      } else {
+        init();
+      }
+
+    })();
+  </script>
+
+
+  <!-- =====================================================
+       FIREBASE — Real-time Firestore sync
+       ===================================================== -->
+    <!-- =====================================================
+       GLOBAL DISPATCHER
+       Buttons call these functions which wait for Firebase to load
+       This fixes the type="module" async timing issue
+       ===================================================== -->
+  <script>
+    // Queue that holds the real Firebase functions once module loads
+    window._fb = {};
+
+    // Safe wrappers — these are called by onclick buttons immediately
+    // They wait for Firebase module to set window._fb functions
+    function submitProduct()  { window._fb.submitProduct  ? window._fb.submitProduct()  : alert('Store abhi load ho raha hai, 2 second mein try karein.'); }
+    function adminLogin()     { window._fb.adminLogin     ? window._fb.adminLogin()     : alert('Store abhi load ho raha hai.'); }
+    function adminLogout()    { window._fb.adminLogout    ? window._fb.adminLogout()    : null; }
+    function editProduct(id)  { window._fb.editProduct    ? window._fb.editProduct(id)  : null; }
+    function deleteProduct(id){ window._fb.deleteProduct  ? window._fb.deleteProduct(id): null; }
+  </script>
+
 <script type="module">
-import { initializeApp }
-  from "https://www.gstatic.com/firebasejs/10.12.2/firebase-app.js";
-import { getAuth, signInWithEmailAndPassword, signOut, onAuthStateChanged }
-  from "https://www.gstatic.com/firebasejs/10.12.2/firebase-auth.js";
-import { getFirestore, collection, addDoc, getDocs, doc, updateDoc, deleteDoc, onSnapshot }
-  from "https://www.gstatic.com/firebasejs/10.12.2/firebase-firestore.js";
 
-const firebaseConfig = {
-  apiKey:            "AIzaSyD1H6TClrILVXaPX-7FidvVZmpJLsvumPk",
-  authDomain:        "zenova-store.firebaseapp.com",
-  projectId:         "zenova-store",
-  storageBucket:     "zenova-store.firebasestorage.app",
-  messagingSenderId: "1086423258032",
-  appId:             "1:1086423258032:web:5e39a8196fc3763188fc75"
-};
+    import { initializeApp }
+      from "https://www.gstatic.com/firebasejs/10.12.2/firebase-app.js";
 
-const app  = initializeApp(firebaseConfig);
-const auth = getAuth(app);
-const db   = getFirestore(app);
-const col  = collection(db, 'products');
+    import { getAuth, signInWithEmailAndPassword, signOut, onAuthStateChanged }
+      from "https://www.gstatic.com/firebasejs/10.12.2/firebase-auth.js";
 
-// Global array accessible by vanilla JS functions
-window.firestoreProducts = [];
+    import { getFirestore, collection, addDoc, doc, updateDoc, deleteDoc, onSnapshot }
+      from "https://www.gstatic.com/firebasejs/10.12.2/firebase-firestore.js";
 
-// Auth state: show/hide admin screens
-onAuthStateChanged(auth, (user) => {
-  document.getElementById('admin-login-screen').style.display   = user ? 'none'  : 'block';
-  document.getElementById('admin-content-screen').style.display = user ? 'block' : 'none';
-});
+    const firebaseConfig = {
+      apiKey:            "AIzaSyD1H6TClrILVXaPX-7FidvVZmpJLsvumPk",
+      authDomain:        "zenova-store.firebaseapp.com",
+      projectId:         "zenova-store",
+      storageBucket:     "zenova-store.firebasestorage.app",
+      messagingSenderId: "1086423258032",
+      appId:             "1:1086423258032:web:5e39a8196fc3763188fc75"
+    };
 
-// --------------------------------------------------
-// Real-time listener: fires on every Firestore change
-// Updates array, re-renders home grid and category grids
-// --------------------------------------------------
-onSnapshot(col, (snapshot) => {
-  window.firestoreProducts = [];
-  snapshot.forEach(d => window.firestoreProducts.push({ id: d.id, ...d.data() }));
+    const app  = initializeApp(firebaseConfig);
+    const auth = getAuth(app);
+    const db   = getFirestore(app);
+    const col  = collection(db, 'products');
 
-  renderHomeGrid();
-  renderCategoryFirestoreCards();
+    // Shared products array — accessible from vanilla JS functions
+    window.firestoreProducts = [];
 
-  // Hide loading spinner once data arrives
-  const loader = document.getElementById('home-loading');
-  if (loader) loader.style.display = 'none';
-});
+    // Show/hide admin panel based on login state
+    onAuthStateChanged(auth, (user) => {
+      document.getElementById('admin-login-screen').style.display   = user ? 'none'  : 'block';
+      document.getElementById('admin-content-screen').style.display = user ? 'block' : 'none';
+    });
 
-// --------------------------------------------------
-// Render home grid: static cards + Firestore cards shuffled
-// --------------------------------------------------
-function renderHomeGrid() {
-  const homeGrid = document.getElementById('home-products');
-  if (!homeGrid) return;
+    // Real-time listener — fires on every Firestore add/edit/delete
+    onSnapshot(col, (snapshot) => {
+      window.firestoreProducts = [];
+      snapshot.forEach(d => window.firestoreProducts.push({ id: d.id, ...d.data() }));
 
-  // Remove old Firestore cards (keep static ones)
-  homeGrid.querySelectorAll('.card[data-firestore]').forEach(c => c.remove());
+      renderHomeGrid();
+      renderCategoryCards();
 
-  // Build Firestore cards
-  const fsCards = window.firestoreProducts.map(p => {
-    const card = window.buildCard(p, p.id);
-    card.setAttribute('data-firestore', '1');
-    return card;
-  });
+      const loader = document.getElementById('home-loading');
+      if (loader) loader.style.display = 'none';
+    });
 
-  // Collect existing static cards
-  const staticCards = Array.from(homeGrid.querySelectorAll('.card:not([data-firestore])'));
+    // Home grid: static cards + Firestore cards shuffled randomly
+    function renderHomeGrid() {
+      const grid = document.getElementById('home-products');
+      if (!grid) return;
 
-  // Shuffle all cards together using Fisher-Yates algorithm
-  const allCards = [...staticCards, ...fsCards];
-  for (let i = allCards.length - 1; i > 0; i--) {
-    const j = Math.floor(Math.random() * (i + 1));
-    [allCards[i], allCards[j]] = [allCards[j], allCards[i]];
-  }
+      grid.querySelectorAll('.card[data-firestore]').forEach(c => c.remove());
 
-  homeGrid.innerHTML = '';
-  allCards.forEach(card => homeGrid.appendChild(card));
-}
-
-// --------------------------------------------------
-// Render category grids: only Firestore cards per section
-// --------------------------------------------------
-function renderCategoryFirestoreCards() {
-  ['beauty', 'tech', 'gaming'].forEach(section => {
-    const grid = document.getElementById(section + '-products');
-    if (!grid) return;
-
-    // Remove old Firestore cards from this category
-    grid.querySelectorAll('.card[data-firestore]').forEach(c => c.remove());
-
-    // Add fresh Firestore cards for this category
-    window.firestoreProducts
-      .filter(p => p.section === section)
-      .forEach(p => {
+      const fsCards = window.firestoreProducts.map(p => {
         const card = window.buildCard(p, p.id);
         card.setAttribute('data-firestore', '1');
-        grid.appendChild(card);
+        return card;
       });
-  });
-}
 
-// Login
-window.adminLogin = function() {
-  const email  = document.getElementById('admin-email').value.trim();
-  const pass   = document.getElementById('admin-password').value;
-  const errEl  = document.getElementById('login-error');
-  errEl.style.display = 'none';
+      const staticCards = Array.from(grid.querySelectorAll('.card:not([data-firestore])'));
 
-  signInWithEmailAndPassword(auth, email, pass)
-    .then(() => {
-      document.getElementById('admin-email').value    = '';
-      document.getElementById('admin-password').value = '';
-    })
-    .catch(err => {
-      const msgs = {
-        'auth/invalid-email':      'Invalid email address.',
-        'auth/user-not-found':     'No account found.',
-        'auth/wrong-password':     'Incorrect password.',
-        'auth/invalid-credential': 'Invalid email or password.',
-        'auth/too-many-requests':  'Too many attempts. Try later.'
-      };
-      errEl.textContent   = msgs[err.code] || 'Login failed.';
-      errEl.style.display = 'block';
-    });
-};
+      // Fisher-Yates shuffle to randomize card order
+      const all = [...staticCards, ...fsCards];
+      for (let i = all.length - 1; i > 0; i--) {
+        const j = Math.floor(Math.random() * (i + 1));
+        [all[i], all[j]] = [all[j], all[i]];
+      }
 
-// Logout
-window.adminLogout = function() {
-  signOut(auth).then(() => { closeAdmin(); showMsg('Logged out.'); });
-};
-
-// --------------------------------------------------
-// Submit: Add new product OR update existing one
-// Price is entered in PKR — stored as pricePkr in Firestore
-// --------------------------------------------------
-window.submitProduct = async function() {
-  const name      = document.getElementById('ap-name').value.trim();
-  const pricePkr  = parseFloat(document.getElementById('ap-price-pkr').value);
-  const section   = document.getElementById('ap-section').value;
-  const link      = document.getElementById('ap-link').value.trim();
-  const shortDesc = document.getElementById('ap-short').value.trim();
-  const fullDesc  = document.getElementById('ap-full').value.trim();
-  const mainImg   = document.getElementById('ap-img').value.trim();
-  const editId    = document.getElementById('ap-edit-id').value;
-
-  if (!name || !mainImg || !pricePkr) {
-    alert('Name, Image URL, and Price are required.');
-    return;
-  }
-
-  const extraImgs = Array.from(document.querySelectorAll('.admin-thumb-input'))
-    .map(i => i.value.trim()).filter(Boolean);
-
-  const product = { name, pricePkr, section, link, shortDesc, fullDesc, mainImg, extraImgs, createdAt: Date.now() };
-
-  try {
-    if (editId) {
-      await updateDoc(doc(db, 'products', editId), product);
-      showMsg('✓ "' + name + '" updated!');
-    } else {
-      await addDoc(col, product);
-      openSection(section);
-      showMsg('✓ "' + name + '" added to store!');
+      grid.innerHTML = '';
+      all.forEach(card => grid.appendChild(card));
     }
-    clearAdminForm();
-  } catch (e) {
-    console.error('Save error:', e);
-    alert('Could not save product. Check console.');
-  }
-};
 
-// Edit: Load product data into the form
-window.editProduct = function(docId) {
-  const p = window.firestoreProducts.find(x => x.id === docId);
-  if (!p) return;
-  switchAdminTab('add');
-  document.getElementById('ap-name').value      = p.name      || '';
-  document.getElementById('ap-price-pkr').value = p.pricePkr  || '';
-  document.getElementById('ap-section').value   = p.section   || 'beauty';
-  document.getElementById('ap-link').value      = p.link      || '';
-  document.getElementById('ap-short').value     = p.shortDesc || '';
-  document.getElementById('ap-full').value      = p.fullDesc  || '';
-  document.getElementById('ap-img').value       = p.mainImg   || '';
-  document.getElementById('ap-edit-id').value   = docId;
-  document.getElementById('ap-submit-btn').textContent = 'Save Changes';
+    // Category grids: append Firestore cards for each section
+    function renderCategoryCards() {
+      ['beauty', 'tech', 'gaming'].forEach(section => {
+        const grid = document.getElementById(section + '-products');
+        if (!grid) return;
 
-  const thumbContainer = document.getElementById('thumb-fields');
-  thumbContainer.innerHTML = '';
-  (p.extraImgs || []).forEach(src => {
-    const wrap  = document.createElement('div'); wrap.style.marginTop = '8px';
-    const input = document.createElement('input');
-    input.type = 'url'; input.className = 'admin-thumb-input'; input.value = src;
-    input.style.cssText = 'width:100%;padding:10px 14px;background:rgba(0,0,0,0.4);border:1px solid var(--maroon-mid);border-radius:6px;color:var(--text-main);font-size:13px;outline:none;';
-    wrap.appendChild(input); thumbContainer.appendChild(wrap);
-  });
-};
+        grid.querySelectorAll('.card[data-firestore]').forEach(c => c.remove());
 
-// Delete product from Firestore
-window.deleteProduct = async function(docId) {
-  if (!confirm('Delete this product permanently?')) return;
-  try {
-    await deleteDoc(doc(db, 'products', docId));
-    if (window.renderEditList) window.renderEditList();
-    showMsg('Product deleted.');
-  } catch(e) { console.error(e); alert('Delete failed.'); }
-};
+        window.firestoreProducts
+          .filter(p => p.section === section)
+          .forEach(p => {
+            const card = window.buildCard(p, p.id);
+            card.setAttribute('data-firestore', '1');
+            grid.appendChild(card);
+          });
+      });
+    }
 
-// Render the edit/delete list in admin panel
-window.renderEditList = function() {
-  const list  = document.getElementById('edit-list');
-  const empty = document.getElementById('edit-empty');
-  list.innerHTML = '';
+    // Admin: Login with email and password
+    window._fb.adminLogin = function () {
+      const email = document.getElementById('admin-email').value.trim();
+      const pass  = document.getElementById('admin-password').value;
+      const errEl = document.getElementById('login-error');
+      errEl.style.display = 'none';
 
-  if (!window.firestoreProducts.length) { empty.style.display = 'block'; return; }
-  empty.style.display = 'none';
+      signInWithEmailAndPassword(auth, email, pass)
+        .then(() => {
+          document.getElementById('admin-email').value    = '';
+          document.getElementById('admin-password').value = '';
+        })
+        .catch(err => {
+          const msgs = {
+            'auth/invalid-email':      'Invalid email address.',
+            'auth/user-not-found':     'No account found.',
+            'auth/wrong-password':     'Incorrect password.',
+            'auth/invalid-credential': 'Invalid email or password.',
+            'auth/too-many-requests':  'Too many attempts. Try later.',
+          };
+          errEl.textContent   = msgs[err.code] || 'Login failed.';
+          errEl.style.display = 'block';
+        });
+    };
 
-  window.firestoreProducts.forEach(p => {
-    const currency      = window.userCurrency || { symbol: 'Rs.', rate: 1 };
-    const displayPrice  = window.convertPrice ? window.convertPrice(p.pricePkr, currency) : 'Rs.' + p.pricePkr;
+    // Admin: Logout
+    window._fb.adminLogout = function () {
+      signOut(auth).then(() => { closeAdmin(); showMsg('Logged out.'); });
+    };
 
-    const item = document.createElement('div');
-    item.className = 'edit-item';
-    item.innerHTML = `
-      <img src="${p.mainImg}" onerror="this.src='https://placehold.co/54x54/1e0510/f5c518?text=?'">
-      <div class="edit-item-info">
-        <strong>${p.name}</strong>
-        <span>${capitalize(p.section)} · ${displayPrice}</span>
-      </div>
-      <div class="edit-item-btns">
-        <button class="edit-btn edit" onclick="editProduct('${p.id}')">Edit</button>
-        <button class="edit-btn del"  onclick="deleteProduct('${p.id}')">Delete</button>
-      </div>`;
-    list.appendChild(item);
-  });
-};
+    // Admin: Add new product or save edits to existing one
+    window._fb.submitProduct = async function () {
+      const name      = document.getElementById('ap-name').value.trim();
+      const pricePkr  = parseFloat(document.getElementById('ap-price-pkr').value);
+      const section   = document.getElementById('ap-section').value;
+      const link      = document.getElementById('ap-link').value.trim();
+      const shortDesc = document.getElementById('ap-short').value.trim();
+      const fullDesc  = document.getElementById('ap-full').value.trim();
+      const mainImg   = document.getElementById('ap-img').value.trim();
+      const editId    = document.getElementById('ap-edit-id').value;
 
-// On page load: copy static cards into the home grid
-window.addEventListener('load', () => {
-  const homeGrid = document.getElementById('home-products');
-  ['beauty-products','tech-products','gaming-products'].forEach(gridId => {
-    document.querySelectorAll('#' + gridId + ' .card').forEach(card => {
-      homeGrid.appendChild(card.cloneNode(true));
+      if (!name || !mainImg || !pricePkr) {
+        alert('Name, Image URL, and Price (PKR) are required.');
+        return;
+      }
+
+      const extraImgs = Array.from(document.querySelectorAll('.admin-thumb-input'))
+        .map(i => i.value.trim()).filter(Boolean);
+
+      const product = {
+        name, pricePkr, section, link,
+        shortDesc, fullDesc, mainImg, extraImgs,
+        createdAt: Date.now()
+      };
+
+      try {
+        if (editId) {
+          await updateDoc(doc(db, 'products', editId), product);
+          showMsg('✓ "' + name + '" updated!');
+        } else {
+          await addDoc(col, product);
+          openSection(section);
+          showMsg('✓ "' + name + '" added to store!');
+        }
+        clearAdminForm();
+      } catch (e) {
+        console.error('Save error:', e);
+        alert('Could not save product. Check console.');
+      }
+    };
+
+    // Admin: Fill form with existing product data for editing
+    window._fb.editProduct = function (docId) {
+      const p = window.firestoreProducts.find(x => x.id === docId);
+      if (!p) return;
+
+      switchAdminTab('add');
+      document.getElementById('ap-name').value      = p.name      || '';
+      document.getElementById('ap-price-pkr').value = p.pricePkr  || '';
+      document.getElementById('ap-section').value   = p.section   || 'beauty';
+      document.getElementById('ap-link').value      = p.link      || '';
+      document.getElementById('ap-short').value     = p.shortDesc || '';
+      document.getElementById('ap-full').value      = p.fullDesc  || '';
+      document.getElementById('ap-img').value       = p.mainImg   || '';
+      document.getElementById('ap-edit-id').value   = docId;
+      document.getElementById('ap-submit-btn').textContent = 'Save Changes';
+
+      const thumbContainer = document.getElementById('thumb-fields');
+      thumbContainer.innerHTML = '';
+
+      (p.extraImgs || []).forEach(src => {
+        const wrap  = document.createElement('div');
+        wrap.style.marginTop = '8px';
+        const input = document.createElement('input');
+        input.type        = 'url';
+        input.className   = 'admin-thumb-input';
+        input.value       = src;
+        input.style.cssText = 'width:100%;padding:10px 14px;background:rgba(0,0,0,0.4);border:1px solid var(--maroon-mid);border-radius:6px;color:var(--text-main);font-size:13px;outline:none;';
+        wrap.appendChild(input);
+        thumbContainer.appendChild(wrap);
+      });
+    };
+
+    // Admin: Delete product from Firestore
+    window._fb.deleteProduct = async function (docId) {
+      if (!confirm('Delete this product permanently?')) return;
+      try {
+        await deleteDoc(doc(db, 'products', docId));
+        if (window._fb.renderEditList) window._fb.renderEditList();
+        showMsg('Product deleted.');
+      } catch (e) {
+        console.error(e);
+        alert('Delete failed.');
+      }
+    };
+
+    // Admin: Render the edit/delete product list
+    window._fb.renderEditList = function () {
+      const list  = document.getElementById('edit-list');
+      const empty = document.getElementById('edit-empty');
+      list.innerHTML = '';
+
+      if (!window.firestoreProducts.length) {
+        empty.style.display = 'block';
+        return;
+      }
+      empty.style.display = 'none';
+
+      window.firestoreProducts.forEach(p => {
+        const currency     = window.userCurrency || { symbol: 'Rs.', rate: 1 };
+        const displayPrice = p.pricePkr ? window.convertPrice(p.pricePkr, currency) : 'N/A';
+
+        const item = document.createElement('div');
+        item.className = 'edit-item';
+        item.innerHTML = `
+          <img src="${p.mainImg}" onerror="this.src='https://placehold.co/54x54/1e0510/f5c518?text=?'">
+          <div class="edit-item-info">
+            <strong>${p.name}</strong>
+            <span>${capitalize(p.section)} · ${displayPrice}</span>
+          </div>
+          <div class="edit-item-btns">
+            <button class="edit-btn edit" onclick="editProduct('${p.id}')">Edit</button>
+            <button class="edit-btn del"  onclick="deleteProduct('${p.id}')">Delete</button>
+          </div>
+        `;
+        list.appendChild(item);
+      });
+    };
+
+    // On page load: clone static cards from category grids into home grid
+    window.addEventListener('load', () => {
+      const homeGrid = document.getElementById('home-products');
+      ['beauty-products', 'tech-products', 'gaming-products'].forEach(gridId => {
+        document.querySelectorAll('#' + gridId + ' .card').forEach(card => {
+          homeGrid.appendChild(card.cloneNode(true));
+        });
+      });
     });
-  });
-});
-</script>
 
-<!-- =====================================================
-     VANILLA JS HELPERS
-     ===================================================== -->
-<script>
-function openSection(id) {
-  document.querySelectorAll('.section').forEach(s => s.classList.remove('active'));
-  document.querySelectorAll('.tab-btn').forEach(b => b.classList.remove('active'));
-  document.getElementById(id).classList.add('active');
-  document.querySelectorAll('.tab-btn').forEach(b => {
-    if (b.textContent.trim().toLowerCase() === id) b.classList.add('active');
-  });
-  const el = document.getElementById(id);
-  window.scrollTo({ top: el.getBoundingClientRect().top + window.scrollY - 80, behavior:'smooth' });
-}
+  </script>
 
-function toggleDetails(btn) {
-  const fd = btn.closest('.card-content').querySelector('.full-desc');
-  if (fd.style.display === 'block') { fd.style.display='none'; btn.textContent='Details'; }
-  else { fd.style.display='block'; btn.textContent='Hide'; }
-}
 
-function changeImage(thumb) {
-  const gallery = thumb.closest('.product-gallery');
-  gallery.querySelector('.main-image').src = thumb.src;
-  gallery.querySelectorAll('.thumb').forEach(t => t.classList.remove('active'));
-  thumb.classList.add('active');
-}
+  <!-- =====================================================
+       VANILLA JS HELPERS
+       ===================================================== -->
+  <script>
 
-function searchProducts(input) {
-  const filter = input.value.trim().toLowerCase();
-  input.closest('.section').querySelectorAll('.card').forEach(card => {
-    const title = (card.querySelector('h3')?.textContent || '').toLowerCase();
-    const desc  = (card.querySelector('.short-desc')?.textContent || '').toLowerCase();
-    card.style.display = (!filter || title.includes(filter) || desc.includes(filter)) ? '' : 'none';
-  });
-}
+    // Switch between page sections (home, beauty, tech, gaming)
+    function openSection(id) {
+      document.querySelectorAll('.section').forEach(s => s.classList.remove('active'));
+      document.querySelectorAll('.tab-btn').forEach(b => b.classList.remove('active'));
+      document.getElementById(id).classList.add('active');
+      document.querySelectorAll('.tab-btn').forEach(b => {
+        if (b.textContent.trim().toLowerCase() === id) b.classList.add('active');
+      });
+      const el = document.getElementById(id);
+      window.scrollTo({ top: el.getBoundingClientRect().top + window.scrollY - 80, behavior: 'smooth' });
+    }
 
-// --------------------------------------------------
-// Build a product card — used for Firestore products
-// Automatically converts PKR price to user's currency
-// --------------------------------------------------
-window.buildCard = function(p, docId) {
-  const allImgs     = [p.mainImg, ...(p.extraImgs || [])].filter(Boolean);
-  const hasMultiple = allImgs.length > 1;
+    // Toggle show/hide of full product description
+    function toggleDetails(btn) {
+      const fd = btn.closest('.card-content').querySelector('.full-desc');
+      if (fd.style.display === 'block') {
+        fd.style.display = 'none';
+        btn.textContent  = 'Details';
+      } else {
+        fd.style.display = 'block';
+        btn.textContent  = 'Hide';
+      }
+    }
 
-  // Convert price using detected currency
-  const currency    = window.userCurrency || { symbol: 'Rs.', rate: 1 };
-  const priceText   = p.pricePkr
-    ? window.convertPrice(p.pricePkr, currency)
-    : (p.price || 'N/A');
+    // Swap main image when a thumbnail is clicked
+    function changeImage(thumb) {
+      const gallery = thumb.closest('.product-gallery');
+      gallery.querySelector('.main-image').src = thumb.src;
+      gallery.querySelectorAll('.thumb').forEach(t => t.classList.remove('active'));
+      thumb.classList.add('active');
+    }
 
-  let inner = hasMultiple
-    ? `<div class="product-gallery">
-         <img src="${p.mainImg}" class="main-image">
-         <div class="thumbnails">
-           ${allImgs.map((src,i) => `<img src="${src}" class="thumb ${i===0?'active':''}" onclick="changeImage(this)">`).join('')}
-         </div>
-       </div>`
-    : `<img src="${p.mainImg}" style="width:100%;max-height:220px;object-fit:cover;display:block;">`;
+    // Filter cards in current section by search term
+    function searchProducts(input) {
+      const filter = input.value.trim().toLowerCase();
+      input.closest('.section').querySelectorAll('.card').forEach(card => {
+        const title = (card.querySelector('h3')?.textContent || '').toLowerCase();
+        const desc  = (card.querySelector('.short-desc')?.textContent || '').toLowerCase();
+        card.style.display = (!filter || title.includes(filter) || desc.includes(filter)) ? '' : 'none';
+      });
+    }
 
-  inner += `<div class="card-content">
-    <h3>${p.name}</h3>
-    <p class="short-desc">${p.shortDesc || ''}</p>
-    <p class="full-desc">${p.fullDesc || ''}</p>
-    <button class="details-btn" onclick="toggleDetails(this)">Details</button>
-    <div class="price">${priceText}</div>
-    <a href="${p.link || '#'}" class="btn" target="_blank">Buy Now</a>
-  </div>`;
+    // Build a product card element from Firestore product data
+    // Price is automatically converted to user's local currency
+    // Convert any image URL to JPG using Canvas API
+    // Returns a Promise that resolves to a JPG data URL
+    // If conversion fails (CORS block), returns the original URL as fallback
+    window.convertToJpg = function (imageUrl) {
+      return new Promise((resolve) => {
+        const img    = new Image();
+        img.crossOrigin = 'anonymous'; // Required for Canvas to read cross-origin images
 
-  const card = document.createElement('div');
-  card.className = 'card';
-  if (p.pricePkr) card.setAttribute('data-price-pkr', p.pricePkr);
-  if (docId) card.setAttribute('data-id', docId);
-  card.innerHTML = inner;
-  return card;
-};
+        img.onload = function () {
+          try {
+            // Draw image onto an invisible canvas, then export as JPG
+            const canvas    = document.createElement('canvas');
+            canvas.width    = img.naturalWidth;
+            canvas.height   = img.naturalHeight;
+            const ctx       = canvas.getContext('2d');
+            ctx.drawImage(img, 0, 0);
+            const jpgDataUrl = canvas.toDataURL('image/jpeg', 0.92); // 92% quality JPG
+            resolve(jpgDataUrl);
+          } catch (e) {
+            // Canvas tainted by CORS — fall back to original URL
+            console.warn('[Zenova] Canvas conversion blocked (CORS), using original:', imageUrl);
+            resolve(imageUrl);
+          }
+        };
 
-// Make convertPrice available globally (used in renderEditList too)
-window.convertPrice = function(pkrAmount, currency) {
-  const converted = pkrAmount * currency.rate;
-  if (converted < 1)  return currency.symbol + converted.toFixed(3);
-  if (converted < 10) return currency.symbol + converted.toFixed(2);
-  return currency.symbol + Math.round(converted).toLocaleString();
-};
+        img.onerror = function () {
+          // Image failed to load — return original URL
+          resolve(imageUrl);
+        };
 
-function showMsg(text) {
-  const msg = document.getElementById('admin-msg');
-  if (!msg) return;
-  msg.style.display = 'block'; msg.textContent = text;
-  setTimeout(() => msg.style.display = 'none', 3000);
-}
+        img.src = imageUrl;
+      });
+    };
 
-function closeAdmin() {
-  document.getElementById('admin-panel').classList.remove('open');
-}
+    // After all images on page load, convert them to JPG in the background
+    // This makes right-click save also give JPG
+    window.convertPageImagesToJpg = async function () {
+      const allCardImgs = document.querySelectorAll('.card img.main-image, .card > img');
+      allCardImgs.forEach(async (img) => {
+        if (img.dataset.jpgConverted) return; // Skip already converted
+        const jpgUrl = await window.convertToJpg(img.src);
+        if (jpgUrl !== img.src && jpgUrl.startsWith('data:image/jpeg')) {
+          img.src = jpgUrl; // Replace src with JPG data URL
+        }
+        img.dataset.jpgConverted = 'yes';
+      });
+    };
 
-function addThumbField() {
-  const container = document.getElementById('thumb-fields');
-  if (container.children.length >= 3) return;
-  const wrap  = document.createElement('div'); wrap.style.marginTop = '8px';
-  const input = document.createElement('input');
-  input.type = 'url'; input.className = 'admin-thumb-input';
-  input.placeholder = 'Extra image URL ' + (container.children.length + 2);
-  input.style.cssText = 'width:100%;padding:10px 14px;background:rgba(0,0,0,0.4);border:1px solid var(--maroon-mid);border-radius:6px;color:var(--text-main);font-size:13px;outline:none;';
-  wrap.appendChild(input); container.appendChild(wrap);
-}
+    // Build a product card element from Firestore product data
+    // Price is automatically converted to user's local currency
+    window.buildCard = function (p, docId) {
+      const allImgs     = [p.mainImg, ...(p.extraImgs || [])].filter(Boolean);
+      const hasMultiple = allImgs.length > 1;
+      const currency    = window.userCurrency || { symbol: 'Rs.', rate: 1 };
+      const priceText   = p.pricePkr ? window.convertPrice(p.pricePkr, currency) : 'N/A';
 
-function clearAdminForm() {
-  ['ap-name','ap-price-pkr','ap-link','ap-short','ap-full','ap-img'].forEach(id => {
-    const el = document.getElementById(id); if (el) el.value = '';
-  });
-  document.getElementById('thumb-fields').innerHTML    = '';
-  document.getElementById('ap-edit-id').value          = '';
-  document.getElementById('ap-submit-btn').textContent = 'Add Product to Store';
-}
+      let inner = hasMultiple
+        ? `<div class="product-gallery">
+             <img src="${p.mainImg}" class="main-image" crossorigin="anonymous">
+             <div class="thumbnails">
+               ${allImgs.map((src, i) => `<img src="${src}" class="thumb ${i === 0 ? 'active' : ''}" crossorigin="anonymous" onclick="changeImage(this)">`).join('')}
+             </div>
+           </div>`
+        : `<img src="${p.mainImg}" crossorigin="anonymous" style="width:100%;max-height:220px;object-fit:cover;display:block;">`;
 
-function switchAdminTab(tab) {
-  const tabs = document.querySelectorAll('.admin-tab');
-  if (tab === 'add') {
-    document.getElementById('tab-add').style.display  = '';
-    document.getElementById('tab-edit').style.display = 'none';
-    tabs[0].classList.add('active'); tabs[1].classList.remove('active');
-    clearAdminForm();
-  } else {
-    document.getElementById('tab-add').style.display  = 'none';
-    document.getElementById('tab-edit').style.display = '';
-    tabs[1].classList.add('active'); tabs[0].classList.remove('active');
-    if (window.renderEditList) window.renderEditList();
-  }
-}
+      inner += `
+        <div class="card-content">
+          <h3>${p.name}</h3>
+          <p class="short-desc">${p.shortDesc || ''}</p>
+          <p class="full-desc">${p.fullDesc || ''}</p>
+          <button class="details-btn" onclick="toggleDetails(this)">Details</button>
+          <div class="price">${priceText}</div>
+          <a href="${p.link || '#'}" class="btn" target="_blank">Buy Now</a>
+        </div>
+      `;
 
-function capitalize(str) {
-  return str ? str.charAt(0).toUpperCase() + str.slice(1) : '';
-}
+      const card = document.createElement('div');
+      card.className = 'card';
+      if (p.pricePkr) card.setAttribute('data-price-pkr', p.pricePkr);
+      if (docId)      card.setAttribute('data-id', docId);
+      card.innerHTML  = inner;
+      return card;
+    };
 
-// Open admin panel with Ctrl+Shift+A keyboard shortcut
-document.addEventListener('keydown', e => {
-  if (e.ctrlKey && e.shiftKey && e.key.toLowerCase() === 'a') {
-    e.preventDefault();
-    document.getElementById('admin-panel').classList.add('open');
-  }
-});
-</script>
+    // window.convertPrice is defined in the currency system above — used everywhere
+
+    // Show a temporary message in admin panel
+    function showMsg(text) {
+      const msg = document.getElementById('admin-msg');
+      if (!msg) return;
+      msg.style.display = 'block';
+      msg.textContent   = text;
+      setTimeout(() => msg.style.display = 'none', 3000);
+    }
+
+    // Close admin panel overlay
+    function closeAdmin() {
+      document.getElementById('admin-panel').classList.remove('open');
+    }
+
+    // Add an extra image URL input field in admin form
+    function addThumbField() {
+      const container = document.getElementById('thumb-fields');
+      if (container.children.length >= 3) return;
+
+      const wrap  = document.createElement('div');
+      wrap.style.marginTop = '8px';
+
+      const input = document.createElement('input');
+      input.type        = 'url';
+      input.className   = 'admin-thumb-input';
+      input.placeholder = 'Extra image URL ' + (container.children.length + 2);
+      input.style.cssText = 'width:100%;padding:10px 14px;background:rgba(0,0,0,0.4);border:1px solid var(--maroon-mid);border-radius:6px;color:var(--text-main);font-size:13px;outline:none;';
+
+      wrap.appendChild(input);
+      container.appendChild(wrap);
+    }
+
+    // Clear all fields in the admin add/edit form
+    function clearAdminForm() {
+      ['ap-name', 'ap-price-pkr', 'ap-link', 'ap-short', 'ap-full', 'ap-img'].forEach(id => {
+        const el = document.getElementById(id);
+        if (el) el.value = '';
+      });
+      document.getElementById('thumb-fields').innerHTML    = '';
+      document.getElementById('ap-edit-id').value          = '';
+      document.getElementById('ap-submit-btn').textContent = 'Add Product to Store';
+    }
+
+    // Switch between Add and Edit/Delete tabs in admin panel
+    function switchAdminTab(tab) {
+      const tabs = document.querySelectorAll('.admin-tab');
+      if (tab === 'add') {
+        document.getElementById('tab-add').style.display  = '';
+        document.getElementById('tab-edit').style.display = 'none';
+        tabs[0].classList.add('active');
+        tabs[1].classList.remove('active');
+        clearAdminForm();
+      } else {
+        document.getElementById('tab-add').style.display  = 'none';
+        document.getElementById('tab-edit').style.display = '';
+        tabs[1].classList.add('active');
+        tabs[0].classList.remove('active');
+        if (window._fb.renderEditList) window._fb.renderEditList();
+      }
+    }
+
+    // Helper to capitalize first letter of a string
+    function capitalize(str) {
+      return str ? str.charAt(0).toUpperCase() + str.slice(1) : '';
+    }
+
+    // Keyboard shortcut: Ctrl + Shift + A opens admin panel
+    document.addEventListener('keydown', e => {
+      if (e.ctrlKey && e.shiftKey && e.key.toLowerCase() === 'a') {
+        e.preventDefault();
+        document.getElementById('admin-panel').classList.add('open');
+      }
+    });
+
+    // Auto-convert all card images to JPG in the background after page loads
+    // Customer sees no visual change, but right-click save gives JPG format
+    window.addEventListener('load', () => {
+      setTimeout(() => window.convertPageImagesToJpg(), 1500);
+    });
+
+    // Watch for new Firebase cards and convert their images to JPG too
+    // Debounced so it doesn't fire too often during rapid DOM updates
+    (function watchForNewImages() {
+      const observer = new MutationObserver(() => {
+        clearTimeout(window._jpgTimer);
+        window._jpgTimer = setTimeout(() => window.convertPageImagesToJpg(), 800);
+      });
+      observer.observe(document.body, { childList: true, subtree: true });
+    })();
+
+  </script>
+
 
 
 </body>
