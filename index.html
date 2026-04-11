@@ -1,1293 +1,1317 @@
 <!DOCTYPE html>
 <html lang="en">
 <head>
-<meta charset="UTF-8">
-<meta name="viewport" content="width=device-width, initial-scale=1.0">
-<title>Zenova | Beauty, Tech & Gaming Store</title>
-<link href="https://fonts.googleapis.com/css2?family=Orbitron:wght@500;700&family=Poppins:wght@300;400;600&family=Playfair+Display:wght@600&display=swap" rel="stylesheet">
-<style>
-:root {
-  --bg-deep:      #0d0205;
-  --bg-base:      #130308;
-  --bg-card:      #1e0510;
-  --bg-header:    #0a0103;
-  --accent:       #f5c518;
-  --accent-glow:  rgba(245,197,24,0.55);
-  --accent-soft:  rgba(245,197,24,0.15);
-  --maroon:       #6b0f1a;
-  --maroon-mid:   #8b1a28;
-  --maroon-light: #b52a3d;
-  --text-main:    #f5efe6;
-  --text-muted:   #c9a8b0;
-  --border:       rgba(245,197,24,0.18);
-}
-*{ margin:0;
-  padding:0;
-  box-sizing:border-box;
-}
-body
-  {
-    font-family:Poppins,sans-serif;
-    background:var(--bg-base);
-    color:var(--text-main);
-    overflow-x:hidden; 
-  }
-body::before
-  {
-  content:'';
-    position:fixed;
-    inset:0; 
-    z-index:0;
-    pointer-events:none;
-  background-image:url("data:image/svg+xml,%3Csvg viewBox='0 0 200 200' xmlns='http://www.w3.org/2000/svg'%3E%3Cfilter id='n'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='0.85' numOctaves='4' stitchTiles='stitch'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23n)' opacity='0.04'/%3E%3C/svg%3E");
-  background-size:180px;
-    opacity:0.45;
-}
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Zenova | Beauty, Tech & Gaming Store</title>
+  <link href="https://fonts.googleapis.com/css2?family=Orbitron:wght@500;700&family=Poppins:wght@300;400;600&family=Playfair+Display:wght@600&display=swap" rel="stylesheet">
 
-/* HEADER */
-header{
-  padding:18px 5%;
-  display:flex;
-  justify-content:space-between;
-  align-items:center;
-  background:var(--bg-header);
-  border-bottom:1px solid var(--border);
-  box-shadow:0 0 30px rgba(107,15,26,0.6),0 0 60px rgba(245,197,24,0.08);
-  position:sticky; 
-  top:0; z-index:1000;
-  backdrop-filter:blur(6px);
-}
-.logo
-  {
-    font-family:Orbitron,sans-serif;
-    font-size:26px;
-    color:var(--accent);
-    letter-spacing:3px;
-    text-shadow:0 0 14px var(--accent-glow),0 0 40px var(--accent-glow);
-  }
-nav a
-  {
-    color:var(--text-muted);
-    text-decoration:none;
-    margin-left:28px; 
-    font-size:14px; 
-    font-weight:600;
-    letter-spacing:1px; 
-    text-transform:uppercase;
-    transition:color .25s,text-shadow .25s; 
-    cursor:pointer; 
-  }
-nav a:hover
-  {
-    color:var(--accent);
-    text-shadow:0 0 12px var(--accent-glow); 
-  }
+  <style>
 
-/* HERO */
-.hero{
-  text-align:center;
-  padding:110px 20px 80px;
-  background:linear-gradient(160deg,rgba(107,15,26,0.72) 0%,rgba(13,2,5,0.88) 60%),url("https://images.unsplash.com/photo-1607082348824-0a96f2a4b9da?q=80&w=1920");
-  background-size:cover;
-  background-position:center;
-}
-.hero h1
-  {
-  font-size:52px;
-    font-family:Orbitron,sans-serif;
-    margin-bottom:14px; 
-    letter-spacing:4px;
-  background:linear-gradient(135deg,#f5c518 30%,#fff6c0 60%,#e8a000 90%);
-  -webkit-background-clip:text;
-    -webkit-text-fill-color:transparent;
-    background-clip:text;
-  filter:drop-shadow(0 0 18px rgba(245,197,24,0.5));
-}
-.hero p
-  { 
-    color:var(--text-muted);
-    margin-bottom:28px;
-    font-size:16px;
-    letter-spacing:1px; 
-  }
-.hero button
-  {
-  padding:14px 36px;
-    border:2px solid var(--accent);
-    background:transparent;
-    color:var(--accent);
-  font-weight:700;
-    font-family:Orbitron,sans-serif; 
-    font-size:13px; 
-    letter-spacing:2px;
-  cursor:pointer;
-    border-radius:4px;
-    transition:background .3s,box-shadow .3s,color .3s; 
-    text-transform:uppercase;
-}
-.hero button:hover
-  {
-    background:var(--accent);
-    color:var(--bg-deep);
-    box-shadow:0 0 28px var(--accent-glow),0 0 60px var(--accent-glow); 
-  }
-
-/* TABS */
-.tabs
-  {
-    display:flex;
-    justify-content:center;
-    gap:14px; 
-    margin-top:44px; 
-    flex-wrap:wrap;
-  }
-.tabs button
-  {
-  padding:11px 28px;
-    border:1.5px solid var(--maroon-mid); 
-    background:rgba(107,15,26,0.25);
-  color:var(--text-muted);
-    font-weight:600; 
-    font-size:13px; 
-    letter-spacing:1.5px;
-  text-transform:uppercase;
-    border-radius:4px;
-    cursor:pointer;
-    transition:all .3s;
-    font-family:Orbitron,sans-serif;
-}
-.tabs button.active,
-.tabs button:hover
-  {
-    background:var(--accent); 
-    border-color:var(--accent);
-    color:var(--bg-deep); 
-    
-    box-shadow:0 0 18px var(--accent-glow); }
-
-/* SECTIONS */
-.section
-  { padding:70px 5%;
-    display:none; 
-    position:relative;
-    
-  }
-.section.active
-  
-  {
-    display:block;
-  }
-.section h2
-  {
-    text-align:center;    
-    margin-bottom:50px;
-    font-size:34px;
-    font-family:'Playfair Display',serif;
-    color:var(--accent);
-    text-shadow:0 0 22px var(--accent-glow);
-    letter-spacing:2px;
-  }
-
-/* SEARCH */
-.search-bar
-  {
-  width:100%;
-    max-width:420px;
-    margin:0 auto 35px auto;
-    display:block;
-    padding:12px 18px;
-    border-radius:6px;
-    border:1px solid var(--maroon-mid);
-    background:rgba(0,0,0,0.35);
-    color:var(--text-main);
-    font-size:14px;
-    outline:none;
-}
-.search-bar:focus
-  {
-    border-color:var(--accent);
-    box-shadow:0 0 12px var(--accent-glow);
-  }
-.search-bar::placeholder
-  
-  {
-    color:var(--text-muted);
-  }
-
-/* PRODUCT GRID */
-.products
-  {
-    display:grid;
-    grid-template-columns:repeat(auto-fit,minmax(250px,1fr));
-    gap:28px; 
-  }
-
-/* CARD */
-.card
-  {
-  background:var(--bg-card);
-    border-radius:10px; 
-    overflow:hidden;
-  border:1px solid rgba(107,15,26,0.6);
-    transition:transform .3s,box-shadow .3s,border-color .3s;
-  box-shadow:0 4px 20px rgba(0,0,0,0.5);
-    position:relative;
-}
-.card::before
-  {
-  content:'';
-    position:absolute;
-    top:0;
-    left:0;
-    right:0; 
-    height:2px;
-  background:linear-gradient(90deg,transparent,var(--maroon-light),transparent);
-    opacity:0; 
-    transition:opacity .3s;
-}
-.card:hover
-  {
-    transform:translateY(-10px);
-    box-shadow:0 0 30px rgba(245,197,24,0.25),0 0 60px rgba(107,15,26,0.4),0 8px 40px rgba(0,0,0,0.6);
-    border-color:var(--accent); 
-  }
-.card:hover::before
-  {
-    opacity:1; 
-  }
-.card>img
-  {
-    width:100%;
-    height:auto;
-    max-height:220px;
-    object-fit:cover; 
-    display:block;
-  }
-.card-content
-  {
-    padding:20px;
-  }
-.card-content h3
-  {
-    margin-bottom:8px;
-    font-size:15px; 
-    color:var(--text-main); 
-    line-height:1.4;
-  }
-.card-content p
-  {
-    color:var(--text-muted);
-    font-size:13px;
-    margin-bottom:8px;
-    line-height:1.5;
-  }
-.price
-  { color:var(--accent);
-    font-weight:700;
-    font-size:16px;
-    margin-bottom:14px;
-    text-shadow:0 0 10px var(--accent-glow); 
-    letter-spacing:0.5px; 
-  }
-.btn
-  {
-    display:inline-block;
-    padding:9px 20px;
-    background:var(--maroon);
-    color:var(--accent);
-    text-decoration:none;
-    border-radius:4px;
-    font-size:13px; 
-    font-weight:600;
-    letter-spacing:1px;
-    border:1px solid var(--maroon-light);
-    transition:background .3s,box-shadow .3s,border-color .3s;
-  }
-.btn:hover
-  {
-    background:var(--accent);
-    color:var(--bg-deep);
-    border-color:var(--accent);
-    box-shadow:0 0 18px var(--accent-glow);
-  }
-.details-btn
-  {
-    display:inline-block;
-    margin-top:6px;
-    margin-bottom:10px;
-    padding:7px 15px; 
-    border:1px solid var(--maroon-light);
-    background:transparent; 
-    color:var(--maroon-light);
-    border-radius:4px;
-    cursor:pointer;
-    font-size:12px;
-    font-weight:600; 
-    letter-spacing:1px;
-    text-transform:uppercase;
-    transition:all .3s; 
-  }
-.details-btn:hover
-  {
-    background:var(--maroon);
-    color:var(--accent);
-    border-color:var(--accent);
-  }
-.full-desc
-  {
-    display:none;
-    color:var(--text-muted);
-    margin-top:8px;
-    font-size:13px;
-    line-height:1.6;
-    border-left:2px solid var(--maroon-mid);
-    padding-left:10px; 
-  }
-
-/* GALLERY */
-.product-gallery
-  {
-    width:100%;
-  }
-.main-image
-  {
-    width:100%;
-    height:220px;
-    object-fit:cover;
-    border-radius:8px 8px 0 0;
-    transition:transform .4s;
-    display:block; 
-  }
-.card:hover .main-image
-  {
-    transform:scale(1.03);
-  }
-.thumbnails
-  {
-    display:flex;
-    gap:6px;
-    padding:8px 10px;
-    background:rgba(0,0,0,0.3); 
-  }
-.thumb
-  {
-    width:48px;
-    height:48px;
-    object-fit:cover;
-    border-radius:4px;
-    cursor:pointer;
-    opacity:0.55;
-    border:2px solid transparent;
-    transition:all .25s;
-  }
-.thumb:hover
-  {
-    opacity:1;
-    transform:scale(1.08);
-  }
-.thumb.active
-  {
-    opacity:1;
-    border-color:var(--accent);
-    box-shadow:0 0 10px var(--accent-glow);
-  }
-
-/* ABOUT */
-.about
-  {
-    text-align:center;
-    padding:80px 20px; 
-    background:linear-gradient(180deg,var(--bg-deep) 0%,#1a040b 100%);
-    border-top:1px solid var(--border);
-    position:relative;
-    overflow:hidden; 
-  }
-.about::before
-  {
-    content:'';
-    position:absolute; 
-    top:0;
-    left:50%;
-    transform:translateX(-50%);
-    width:600px;
-    height:2px; 
-    background:linear-gradient(90deg,transparent,var(--accent),transparent);
-  }
-.about h2
-  {
-    margin-bottom:16px;
-    font-family:'Playfair Display',serif; 
-    font-size:32px; 
-    color:var(--accent); 
-    text-shadow:0 0 22px var(--accent-glow); 
-  }
-.about p
-  {
-    max-width:580px;
-    margin:auto;
-    color:var(--text-muted);
-    line-height:1.8;
-    font-size:15px;
-  }
-footer
-  {
-    text-align:center;
-    padding:22px;
-    background:var(--bg-header);
-    color:var(--text-muted);
-    font-size:13px;
-    border-top:1px solid var(--border);
-  }
-
-/* MOBILE */
-@media(max-width:768px)
-  {
-  header
-    {
-      flex-direction:column;
-      gap:14px;
-      padding:14px;
-      text-align:center;
+    /* ── Root Variables ──────────────────────────────────────── */
+    :root {
+      --bg-deep:      #0d0205;
+      --bg-base:      #130308;
+      --bg-card:      #1e0510;
+      --bg-header:    #0a0103;
+      --accent:       #f5c518;
+      --accent-glow:  rgba(245, 197, 24, 0.55);
+      --maroon:       #6b0f1a;
+      --maroon-mid:   #8b1a28;
+      --maroon-light: #b52a3d;
+      --text-main:    #f5efe6;
+      --text-muted:   #c9a8b0;
+      --border:       rgba(245, 197, 24, 0.18);
     }
-  nav
-    {
-      display:flex;
-      flex-wrap:wrap;
-      justify-content:center;
-      gap:12px; 
+
+    * {
+      margin: 0;
+      padding: 0;
+      box-sizing: border-box;
     }
-  nav a
-    {
-      margin-left:0;
+
+    body {
+      font-family: Poppins, sans-serif;
+      background: var(--bg-base);
+      color: var(--text-main);
+      overflow-x: hidden;
     }
-  .hero
-    {
-      padding:60px 15px 50px; 
+
+    /* Noise texture background overlay */
+    body::before {
+      content: '';
+      position: fixed;
+      inset: 0;
+      z-index: 0;
+      pointer-events: none;
+      background-image: url("data:image/svg+xml,%3Csvg viewBox='0 0 200 200' xmlns='http://www.w3.org/2000/svg'%3E%3Cfilter id='n'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='0.85' numOctaves='4' stitchTiles='stitch'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23n)' opacity='0.04'/%3E%3C/svg%3E");
+      background-size: 180px;
+      opacity: 0.45;
     }
-  .hero h1
-    {
-      font-size:28px;
+
+    /* ── Header ──────────────────────────────────────────────── */
+    header {
+      padding: 18px 5%;
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      background: var(--bg-header);
+      border-bottom: 1px solid var(--border);
+      box-shadow: 0 0 30px rgba(107, 15, 26, 0.6), 0 0 60px rgba(245, 197, 24, 0.08);
+      position: sticky;
+      top: 0;
+      z-index: 1000;
+      backdrop-filter: blur(6px);
     }
-  .section
-    {
-      padding:40px 15px;
+
+    .logo {
+      font-family: Orbitron, sans-serif;
+      font-size: 26px;
+      color: var(--accent);
+      letter-spacing: 3px;
+      text-shadow: 0 0 14px var(--accent-glow), 0 0 40px var(--accent-glow);
     }
-  .products
-    {
-      grid-template-columns:1fr;
+
+    nav a {
+      color: var(--text-muted);
+      text-decoration: none;
+      margin-left: 28px;
+      font-size: 14px;
+      font-weight: 600;
+      letter-spacing: 1px;
+      text-transform: uppercase;
+      transition: color .25s, text-shadow .25s;
+      cursor: pointer;
     }
-}
 
-/* ══════════════════════════════
-   ADMIN PANEL — FIXED & CLEAN
-══════════════════════════════ */
-#admin-panel
-  {
-    
-    display:none;
-    position:fixed;
-    inset:0;
-    z-index:9999;
-  background:rgba(0,0,0,0.88); 
-    backdrop-filter:blur(8px);
-  align-items:center;
-    justify-content:center;
-}
-#admin-panel.open
-  {
-    display:flex;
-  }
+    nav a:hover {
+      color: var(--accent);
+      text-shadow: 0 0 12px var(--accent-glow);
+    }
 
-.admin-box
-  {
-    
-  background:var(--bg-card);
-    border:1px solid var(--accent);
-    border-radius:12px;
-  padding:36px 32px;
-    width:100%;
-    max-width:540px;
-    max-height:92vh;
-  overflow-y:auto;
-    box-shadow:0 0 60px var(--accent-glow); 
-    position:relative;
-}
+    /* ── Hero ────────────────────────────────────────────────── */
+    .hero {
+      text-align: center;
+      padding: 110px 20px 80px;
+      background:
+        linear-gradient(160deg, rgba(107, 15, 26, 0.72) 0%, rgba(13, 2, 5, 0.88) 60%),
+        url("https://images.unsplash.com/photo-1607082348824-0a96f2a4b9da?q=80&w=1920");
+      background-size: cover;
+      background-position: center;
+    }
 
-/* LOGIN SCREEN */
-.admin-login-screen
-  {
-    text-align:center; 
-  }
-.admin-login-screen h2
-  {
-    font-family:Orbitron,sans-serif;
-    font-size:20px; 
-    color:var(--accent);
-    margin-bottom:24px;
-    letter-spacing:2px; 
-  }
-.admin-login-screen input
-  {
-  width:100%;
-    padding:12px 16px;
-    margin-bottom:14px;
-    border-radius:8px;
-  border:1px solid var(--maroon-mid);
-    background:rgba(0,0,0,0.5); 
-    color:var(--text-main);
-  font-size:14px;
-        outline:none;
-    font-family:Poppins,sans-serif;
-    transition:border-color .25s;
-}
-.admin-login-screen input:focus
-  {
-    border-color:var(--accent);
-    box-shadow:0 0 10px var(--accent-glow);
-  }
-.login-btn
-  {
-    
-  width:100%;
-    padding:13px; 
-    background:linear-gradient(135deg,var(--accent),#e8a000);
-  color:var(--bg-deep);
-    border:none;
-    border-radius:8px;
-    font-family:Orbitron,sans-serif;
-  font-size:13px; 
-    font-weight:700; 
-    letter-spacing:1px;
-    cursor:pointer; 
-    transition:box-shadow .3s,transform .2s;
-    margin-top:6px;
-}
-.login-btn:hover
-  {
-    box-shadow:0 0 24px var(--accent-glow);
-    transform:scale(1.02);
-  }
-.login-error
-  {
-    color:#ff6b6b; 
-    font-size:13px;
-    margin-top:10px;
-    display:none;
-  }
+    .hero h1 {
+      font-size: 52px;
+      font-family: Orbitron, sans-serif;
+      margin-bottom: 14px;
+      letter-spacing: 4px;
+      background: linear-gradient(135deg, #f5c518 30%, #fff6c0 60%, #e8a000 90%);
+      -webkit-background-clip: text;
+      -webkit-text-fill-color: transparent;
+      background-clip: text;
+      filter: drop-shadow(0 0 18px rgba(245, 197, 24, 0.5));
+    }
 
-/* ADMIN CONTENT */
-.admin-content-screen
-  {
-    display:none; 
-  }
-.admin-content-screen h2
-  {
-    font-family:Orbitron,sans-serif;
-    font-size:18px;
-    color:var(--accent);
-    margin-bottom:24px;
-    letter-spacing:2px; 
-  }
+    .hero p {
+      color: var(--text-muted);
+      margin-bottom: 28px;
+      font-size: 16px;
+      letter-spacing: 1px;
+    }
 
-.admin-close
-  {
-  position:absolute;
-    top:14px;
-    right:16px;
-    background:rgba(0,0,0,0.4);
-  border:1px solid var(--maroon-mid);
-    color:var(--text-muted); 
-    font-size:18px;
-  cursor:pointer;
-    border-radius:50%;
-    width:32px; 
-    height:32px;
-    display:flex;
-  align-items:center;
-    justify-content:center; 
-    transition:all .2s; 
-    line-height:1;
-}
-.admin-close:hover
-  {
-    color:var(--accent);
-    border-color:var(--accent); 
-  }
+    .hero button {
+      padding: 14px 36px;
+      border: 2px solid var(--accent);
+      background: transparent;
+      color: var(--accent);
+      font-weight: 700;
+      font-family: Orbitron, sans-serif;
+      font-size: 13px;
+      letter-spacing: 2px;
+      cursor: pointer;
+      border-radius: 4px;
+      transition: background .3s, box-shadow .3s, color .3s;
+      text-transform: uppercase;
+    }
 
-.admin-tabs
-  {
-    display:flex;
-    gap:0;
-    margin-bottom:24px;
-    border-radius:6px;
-    overflow:hidden;
-    border:1px solid var(--maroon-mid);
-  }
-.admin-tab
-  {
-    flex:1; 
-    padding:10px; 
-    background:transparent; 
-    border:none;
-    color:var(--text-muted); 
-    font-family:Orbitron,sans-serif;
-    font-size:11px;
-    letter-spacing:1px;
-    cursor:pointer;
-    transition:all .2s; 
-  }
-.admin-tab.active
-  {
-    background:var(--accent);
-    color:var(--bg-deep);
-    font-weight:700; 
-  }
+    .hero button:hover {
+      background: var(--accent);
+      color: var(--bg-deep);
+      box-shadow: 0 0 28px var(--accent-glow), 0 0 60px var(--accent-glow);
+    }
 
-.admin-field
-  {
-    margin-bottom:16px;
-  }
-.admin-field label
-  {
-    display:block;
-    font-size:12px;
-    font-weight:600;
-    letter-spacing:1px;
-    text-transform:uppercase;
-    color:var(--text-muted);
-    margin-bottom:6px; 
-  }
-.admin-field input,
-.admin-field select,
-.admin-field textarea
-  {
-  width:100%;
-    padding:10px 14px;
-    background:rgba(0,0,0,0.4);
-    border:1px solid var(--maroon-mid);
-  border-radius:6px;
-    color:var(--text-main);
-    font-size:13px; 
-    font-family:Poppins,sans-serif; 
-    outline:none;
-    transition:border-color .25s;
-}
-.admin-field input:focus,
-  .admin-field select:focus,
-  .admin-field textarea:focus
-  {
-    border-color:var(--accent);
-  }
-.admin-field textarea
-  {
-    resize:vertical; 
-    min-height:70px; 
-  }
-.admin-field select option
-  {
-    background:var(--bg-card);
-  }
+    /* ── Category Tabs ───────────────────────────────────────── */
+    .tabs {
+      display: flex;
+      justify-content: center;
+      gap: 14px;
+      margin-top: 44px;
+      flex-wrap: wrap;
+    }
 
-.add-thumb-btn
-  {
-    margin-top:6px;
-    padding:6px 14px;
-    background:transparent;
-    border:1px solid var(--maroon-light);
-    color:var(--maroon-light);
-    border-radius:4px;
-    font-size:12px;
-    cursor:pointer; 
-    transition:all .25s;
-  }
-.add-thumb-btn:hover
-  {
-    background:var(--maroon);
-    color:var(--accent);
-    border-color:var(--accent);
-  }
+    .tabs button {
+      padding: 11px 28px;
+      border: 1.5px solid var(--maroon-mid);
+      background: rgba(107, 15, 26, 0.25);
+      color: var(--text-muted);
+      font-weight: 600;
+      font-size: 13px;
+      letter-spacing: 1.5px;
+      text-transform: uppercase;
+      border-radius: 4px;
+      cursor: pointer;
+      transition: all .3s;
+      font-family: Orbitron, sans-serif;
+    }
 
-.admin-submit
-  {
-    width:100%;
-    padding:12px; 
-    background:var(--accent);
-    color:var(--bg-deep);
-    border:none;
-    border-radius:6px;
-    font-family:Orbitron,sans-serif;
-    font-size:13px;
-    font-weight:700;
-    letter-spacing:1px;
-    cursor:pointer;
-    margin-top:8px;
-    transition:box-shadow .3s; 
-  }
-.admin-submit:hover
-  {
-  box-shadow:0 0 24px var(--accent-glow);
-  }
-.admin-msg
-  {
-    text-align:center;
-    margin-top:12px;
-    font-size:13px;
-    color:var(--accent);
-    display:none;
-  }
+    .tabs button.active,
+    .tabs button:hover {
+      background: var(--accent);
+      border-color: var(--accent);
+      color: var(--bg-deep);
+      box-shadow: 0 0 18px var(--accent-glow);
+    }
 
-.logout-btn
-  {
-    padding:7px 16px; 
-    background:transparent;
-    border:1px solid var(--maroon-light); 
-    color:var(--maroon-light);
-    border-radius:4px;
-    font-size:12px;
-    cursor:pointer; 
-    transition:all .2s; 
-    margin-bottom:20px;
-    float:right;
-  }
-.logout-btn:hover
-  {
-    background:var(--maroon); 
-    color:var(--accent);
-    border-color:var(--accent);
-  }
+    /* ── Page Sections ───────────────────────────────────────── */
+    .section {
+      padding: 70px 5%;
+      display: none;
+      position: relative;
+    }
 
-/* EDIT LIST */
-#edit-list
-  {
-    display:flex;
-    flex-direction:column;
-    gap:10px;
-    max-height:400px;
-    overflow-y:auto; 
-  }
-.edit-item
-  {
-    background:rgba(0,0,0,0.3);
-    border:1px solid var(--maroon-mid);
-    border-radius:8px; 
-    padding:12px 14px;
-    display:flex; 
-    align-items:center;
-    gap:12px; 
-  }
-.edit-item img
-  {
-    width:54px;
-    height:54px;
-    object-fit:cover;
-    border-radius:6px; 
-    flex-shrink:0;
-    border:1px solid var(--maroon-mid);
-  }
-.edit-item-info
-  {
-    flex:1;
-    min-width:0;
-  }
-.edit-item-info strong
-  {
-    display:block;
-    color:var(--text-main);
-    font-size:13px;
-    white-space:nowrap;
-    overflow:hidden; 
-    text-overflow:ellipsis; 
-  }
-.edit-item-info span
-  {
-    color:var(--text-muted);
-    font-size:11px;
-  }
-.edit-item-btns
-  {
-    display:flex;
-    gap:6px;
-    flex-shrink:0;
-  }
-.edit-btn
-  {
-    padding:6px 12px;
-    border-radius:4px;
-    font-size:11px; 
-    font-weight:700;
-    cursor:pointer; 
-    letter-spacing:1px; 
-    border:1px solid;
-    transition:all .2s; 
-  }
-.edit-btn.edit
-  {
-  background:transparent;
-    color:var(--accent);
-    border-color:var(--accent);
-  }
-.edit-btn.edit:hover
-  {
-    background:var(--accent);
-    color:var(--bg-deep);
-  }
-.edit-btn.del
-  {
-    background:transparent;
-    color:var(--maroon-light);
-    border-color:var(--maroon-light);
-  }
-.edit-btn.del:hover
-  {
-    background:var(--maroon-light);
-    color:#fff; 
-  }
-#edit-empty
-  {
-    text-align:center;
-    color:var(--text-muted);
-    font-size:13px; 
-    padding:30px 0;
-  }
+    .section.active {
+      display: block;
+    }
 
-/* LOADING SPINNER */
-.loading-overlay
-  {
-    text-align:center;
-    padding:40px; 
-    color:var(--text-muted);
-    font-size:14px;
-  }
-.spinner
-  {
-    display:inline-block;
-    width:32px; 
-    height:32px;
-    border:3px solid var(--maroon-mid);
-    border-top-color:var(--accent);
-    border-radius:50%;
-    animation:spin .7s linear infinite;
-    margin-bottom:12px; 
-  }
-@keyframes spin{ to{ transform:rotate(360deg); } }
+    .section h2 {
+      text-align: center;
+      margin-bottom: 50px;
+      font-size: 34px;
+      font-family: 'Playfair Display', serif;
+      color: var(--accent);
+      text-shadow: 0 0 22px var(--accent-glow);
+      letter-spacing: 2px;
+    }
 
-html
-  { scroll-behavior:smooth; }
-button,a
-{ -webkit-tap-highlight-color:transparent; }
-</style>
+    /* ── Search Bar ──────────────────────────────────────────── */
+    .search-bar {
+      width: 100%;
+      max-width: 420px;
+      margin: 0 auto 35px auto;
+      display: block;
+      padding: 12px 18px;
+      border-radius: 6px;
+      border: 1px solid var(--maroon-mid);
+      background: rgba(0, 0, 0, 0.35);
+      color: var(--text-main);
+      font-size: 14px;
+      outline: none;
+    }
+
+    .search-bar:focus {
+      border-color: var(--accent);
+      box-shadow: 0 0 12px var(--accent-glow);
+    }
+
+    .search-bar::placeholder {
+      color: var(--text-muted);
+    }
+
+    /* ── Product Grid ────────────────────────────────────────── */
+    .products {
+      display: grid;
+      grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));
+      gap: 28px;
+    }
+
+    /* ── Product Card ────────────────────────────────────────── */
+    .card {
+      background: var(--bg-card);
+      border-radius: 10px;
+      overflow: hidden;
+      border: 1px solid rgba(107, 15, 26, 0.6);
+      transition: transform .3s, box-shadow .3s, border-color .3s;
+      box-shadow: 0 4px 20px rgba(0, 0, 0, 0.5);
+      position: relative;
+    }
+
+    .card::before {
+      content: '';
+      position: absolute;
+      top: 0;
+      left: 0;
+      right: 0;
+      height: 2px;
+      background: linear-gradient(90deg, transparent, var(--maroon-light), transparent);
+      opacity: 0;
+      transition: opacity .3s;
+    }
+
+    .card:hover {
+      transform: translateY(-10px);
+      box-shadow:
+        0 0 30px rgba(245, 197, 24, 0.25),
+        0 0 60px rgba(107, 15, 26, 0.4),
+        0 8px 40px rgba(0, 0, 0, 0.6);
+      border-color: var(--accent);
+    }
+
+    .card:hover::before {
+      opacity: 1;
+    }
+
+    .card > img {
+      width: 100%;
+      height: auto;
+      max-height: 220px;
+      object-fit: cover;
+      display: block;
+    }
+
+    .card-content {
+      padding: 20px;
+    }
+
+    .card-content h3 {
+      margin-bottom: 8px;
+      font-size: 15px;
+      color: var(--text-main);
+      line-height: 1.4;
+    }
+
+    .card-content p {
+      color: var(--text-muted);
+      font-size: 13px;
+      margin-bottom: 8px;
+      line-height: 1.5;
+    }
+
+    .price {
+      color: var(--accent);
+      font-weight: 700;
+      font-size: 16px;
+      margin-bottom: 14px;
+      text-shadow: 0 0 10px var(--accent-glow);
+      letter-spacing: 0.5px;
+    }
+
+    .btn {
+      display: inline-block;
+      padding: 9px 20px;
+      background: var(--maroon);
+      color: var(--accent);
+      text-decoration: none;
+      border-radius: 4px;
+      font-size: 13px;
+      font-weight: 600;
+      letter-spacing: 1px;
+      border: 1px solid var(--maroon-light);
+      transition: background .3s, box-shadow .3s, border-color .3s;
+    }
+
+    .btn:hover {
+      background: var(--accent);
+      color: var(--bg-deep);
+      border-color: var(--accent);
+      box-shadow: 0 0 18px var(--accent-glow);
+    }
+
+    .details-btn {
+      display: inline-block;
+      margin-top: 6px;
+      margin-bottom: 10px;
+      padding: 7px 15px;
+      border: 1px solid var(--maroon-light);
+      background: transparent;
+      color: var(--maroon-light);
+      border-radius: 4px;
+      cursor: pointer;
+      font-size: 12px;
+      font-weight: 600;
+      letter-spacing: 1px;
+      text-transform: uppercase;
+      transition: all .3s;
+    }
+
+    .details-btn:hover {
+      background: var(--maroon);
+      color: var(--accent);
+      border-color: var(--accent);
+    }
+
+    .full-desc {
+      display: none;
+      color: var(--text-muted);
+      margin-top: 8px;
+      font-size: 13px;
+      line-height: 1.6;
+      border-left: 2px solid var(--maroon-mid);
+      padding-left: 10px;
+    }
+
+    /* ── Multi-image Gallery ─────────────────────────────────── */
+    .product-gallery {
+      width: 100%;
+    }
+
+    .main-image {
+      width: 100%;
+      height: 220px;
+      object-fit: cover;
+      border-radius: 8px 8px 0 0;
+      transition: transform .4s;
+      display: block;
+    }
+
+    .card:hover .main-image {
+      transform: scale(1.03);
+    }
+
+    .thumbnails {
+      display: flex;
+      gap: 6px;
+      padding: 8px 10px;
+      background: rgba(0, 0, 0, 0.3);
+    }
+
+    .thumb {
+      width: 48px;
+      height: 48px;
+      object-fit: cover;
+      border-radius: 4px;
+      cursor: pointer;
+      opacity: 0.55;
+      border: 2px solid transparent;
+      transition: all .25s;
+    }
+
+    .thumb:hover {
+      opacity: 1;
+      transform: scale(1.08);
+    }
+
+    .thumb.active {
+      opacity: 1;
+      border-color: var(--accent);
+      box-shadow: 0 0 10px var(--accent-glow);
+    }
+
+    /* ── Loading Spinner ─────────────────────────────────────── */
+    .loading-overlay {
+      text-align: center;
+      padding: 40px;
+      color: var(--text-muted);
+      font-size: 14px;
+    }
+
+    .spinner {
+      display: inline-block;
+      width: 32px;
+      height: 32px;
+      border: 3px solid var(--maroon-mid);
+      border-top-color: var(--accent);
+      border-radius: 50%;
+      animation: spin .7s linear infinite;
+      margin-bottom: 12px;
+    }
+
+    @keyframes spin {
+      to { transform: rotate(360deg); }
+    }
+
+    /* ── About Section ───────────────────────────────────────── */
+    .about {
+      text-align: center;
+      padding: 80px 20px;
+      background: linear-gradient(180deg, var(--bg-deep) 0%, #1a040b 100%);
+      border-top: 1px solid var(--border);
+      position: relative;
+      overflow: hidden;
+    }
+
+    .about::before {
+      content: '';
+      position: absolute;
+      top: 0;
+      left: 50%;
+      transform: translateX(-50%);
+      width: 600px;
+      height: 2px;
+      background: linear-gradient(90deg, transparent, var(--accent), transparent);
+    }
+
+    .about h2 {
+      margin-bottom: 16px;
+      font-family: 'Playfair Display', serif;
+      font-size: 32px;
+      color: var(--accent);
+      text-shadow: 0 0 22px var(--accent-glow);
+    }
+
+    .about p {
+      max-width: 580px;
+      margin: auto;
+      color: var(--text-muted);
+      line-height: 1.8;
+      font-size: 15px;
+    }
+
+    /* ── Footer ──────────────────────────────────────────────── */
+    footer {
+      text-align: center;
+      padding: 22px;
+      background: var(--bg-header);
+      color: var(--text-muted);
+      font-size: 13px;
+      border-top: 1px solid var(--border);
+    }
+
+    /* ── Admin Panel ─────────────────────────────────────────── */
+    #admin-panel {
+      display: none;
+      position: fixed;
+      inset: 0;
+      z-index: 9999;
+      background: rgba(0, 0, 0, 0.88);
+      backdrop-filter: blur(8px);
+      align-items: center;
+      justify-content: center;
+    }
+
+    #admin-panel.open {
+      display: flex;
+    }
+
+    .admin-box {
+      background: var(--bg-card);
+      border: 1px solid var(--accent);
+      border-radius: 12px;
+      padding: 36px 32px;
+      width: 100%;
+      max-width: 540px;
+      max-height: 92vh;
+      overflow-y: auto;
+      box-shadow: 0 0 60px var(--accent-glow);
+      position: relative;
+    }
+
+    .admin-close {
+      position: absolute;
+      top: 14px;
+      right: 16px;
+      background: rgba(0, 0, 0, 0.4);
+      border: 1px solid var(--maroon-mid);
+      color: var(--text-muted);
+      font-size: 18px;
+      cursor: pointer;
+      border-radius: 50%;
+      width: 32px;
+      height: 32px;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      transition: all .2s;
+    }
+
+    .admin-close:hover {
+      color: var(--accent);
+      border-color: var(--accent);
+    }
+
+    .admin-login-screen {
+      text-align: center;
+    }
+
+    .admin-login-screen h2 {
+      font-family: Orbitron, sans-serif;
+      font-size: 20px;
+      color: var(--accent);
+      margin-bottom: 24px;
+      letter-spacing: 2px;
+    }
+
+    .admin-login-screen input {
+      width: 100%;
+      padding: 12px 16px;
+      margin-bottom: 14px;
+      border-radius: 8px;
+      border: 1px solid var(--maroon-mid);
+      background: rgba(0, 0, 0, 0.5);
+      color: var(--text-main);
+      font-size: 14px;
+      outline: none;
+      font-family: Poppins, sans-serif;
+      transition: border-color .25s;
+    }
+
+    .admin-login-screen input:focus {
+      border-color: var(--accent);
+      box-shadow: 0 0 10px var(--accent-glow);
+    }
+
+    .login-btn {
+      width: 100%;
+      padding: 13px;
+      background: linear-gradient(135deg, var(--accent), #e8a000);
+      color: var(--bg-deep);
+      border: none;
+      border-radius: 8px;
+      font-family: Orbitron, sans-serif;
+      font-size: 13px;
+      font-weight: 700;
+      letter-spacing: 1px;
+      cursor: pointer;
+      transition: box-shadow .3s, transform .2s;
+      margin-top: 6px;
+    }
+
+    .login-btn:hover {
+      box-shadow: 0 0 24px var(--accent-glow);
+      transform: scale(1.02);
+    }
+
+    .login-error {
+      color: #ff6b6b;
+      font-size: 13px;
+      margin-top: 10px;
+      display: none;
+    }
+
+    .admin-content-screen {
+      display: none;
+    }
+
+    .admin-content-screen h2 {
+      font-family: Orbitron, sans-serif;
+      font-size: 18px;
+      color: var(--accent);
+      margin-bottom: 24px;
+      letter-spacing: 2px;
+    }
+
+    .admin-tabs {
+      display: flex;
+      margin-bottom: 24px;
+      border-radius: 6px;
+      overflow: hidden;
+      border: 1px solid var(--maroon-mid);
+    }
+
+    .admin-tab {
+      flex: 1;
+      padding: 10px;
+      background: transparent;
+      border: none;
+      color: var(--text-muted);
+      font-family: Orbitron, sans-serif;
+      font-size: 11px;
+      letter-spacing: 1px;
+      cursor: pointer;
+      transition: all .2s;
+    }
+
+    .admin-tab.active {
+      background: var(--accent);
+      color: var(--bg-deep);
+      font-weight: 700;
+    }
+
+    .admin-field {
+      margin-bottom: 16px;
+    }
+
+    .admin-field label {
+      display: block;
+      font-size: 12px;
+      font-weight: 600;
+      letter-spacing: 1px;
+      text-transform: uppercase;
+      color: var(--text-muted);
+      margin-bottom: 6px;
+    }
+
+    .admin-field input,
+    .admin-field select,
+    .admin-field textarea {
+      width: 100%;
+      padding: 10px 14px;
+      background: rgba(0, 0, 0, 0.4);
+      border: 1px solid var(--maroon-mid);
+      border-radius: 6px;
+      color: var(--text-main);
+      font-size: 13px;
+      font-family: Poppins, sans-serif;
+      outline: none;
+      transition: border-color .25s;
+    }
+
+    .admin-field input:focus,
+    .admin-field select:focus,
+    .admin-field textarea:focus {
+      border-color: var(--accent);
+    }
+
+    .admin-field textarea {
+      resize: vertical;
+      min-height: 70px;
+    }
+
+    .admin-field select option {
+      background: var(--bg-card);
+    }
+
+    .add-thumb-btn {
+      margin-top: 6px;
+      padding: 6px 14px;
+      background: transparent;
+      border: 1px solid var(--maroon-light);
+      color: var(--maroon-light);
+      border-radius: 4px;
+      font-size: 12px;
+      cursor: pointer;
+      transition: all .25s;
+    }
+
+    .add-thumb-btn:hover {
+      background: var(--maroon);
+      color: var(--accent);
+      border-color: var(--accent);
+    }
+
+    .admin-submit {
+      width: 100%;
+      padding: 12px;
+      background: var(--accent);
+      color: var(--bg-deep);
+      border: none;
+      border-radius: 6px;
+      font-family: Orbitron, sans-serif;
+      font-size: 13px;
+      font-weight: 700;
+      letter-spacing: 1px;
+      cursor: pointer;
+      margin-top: 8px;
+      transition: box-shadow .3s;
+    }
+
+    .admin-submit:hover {
+      box-shadow: 0 0 24px var(--accent-glow);
+    }
+
+    .admin-msg {
+      text-align: center;
+      margin-top: 12px;
+      font-size: 13px;
+      color: var(--accent);
+      display: none;
+    }
+
+    .logout-btn {
+      padding: 7px 16px;
+      background: transparent;
+      border: 1px solid var(--maroon-light);
+      color: var(--maroon-light);
+      border-radius: 4px;
+      font-size: 12px;
+      cursor: pointer;
+      transition: all .2s;
+      margin-bottom: 20px;
+      float: right;
+    }
+
+    .logout-btn:hover {
+      background: var(--maroon);
+      color: var(--accent);
+      border-color: var(--accent);
+    }
+
+    #edit-list {
+      display: flex;
+      flex-direction: column;
+      gap: 10px;
+      max-height: 400px;
+      overflow-y: auto;
+    }
+
+    .edit-item {
+      background: rgba(0, 0, 0, 0.3);
+      border: 1px solid var(--maroon-mid);
+      border-radius: 8px;
+      padding: 12px 14px;
+      display: flex;
+      align-items: center;
+      gap: 12px;
+    }
+
+    .edit-item img {
+      width: 54px;
+      height: 54px;
+      object-fit: cover;
+      border-radius: 6px;
+      flex-shrink: 0;
+      border: 1px solid var(--maroon-mid);
+    }
+
+    .edit-item-info {
+      flex: 1;
+      min-width: 0;
+    }
+
+    .edit-item-info strong {
+      display: block;
+      color: var(--text-main);
+      font-size: 13px;
+      white-space: nowrap;
+      overflow: hidden;
+      text-overflow: ellipsis;
+    }
+
+    .edit-item-info span {
+      color: var(--text-muted);
+      font-size: 11px;
+    }
+
+    .edit-item-btns {
+      display: flex;
+      gap: 6px;
+      flex-shrink: 0;
+    }
+
+    .edit-btn {
+      padding: 6px 12px;
+      border-radius: 4px;
+      font-size: 11px;
+      font-weight: 700;
+      cursor: pointer;
+      letter-spacing: 1px;
+      border: 1px solid;
+      transition: all .2s;
+    }
+
+    .edit-btn.edit {
+      background: transparent;
+      color: var(--accent);
+      border-color: var(--accent);
+    }
+
+    .edit-btn.edit:hover {
+      background: var(--accent);
+      color: var(--bg-deep);
+    }
+
+    .edit-btn.del {
+      background: transparent;
+      color: var(--maroon-light);
+      border-color: var(--maroon-light);
+    }
+
+    .edit-btn.del:hover {
+      background: var(--maroon-light);
+      color: #fff;
+    }
+
+    #edit-empty {
+      text-align: center;
+      color: var(--text-muted);
+      font-size: 13px;
+      padding: 30px 0;
+    }
+
+    /* ── Mobile ──────────────────────────────────────────────── */
+    @media (max-width: 768px) {
+
+      header {
+        flex-direction: column;
+        gap: 14px;
+        padding: 14px;
+        text-align: center;
+      }
+
+      nav {
+        display: flex;
+        flex-wrap: wrap;
+        justify-content: center;
+        gap: 12px;
+      }
+
+      nav a {
+        margin-left: 0;
+      }
+
+      .hero {
+        padding: 60px 15px 50px;
+      }
+
+      .hero h1 {
+        font-size: 28px;
+      }
+
+      .section {
+        padding: 40px 15px;
+      }
+
+      .products {
+        grid-template-columns: 1fr;
+      }
+
+    }
+
+    html { scroll-behavior: smooth; }
+    button, a { -webkit-tap-highlight-color: transparent; }
+
+  </style>
 </head>
 <body>
 
-<!-- HEADER -->
-<header>
-  <div class="logo">Zenova</div>
-  <nav>
-    <a onclick="openSection('home')">Home</a>
-    <a onclick="openSection('beauty')">Beauty</a>
-    <a onclick="openSection('tech')">Tech</a>
-    <a onclick="openSection('gaming')">Gaming</a>
-    <a href="#about">About</a>
-  </nav>
-</header>
+  <!-- ── Header ────────────────────────────────────────────── -->
+  <header>
+    <div class="logo">Zenova</div>
+    <nav>
+      <a onclick="openSection('home')">Home</a>
+      <a onclick="openSection('beauty')">Beauty</a>
+      <a onclick="openSection('tech')">Tech</a>
+      <a onclick="openSection('gaming')">Gaming</a>
+      <a href="#about">About</a>
+    </nav>
+    <!-- Currency badge is injected here automatically by JS -->
+  </header>
 
-<!-- HERO -->
-<section class="hero">
-  <h1>Welcome to Zenova</h1>
-  <p>Beauty, Tech & Gaming — All in One Place</p>
-  <button onclick="openSection('home')">Shop Now</button>
-  <div class="tabs">
-    <button class="tab-btn" onclick="openSection('beauty')">Beauty</button>
-    <button class="tab-btn" onclick="openSection('tech')">Tech</button>
-    <button class="tab-btn" onclick="openSection('gaming')">Gaming</button>
-  </div>
-</section>
+  <!-- ── Hero ──────────────────────────────────────────────── -->
+  <section class="hero">
+    <h1>Welcome to Zenova</h1>
+    <p>Beauty, Tech & Gaming — All in One Place</p>
+    <button onclick="openSection('home')">Shop Now</button>
+    <div class="tabs">
+      <button class="tab-btn" onclick="openSection('beauty')">Beauty</button>
+      <button class="tab-btn" onclick="openSection('tech')">Tech</button>
+      <button class="tab-btn" onclick="openSection('gaming')">Gaming</button>
+    </div>
+  </section>
 
-<!-- HOME -->
-<section class="section active" id="home">
-  <h2>All Products</h2>
-  <input type="text" class="search-bar" placeholder="Search products..."
-    oninput="searchProducts(this)">
-  <div class="loading-overlay" id="home-loading">
-    <div class="spinner"></div><br>Loading products...
-  </div>
-  <div class="products" id="home-products"></div>
-</section>
+  <!-- ── Home — All Products ───────────────────────────────── -->
+  <section class="section active" id="home">
+    <h2>All Products</h2>
+    <input type="text" class="search-bar" placeholder="Search products..." oninput="searchProducts(this)">
+    <div class="loading-overlay" id="home-loading">
+      <div class="spinner"></div><br>Loading products...
+    </div>
+    <div class="products" id="home-products"></div>
+  </section>
 
-<!-- BEAUTY -->
-<section class="section" id="beauty">
-  <h2>Beauty Products</h2>
-  <input type="text" class="search-bar" placeholder="Search beauty products..."
-    oninput="searchProducts(this)">
-  <div class="loading-overlay" id="beauty-loading" style="display:none">
-    <div class="spinner"></div><br>Loading products...
-  </div>
-  <div class="products" id="beauty-products">
-    <!-- Static beauty products below -->
-    <div class="card">
-      <img src="https://img.kwcdn.com/product/fancy/c6c11aec-30ce-4a25-b5e2-18d8b9fb6d12.jpg?imageView2/2/w/1300/q/90/format/avif">
-      <div class="card-content">
-        <h3>NAILS FOR EASTER</h3>
-        <p class="short-desc">24pcs Easter Theme Fake Nail Set, Macaron Bunny Design,</p>
-        <p class="full-desc">Glossy Finish, 12 Sizes with Jelly Glue and Nail File, Artistic False Nails for Girls and Women</p>
-        <button class="details-btn" onclick="toggleDetails(this)">Details</button>
-        <div class="price">Rs.531</div>
-        <a href="https://share.temu.com/p4VuXYgXsEB" class="btn" target="_blank">Buy Now</a>
-      </div>
-    </div>
-    <div class="card">
-      <img src="https://img.kwcdn.com/product/fancy/41f85bba-b3b3-4533-9f33-b0ed6a1cbbe1.jpg?imageView2/2/w/800/q/70/format/avif">
-      <div class="card-content">
-        <h3>King Love Beauty</h3>
-        <p class="short-desc">Vitamin C Sunscreen with SPF60, waterproof and moisturizing.</p>
-        <p class="full-desc">150g Vitamin C Sunscreen, Broad Spectrum SPF60PA+++, Suitable for Dry and Oily Skin, Moisturizing Formula, Waterproof Protection, Long-lasting sun defense for daily use.</p>
-        <button class="details-btn" onclick="toggleDetails(this)">Details</button>
-        <div class="price">Rs.2755</div>
-        <a href="https://share.temu.com/mDNnjKj9S7B" class="btn" target="_blank">Buy Now</a>
-      </div>
-    </div>
-    <div class="card">
-      <img src="https://img.kwcdn.com/product/fancy/5cf28654-2751-4f28-a410-f6567430330b.jpg?imageView2/2/w/800/q/70/format/avif">
-      <div class="card-content">
-        <h3>Clarity Isolation Protection Cream</h3>
-        <p class="short-desc">Clear And Non-Irritating Isolation Protection,</p>
-        <p class="full-desc">Essential for Going Out, Moisturizing And Clear Facial Sunscreen</p>
-        <button class="details-btn" onclick="toggleDetails(this)">Details</button>
-        <div class="price">Rs.983</div>
-        <a href="https://share.temu.com/JiaAMDViAPB" class="btn" target="_blank">Buy Now</a>
-      </div>
-    </div>
-    <div class="card">
-      <img src="https://img.kwcdn.com/product/fancy/ba46f935-de74-4468-bba6-7cfaa9affe27.jpg?imageView2/2/w/800/q/70/format/avif">
-      <div class="card-content">
-        <h3>Red Cat Eye Fake Nails</h3>
-        <p class="short-desc">10pcs of Red Cat-Eye Short Square Fake Nails,</p>
-        <p class="full-desc">Glossy Acrylic Nails, Reusable Acrylic Home Nails Suitable for Autumn And Winter Nail Decoration</p>
-        <button class="details-btn" onclick="toggleDetails(this)">Details</button>
-        <div class="price">Rs.331</div>
-        <a href="https://share.temu.com/d64lMod7mtB" class="btn" target="_blank">Buy Now</a>
-      </div>
-    </div>
-    <div class="card">
-      <img src="https://img.kwcdn.com/product/fancy/f6ff69c8-8eb4-4dae-9d89-1beac4470597.jpg?imageView2/2/w/800/q/70/format/avif">
-      <div class="card-content">
-        <h3>Easter Bunny False Nails</h3>
-        <p class="short-desc">24pcs Easter Pastel Bunny False Nails,</p>
-        <p class="full-desc">Polka Dot Stripe Cute Artificial Nails, Suitable for Women's Spring and Summer Decorative Styling</p>
-        <button class="details-btn" onclick="toggleDetails(this)">Details</button>
-        <div class="price">Rs.682</div>
-        <a href="https://share.temu.com/zi8og73hl8B" class="btn" target="_blank">Buy Now</a>
-      </div>
-    </div>
-    <div class="card">
-      <img src="https://img.kwcdn.com/product/fancy/f5707130-079b-4ab2-aa98-03a60dff3abb.jpg?imageView2/2/w/800/q/70/format/avif">
-      <div class="card-content">
-        <h3>Tanning Oil</h3>
-        <p class="short-desc">100Ml Coconut Tanning Oil, Waterproof And Long-Lasting Tan,</p>
-        <p class="full-desc">Suitable for Indoor Use, with Moisturizing And Hydrating Properties. Comes in a Spray Bottle And Flip-Top for Easy And Convenient Carrying, Free from Oxybenzone</p>
-        <button class="details-btn" onclick="toggleDetails(this)">Details</button>
-        <div class="price">Rs.2837</div>
-        <a href="https://share.temu.com/ymgAKWDK8FB" class="btn" target="_blank">Buy Now</a>
-      </div>
-    </div>
-    <div class="card">
-      <img src="https://s.alicdn.com/@sc04/kf/H1d2213e1d17e42d3b64cde39adbeaf76b.jpg?avif=close&webp=close">
-      <div class="card-content">
-        <h3>Natural Keratin Hair Treatment</h3>
-        <p class="short-desc">Brazilian Natural Keratin Hair Treatment</p>
-        <p class="full-desc">Wholesale by Carton 800ml Hair Smoothing Cream Product</p>
-        <button class="details-btn" onclick="toggleDetails(this)">Details</button>
-        <div class="price">Rs.20,241</div>
-        <a href="https://offer.alibaba.com/cps/0ciah0q6?bm=cps&src=saf&productId=1601418772610" class="btn" target="_blank">Buy Now</a>
-      </div>
-    </div>
-    <div class="card">
-      <img src="https://s.alicdn.com/@sc04/kf/H23f7a5c36f1b4c58a6648e771ecd1dc65.jpg?avif=close&webp=close">
-      <div class="card-content">
-        <h3>OEM Waterproof Root Touch Up Hair</h3>
-        <p class="short-desc">OEM Waterproof Root Touch up Hair Dye Stick</p>
-        <p class="full-desc">2 in 1 Comb & Color Quick Gray Hair Cover Up, Ammonia Free Portable</p>
-        <button class="details-btn" onclick="toggleDetails(this)">Details</button>
-        <div class="price">Rs.258</div>
-        <a href="https://offer.alibaba.com/cps/0ciah0q6?bm=cps&src=saf&productId=1601594093666" class="btn" target="_blank">Buy Now</a>
-      </div>
-    </div>
-    <div class="card">
-      <img src="https://s.alicdn.com/@sc04/kf/H6c4a7006354d487890e4a19212aa92b4S.jpg?avif=close&webp=close">
-      <div class="card-content">
-        <h3>OEM Shampoo</h3>
-        <p class="short-desc">OEM Shampoo Manufacturers</p>
-        <p class="full-desc">Rosemary Extract Peppermint Oil Refreshing Oil-Control Rosemary Shampoo</p>
-        <button class="details-btn" onclick="toggleDetails(this)">Details</button>
-        <div class="price">Rs.703</div>
-        <a href="https://offer.alibaba.com/cps/0ciah0q6?bm=cps&src=saf&productId=1601661844082" class="btn" target="_blank">Buy Now</a>
-      </div>
-    </div>
-    <div class="card">
-      <img src="https://s.alicdn.com/@sc04/kf/H8f83b699c6c644b99904a3d298e4f452a.jpg?avif=close&webp=close">
-      <div class="card-content">
-        <h3>Hair Dye Permanent Hair Color</h3>
-        <p class="short-desc">Organic Professional Salon Hair Dye</p>
-        <p class="full-desc">Professional Hair Dye Permanent Hair Color</p>
-        <button class="details-btn" onclick="toggleDetails(this)">Details</button>
-        <div class="price">Rs.314</div>
-        <a href="https://offer.alibaba.com/cps/0ciah0q6?bm=cps&src=saf&productId=1601252719587" class="btn" target="_blank">Buy Now</a>
-      </div>
-    </div>
-  </div>
-</section>
+  <!-- ── Beauty ────────────────────────────────────────────── -->
+  <section class="section" id="beauty">
+    <h2>Beauty Products</h2>
+    <input type="text" class="search-bar" placeholder="Search beauty products..." oninput="searchProducts(this)">
+    <div class="products" id="beauty-products">
 
-<!-- TECH -->
-<section class="section" id="tech">
-  <h2>Tech Products</h2>
-  <input type="text" class="search-bar" placeholder="Search tech products..."
-    oninput="searchProducts(this)">
-  <div class="loading-overlay" id="tech-loading" style="display:none">
-    <div class="spinner"></div><br>Loading products...
-  </div>
-  <div class="products" id="tech-products">
-    <div class="card">
-      <img src="https://img.kwcdn.com/product/fancy/061a9ef9-e1da-4160-8867-381e592eeb14.jpg?imageView2/2/w/800/q/70/format/avif">
-      <div class="card-content">
-        <h3>Luxurious Wrist Watch</h3>
-        <p class="short-desc">Premium design wrist watch</p>
-        <p class="full-desc">Elegant luxurious wrist watch with premium build quality</p>
-        <button class="details-btn" onclick="toggleDetails(this)">Details</button>
-        <div class="price">Rs.1078</div>
-        <a href="https://temu.to/k/e4qg5ggirqh" class="btn" target="_blank">Buy Now</a>
-      </div>
-    </div>
-    <div class="card">
-      <img src="https://img.kwcdn.com/product/fancy/23ee47f1-48b3-40af-aa4a-655c2520a05c.jpg?imageView2/2/w/800/q/70/format/avif">
-      <div class="card-content">
-        <h3>OTG Extension Hub</h3>
-        <p class="short-desc">High-Speed USB 2.0 Hub - Expand Your Device</p>
-        <p class="full-desc">Connectivity with 4/7 Ports, LED Indicator Switches, Compact and Lightweight Design for PCs and Laptops - Black</p>
-        <button class="details-btn" onclick="toggleDetails(this)">Details</button>
-        <div class="price">Rs.836</div>
-        <a href="https://share.temu.com/AFdBYqAWRVB" class="btn" target="_blank">Buy Now</a>
-      </div>
-    </div>
-    <div class="card">
-      <img src="https://img.kwcdn.com/product/Fancyalgo/VirtualModelMatting/f03bbd6536163de93d0273b8ffcf1eb3.jpg?imageView2/2/w/800/q/70/format/avif">
-      <div class="card-content">
-        <h3>RGB Gaming Mouse</h3>
-        <p class="short-desc">Silver Carved Mechanical Gaming Mouse,</p>
-        <p class="full-desc">Wired, Suitable for Desktop And Laptop Use, Silent for Office And Esports.</p>
-        <button class="details-btn" onclick="toggleDetails(this)">Details</button>
-        <div class="price">Rs.2570</div>
-        <a href="https://share.temu.com/GnNHeaUevAB" class="btn" target="_blank">Buy Now</a>
-      </div>
-    </div>
-    <div class="card">
-      <img src="https://img.kwcdn.com/product/Fancyalgo/VirtualModelMatting/785405df6369d7bf47e59a2d173b23fe.jpg?imageView2/2/w/800/q/70/format/avif">
-      <div class="card-content">
-        <h3>Light Weight Gaming Wired Headphones</h3>
-        <p class="short-desc">7260 Wired Over-Ear Headset with Microphone</p>
-        <p class="full-desc">Compatible: PS4/PS5/Xbox One/SWITCH / Mobile Phones & PC Tablets, comfortable to wear clear call, Lightweight Headphones, Noise Isolation</p>
-        <button class="details-btn" onclick="toggleDetails(this)">Details</button>
-        <div class="price">Rs.4131</div>
-        <a href="https://share.temu.com/nZQDkrPiHRB" class="btn" target="_blank">Buy Now</a>
-      </div>
-    </div>
-    <div class="card">
-      <img src="https://img.kwcdn.com/product/fancy/56097efe-6454-4ba5-958f-3c2a3ff12be2.jpg?imageView2/2/w/800/q/70/format/avif">
-      <div class="card-content">
-        <h3>USB Keyboard & Mouse Combo with Rainbow LED</h3>
-        <p class="short-desc">USB Wired Keyboard And Mouse Combo with Rainbow LED Backlighting,</p>
-        <p class="full-desc">Suitable for PCs, Laptops, Gaming, Office Work, Mac, PS4, And Xbox</p>
-        <button class="details-btn" onclick="toggleDetails(this)">Details</button>
-        <div class="price">Rs.6885</div>
-        <a href="https://share.temu.com/dkZhvwqDeCB" class="btn" target="_blank">Buy Now</a>
-      </div>
-    </div>
-    <div class="card">
-      <img src="https://img.kwcdn.com/product/open/9e097c0b3a5647aa99d831a36e05a44c-goods.jpeg?imageView2/2/w/1300/q/90/format/avif">
-      <div class="card-content">
-        <h3>LED-Backlit Keyboard/Headset/Mouse Bundle</h3>
-        <p class="short-desc">Keyboard and Mouse Set Vibrant LED-Backlit</p>
-        <p class="full-desc">Keyboard/Headset/Mouse/Large Mouse Pad Gaming Peripherals Bundle Suitable for Gaming, Esports, Home and Office Use</p>
-        <button class="details-btn" onclick="toggleDetails(this)">Details</button>
-        <div class="price">Rs.12762</div>
-        <a href="https://share.temu.com/9yUjE3GyTiB" class="btn" target="_blank">Buy Now</a>
-      </div>
-    </div>
-    <div class="card">
-      <img src="https://img.kwcdn.com/product/fancy/0c806d17-6a96-4ed2-b501-dd7f9e09fb85.jpg?imageView2/2/w/800/q/70/format/avif">
-      <div class="card-content">
-        <h3>Black Luxurious Watch</h3>
-        <p class="short-desc">Women's Sparkling Rhinestone Quartz Watch</p>
-        <p class="full-desc">A 5pcs Set Featuring a Women's Sparkling Rhinestone Quartz Watch</p>
-        <button class="details-btn" onclick="toggleDetails(this)">Details</button>
-        <div class="price">Rs.398</div>
-        <a href="https://temu.to/k/eqtmqtnoyoy" class="btn" target="_blank">Buy Now</a>
-      </div>
-    </div>
-    <div class="card">
-      <img src="https://s.alicdn.com/@sc04/kf/He3348378f7b240c58cfedf4d87491b9fq.jpg?avif=close&webp=close">
-      <div class="card-content">
-        <h3>Gaming Wired Headphone</h3>
-        <p class="short-desc">K2 Gaming Wired Headphone</p>
-        <p class="full-desc">Top Selling Headphone Products K2 Gaming Wired Headphone</p>
-        <button class="details-btn" onclick="toggleDetails(this)">Details</button>
-        <div class="price">Rs.3764</div>
-        <a href="https://offer.alibaba.com/cps/0ciah0q6?bm=cps&src=saf&productId=60702763866" class="btn" target="_blank">Buy Now</a>
-      </div>
-    </div>
-    <div class="card">
-      <div class="product-gallery">
-        <img src="https://s.alicdn.com/@sc04/kf/H0c37a98adf97413792d7d437de270456G.png?avif=close&webp=close" class="main-image">
-        <div class="thumbnails">
-          <img src="https://s.alicdn.com/@sc04/kf/H0ff9d75a7f8d42818e576fa5fbd2b02dQ.png?avif=close&webp=close" class="thumb active" onclick="changeImage(this)">
-          <img src="https://s.alicdn.com/@sc04/kf/H6b8e9ab9b4494a4aa1222c3dfde83d5bw.png?avif=close&webp=close" class="thumb" onclick="changeImage(this)">
-          <img src="https://s.alicdn.com/@sc04/kf/H5bf84163d0ed4083bc7365f556a605a5r.png?avif=close&webp=close" class="thumb" onclick="changeImage(this)">
-          <img src="https://s.alicdn.com/@sc04/kf/H0c37a98adf97413792d7d437de270456G.png?avif=close&webp=close" class="thumb" onclick="changeImage(this)">
+      <div class="card">
+        <img crossorigin="anonymous" src="https://img.kwcdn.com/product/fancy/c6c11aec-30ce-4a25-b5e2-18d8b9fb6d12.jpg?imageView2/2/w/1300/q/90/format/avif">
+        <div class="card-content">
+          <h3>NAILS FOR EASTER</h3>
+          <p class="short-desc">24pcs Easter Theme Fake Nail Set, Macaron Bunny Design</p>
+          <p class="full-desc">Glossy Finish, 12 Sizes with Jelly Glue and Nail File, Artistic False Nails for Girls and Women</p>
+          <button class="details-btn" onclick="toggleDetails(this)">Details</button>
+          <div class="price" data-pkr="531">Rs.531</div>
+          <a href="https://share.temu.com/p4VuXYgXsEB" class="btn" target="_blank">Buy Now</a>
         </div>
       </div>
-      <div class="card-content">
-        <h3>Intel I7 10th/12th Gen Quad Core Laptop</h3>
-        <p class="short-desc">OEM 15.6 Inch Intel I7 Quad Core SSD Laptop</p>
-        <p class="full-desc">Quad Core SSD Laptop English for Gaming Business Low Price New Products Available</p>
-        <button class="details-btn" onclick="toggleDetails(this)">Details</button>
-        <div class="price">Rs.80,040–114,567</div>
-        <a href="https://offer.alibaba.com/cps/0ciah0q6?bm=cps&src=saf&productId=1601224210243" class="btn" target="_blank">Buy Now</a>
-      </div>
-    </div>
-    <div class="card">
-      <div class="product-gallery">
-        <img src="https://s.alicdn.com/@sc04/kf/H76cc954420b8467083fbc290cfd4a76fo.jpg?avif=close&webp=close" class="main-image">
-        <div class="thumbnails">
-          <img src="https://s.alicdn.com/@sc04/kf/H76cc954420b8467083fbc290cfd4a76fo.jpg?avif=close&webp=close" class="thumb active" onclick="changeImage(this)">
-          <img src="https://s.alicdn.com/@sc04/kf/Hcd577ccd35534a33885765be00569fd50.jpg?avif=close&webp=close" class="thumb" onclick="changeImage(this)">
-          <img src="https://s.alicdn.com/@sc04/kf/H677966b829b049e5877b8b44158d0845E.jpg?avif=close&webp=close" class="thumb" onclick="changeImage(this)">
+
+      <div class="card">
+        <img crossorigin="anonymous" src="https://img.kwcdn.com/product/fancy/41f85bba-b3b3-4533-9f33-b0ed6a1cbbe1.jpg?imageView2/2/w/800/q/70/format/avif">
+        <div class="card-content">
+          <h3>King Love Beauty</h3>
+          <p class="short-desc">Vitamin C Sunscreen with SPF60, waterproof and moisturizing</p>
+          <p class="full-desc">150g Vitamin C Sunscreen, Broad Spectrum SPF60PA+++, Suitable for Dry and Oily Skin, Moisturizing Formula, Waterproof Protection</p>
+          <button class="details-btn" onclick="toggleDetails(this)">Details</button>
+          <div class="price" data-pkr="2755">Rs.2755</div>
+          <a href="https://share.temu.com/mDNnjKj9S7B" class="btn" target="_blank">Buy Now</a>
         </div>
       </div>
-      <div class="card-content">
-        <h3>RGB Gaming Chair with Massage</h3>
-        <p class="short-desc">Computer Adjustable Racing Gaming Chair</p>
-        <p class="full-desc">Fast Shipping Silla Gamer Computer Adjustable Racing Gaming Chair with RGB and Massage</p>
-        <button class="details-btn" onclick="toggleDetails(this)">Details</button>
-        <div class="price">Rs.17,016</div>
-        <a href="https://offer.alibaba.com/cps/0ciah0q6?bm=cps&src=saf&productId=1601590820795" class="btn" target="_blank">Buy Now</a>
-      </div>
-    </div>
-  </div>
-</section>
 
-<!-- GAMING -->
-<section class="section" id="gaming">
-  <h2>Gaming Products</h2>
-  <input type="text" class="search-bar" placeholder="Search gaming products..."
-    oninput="searchProducts(this)">
-  <div class="loading-overlay" id="gaming-loading" style="display:none">
-    <div class="spinner"></div><br>Loading products...
-  </div>
-  <div class="products" id="gaming-products">
-    <div class="card">
-      <img src="https://www.nintendo.com/eu/media/images/10_share_images/games_15/nintendo_switch_4/2x1_NSwitch_Sifu.jpg">
-      <div class="card-content">
-        <h3>Sifu Epic Games Account</h3>
-        <p class="short-desc">Epic Games Account with Sifu</p>
-        <p class="full-desc">Full Epic Games Account pre-loaded with Sifu. DM on Instagram to purchase.</p>
-        <button class="details-btn" onclick="toggleDetails(this)">Details</button>
-        <div class="price">$25</div>
-        <a href="https://www.instagram.com/zoro_affiliates?igsh=MXd4ODg3eTlmbW80bw==" class="btn" target="_blank">Buy Now</a>
-      </div>
-    </div>
-    <div class="card">
-      <img src="https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcTxFQotaUdDW3F-qGFAqX9UVbMLH4kfhgvneg&s">
-      <div class="card-content">
-        <h3>Dead Island 2</h3>
-        <p class="short-desc">Brutal first-person action RPG set in Los Angeles</p>
-        <p class="full-desc">Dead Island 2 is a brutal first-person action RPG set in a quarantined Los Angeles overrun by terrifying zombies. Fight, explore, and survive using creative weapons, intense combat, and dark humor. DM on Instagram to buy.</p>
-        <button class="details-btn" onclick="toggleDetails(this)">Details</button>
-        <div class="price">Rs.3199</div>
-        <a href="https://www.instagram.com/zoro_affiliates?igsh=MXd4ODg3eTlmbW80bw==" class="btn" target="_blank">Buy Now</a>
-      </div>
-    </div>
-    <div class="card">
-      <img src="https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcQjUfqbq1eYXHk_LKa2ThJ7kB-e4WymqNBmdA&s">
-      <div class="card-content">
-        <h3>Lego Star Wars: Skywalker Saga</h3>
-        <p class="short-desc">All nine Star Wars films in one LEGO experience</p>
-        <p class="full-desc">Lego Star Wars: The Skywalker Saga is a fun-filled action-adventure game that lets you relive all nine main Star Wars films in one epic LEGO experience.</p>
-        <button class="details-btn" onclick="toggleDetails(this)">Details</button>
-        <div class="price">Rs.2999</div>
-        <a href="https://www.instagram.com/zoro_affiliates?igsh=MXd4ODg3eTlmbW80bw==" class="btn" target="_blank">Buy Now</a>
-      </div>
-    </div>
-  </div>
-</section>
-
-<!-- ABOUT -->
-<section class="about" id="about">
-  <h2>About Zenova</h2>
-  <p>Zenova is your premium destination for beauty, tech, and gaming products. We partner with trusted brands to bring you the best products through affiliate deals.</p>
-</section>
-<footer>© 2026 Zenova Store. All rights reserved.</footer>
-
-<!-- ══════════════════════════════
-     ADMIN PANEL — SINGLE UNIFIED DIV
-══════════════════════════════ -->
-<div id="admin-panel">
-  <div class="admin-box">
-    <button class="admin-close" onclick="closeAdmin()">&#x2715;</button>
-
-    <!-- LOGIN SCREEN -->
-    <div class="admin-login-screen" id="admin-login-screen">
-      <h2>🔐 Admin Login</h2>
-      <input type="email" id="admin-email" placeholder="Email address">
-      <input type="password" id="admin-password" placeholder="Password">
-      <button class="login-btn" onclick="adminLogin()">Login</button>
-      <div class="login-error" id="login-error"></div>
-    </div>
-
-    <!-- ADMIN CONTENT (shown after login) -->
-    <div class="admin-content-screen" id="admin-content-screen">
-      <button class="logout-btn" onclick="adminLogout()">Logout</button>
-      <h2>⚡ Admin Panel</h2>
-
-      <div class="admin-tabs">
-        <button class="admin-tab active" onclick="switchAdminTab('add')">➕ Add Product</button>
-        <button class="admin-tab" onclick="switchAdminTab('edit')">✏️ Edit / Delete</button>
-      </div>
-
-      <!-- ADD TAB -->
-      <div id="tab-add">
-        <div class="admin-field"><label>Product Name *</label><input type="text" id="ap-name" placeholder="e.g. Rose Face Serum"></div>
-        <div class="admin-field">
-          <label>Category *</label>
-          <select id="ap-section">
-            <option value="beauty">Beauty</option>
-            <option value="tech">Tech</option>
-            <option value="gaming">Gaming</option>
-          </select>
+      <div class="card">
+        <img crossorigin="anonymous" src="https://img.kwcdn.com/product/fancy/5cf28654-2751-4f28-a410-f6567430330b.jpg?imageView2/2/w/800/q/70/format/avif">
+        <div class="card-content">
+          <h3>Clarity Isolation Protection Cream</h3>
+          <p class="short-desc">Clear And Non-Irritating Isolation Protection</p>
+          <p class="full-desc">Essential for Going Out, Moisturizing And Clear Facial Sunscreen</p>
+          <button class="details-btn" onclick="toggleDetails(this)">Details</button>
+          <div class="price" data-pkr="983">Rs.983</div>
+          <a href="https://share.temu.com/JiaAMDViAPB" class="btn" target="_blank">Buy Now</a>
         </div>
-        <div class="admin-field"><label>Price</label><input type="text" id="ap-price" placeholder="e.g. Rs.999"></div>
-        <div class="admin-field"><label>Buy Now Link</label><input type="url" id="ap-link" placeholder="https://..."></div>
-        <div class="admin-field"><label>Short Description</label><input type="text" id="ap-short" placeholder="One-line summary shown on card"></div>
-        <div class="admin-field"><label>Full Description</label><textarea id="ap-full" placeholder="Detailed product info..."></textarea></div>
-        <div class="admin-field">
-          <label>Main Image URL *</label>
-          <input type="url" id="ap-img" placeholder="https://...">
-          <div id="thumb-fields"></div>
-          <button class="add-thumb-btn" onclick="addThumbField()">+ Add another image</button>
-        </div>
-        <input type="hidden" id="ap-edit-id" value="">
-        <button class="admin-submit" id="ap-submit-btn" onclick="submitProduct()">Add Product to Store</button>
-        <div id="admin-msg" class="admin-msg"></div>
       </div>
 
-      <!-- EDIT TAB -->
-      <div id="tab-edit" style="display:none;">
-        <div id="edit-list"></div>
-        <div id="edit-empty">No saved products yet. Add some first!</div>
+      <div class="card">
+        <img crossorigin="anonymous" src="https://img.kwcdn.com/product/fancy/ba46f935-de74-4468-bba6-7cfaa9affe27.jpg?imageView2/2/w/800/q/70/format/avif">
+        <div class="card-content">
+          <h3>Red Cat Eye Fake Nails</h3>
+          <p class="short-desc">10pcs of Red Cat-Eye Short Square Fake Nails</p>
+          <p class="full-desc">Glossy Acrylic Nails, Reusable Acrylic Home Nails Suitable for Autumn And Winter Nail Decoration</p>
+          <button class="details-btn" onclick="toggleDetails(this)">Details</button>
+          <div class="price" data-pkr="331">Rs.331</div>
+          <a href="https://share.temu.com/d64lMod7mtB" class="btn" target="_blank">Buy Now</a>
+        </div>
+      </div>
+
+      <div class="card">
+        <img crossorigin="anonymous" src="https://img.kwcdn.com/product/fancy/f6ff69c8-8eb4-4dae-9d89-1beac4470597.jpg?imageView2/2/w/800/q/70/format/avif">
+        <div class="card-content">
+          <h3>Easter Bunny False Nails</h3>
+          <p class="short-desc">24pcs Easter Pastel Bunny False Nails</p>
+          <p class="full-desc">Polka Dot Stripe Cute Artificial Nails, Suitable for Women's Spring and Summer Decorative Styling</p>
+          <button class="details-btn" onclick="toggleDetails(this)">Details</button>
+          <div class="price" data-pkr="682">Rs.682</div>
+          <a href="https://share.temu.com/zi8og73hl8B" class="btn" target="_blank">Buy Now</a>
+        </div>
+      </div>
+
+      <div class="card">
+        <img crossorigin="anonymous" src="https://img.kwcdn.com/product/fancy/f5707130-079b-4ab2-aa98-03a60dff3abb.jpg?imageView2/2/w/800/q/70/format/avif">
+        <div class="card-content">
+          <h3>Tanning Oil</h3>
+          <p class="short-desc">100Ml Coconut Tanning Oil, Waterproof And Long-Lasting Tan</p>
+          <p class="full-desc">Suitable for Indoor Use, with Moisturizing And Hydrating Properties. Free from Oxybenzone</p>
+          <button class="details-btn" onclick="toggleDetails(this)">Details</button>
+          <div class="price" data-pkr="2837">Rs.2837</div>
+          <a href="https://share.temu.com/ymgAKWDK8FB" class="btn" target="_blank">Buy Now</a>
+        </div>
+      </div>
+
+      <div class="card">
+        <img crossorigin="anonymous" src="https://s.alicdn.com/@sc04/kf/H1d2213e1d17e42d3b64cde39adbeaf76b.jpg?avif=close&webp=close">
+        <div class="card-content">
+          <h3>Natural Keratin Hair Treatment</h3>
+          <p class="short-desc">Brazilian Natural Keratin Hair Treatment</p>
+          <p class="full-desc">Wholesale by Carton 800ml Hair Smoothing Cream Product</p>
+          <button class="details-btn" onclick="toggleDetails(this)">Details</button>
+          <div class="price" data-pkr="20241">Rs.20241</div>
+          <a href="https://offer.alibaba.com/cps/0ciah0q6?bm=cps&src=saf&productId=1601418772610" class="btn" target="_blank">Buy Now</a>
+        </div>
+      </div>
+
+      <div class="card">
+        <img crossorigin="anonymous" src="https://s.alicdn.com/@sc04/kf/H23f7a5c36f1b4c58a6648e771ecd1dc65.jpg?avif=close&webp=close">
+        <div class="card-content">
+          <h3>OEM Waterproof Root Touch Up Hair</h3>
+          <p class="short-desc">OEM Waterproof Root Touch up Hair Dye Stick</p>
+          <p class="full-desc">2 in 1 Comb & Color Quick Gray Hair Cover Up, Ammonia Free Portable</p>
+          <button class="details-btn" onclick="toggleDetails(this)">Details</button>
+          <div class="price" data-pkr="258">Rs.258</div>
+          <a href="https://offer.alibaba.com/cps/0ciah0q6?bm=cps&src=saf&productId=1601594093666" class="btn" target="_blank">Buy Now</a>
+        </div>
+      </div>
+
+      <div class="card">
+        <img crossorigin="anonymous" src="https://s.alicdn.com/@sc04/kf/H6c4a7006354d487890e4a19212aa92b4S.jpg?avif=close&webp=close">
+        <div class="card-content">
+          <h3>OEM Shampoo</h3>
+          <p class="short-desc">OEM Shampoo Manufacturers</p>
+          <p class="full-desc">Rosemary Extract Peppermint Oil Refreshing Oil-Control Rosemary Shampoo</p>
+          <button class="details-btn" onclick="toggleDetails(this)">Details</button>
+          <div class="price" data-pkr="703">Rs.703</div>
+          <a href="https://offer.alibaba.com/cps/0ciah0q6?bm=cps&src=saf&productId=1601661844082" class="btn" target="_blank">Buy Now</a>
+        </div>
+      </div>
+
+      <div class="card">
+        <img crossorigin="anonymous" src="https://s.alicdn.com/@sc04/kf/H8f83b699c6c644b99904a3d298e4f452a.jpg?avif=close&webp=close">
+        <div class="card-content">
+          <h3>Hair Dye Permanent Hair Color</h3>
+          <p class="short-desc">Organic Professional Salon Hair Dye</p>
+          <p class="full-desc">Professional Hair Dye Permanent Hair Color</p>
+          <button class="details-btn" onclick="toggleDetails(this)">Details</button>
+          <div class="price" data-pkr="314">Rs.314</div>
+          <a href="https://offer.alibaba.com/cps/0ciah0q6?bm=cps&src=saf&productId=1601252719587" class="btn" target="_blank">Buy Now</a>
+        </div>
+      </div>
+
+    </div>
+  </section>
+
+  <!-- ── Tech ──────────────────────────────────────────────── -->
+  <section class="section" id="tech">
+    <h2>Tech Products</h2>
+    <input type="text" class="search-bar" placeholder="Search tech products..." oninput="searchProducts(this)">
+    <div class="products" id="tech-products">
+
+      <div class="card">
+        <img crossorigin="anonymous" src="https://img.kwcdn.com/product/fancy/061a9ef9-e1da-4160-8867-381e592eeb14.jpg?imageView2/2/w/800/q/70/format/avif">
+        <div class="card-content">
+          <h3>Luxurious Wrist Watch</h3>
+          <p class="short-desc">Premium design wrist watch</p>
+          <p class="full-desc">Elegant luxurious wrist watch with premium build quality</p>
+          <button class="details-btn" onclick="toggleDetails(this)">Details</button>
+          <div class="price" data-pkr="1078">Rs.1078</div>
+          <a href="https://temu.to/k/e4qg5ggirqh" class="btn" target="_blank">Buy Now</a>
+        </div>
+      </div>
+
+      <div class="card">
+        <img crossorigin="anonymous" src="https://img.kwcdn.com/product/fancy/23ee47f1-48b3-40af-aa4a-655c2520a05c.jpg?imageView2/2/w/800/q/70/format/avif">
+        <div class="card-content">
+          <h3>OTG Extension Hub</h3>
+          <p class="short-desc">High-Speed USB 2.0 Hub - Expand Your Device</p>
+          <p class="full-desc">Connectivity with 4/7 Ports, LED Indicator Switches, Compact and Lightweight Design for PCs and Laptops</p>
+          <button class="details-btn" onclick="toggleDetails(this)">Details</button>
+          <div class="price" data-pkr="836">Rs.836</div>
+          <a href="https://share.temu.com/AFdBYqAWRVB" class="btn" target="_blank">Buy Now</a>
+        </div>
+      </div>
+
+      <div class="card">
+        <img crossorigin="anonymous" src="https://img.kwcdn.com/product/Fancyalgo/VirtualModelMatting/f03bbd6536163de93d0273b8ffcf1eb3.jpg?imageView2/2/w/800/q/70/format/avif">
+        <div class="card-content">
+          <h3>RGB Gaming Mouse</h3>
+          <p class="short-desc">Silver Carved Mechanical Gaming Mouse</p>
+          <p class="full-desc">Wired, Suitable for Desktop And Laptop Use, Silent for Office And Esports</p>
+          <button class="details-btn" onclick="toggleDetails(this)">Details</button>
+          <div class="price" data-pkr="2570">Rs.2570</div>
+          <a href="https://share.temu.com/GnNHeaUevAB" class="btn" target="_blank">Buy Now</a>
+        </div>
+      </div>
+
+      <div class="card">
+        <img crossorigin="anonymous" src="https://img.kwcdn.com/product/Fancyalgo/VirtualModelMatting/785405df6369d7bf47e59a2d173b23fe.jpg?imageView2/2/w/800/q/70/format/avif">
+        <div class="card-content">
+          <h3>Light Weight Gaming Wired Headphones</h3>
+          <p class="short-desc">7260 Wired Over-Ear Headset with Microphone</p>
+          <p class="full-desc">Compatible: PS4/PS5/Xbox One/SWITCH / Mobile Phones & PC Tablets, Lightweight, Noise Isolation</p>
+          <button class="details-btn" onclick="toggleDetails(this)">Details</button>
+          <div class="price" data-pkr="4131">Rs.4131</div>
+          <a href="https://share.temu.com/nZQDkrPiHRB" class="btn" target="_blank">Buy Now</a>
+        </div>
+      </div>
+
+      <div class="card">
+        <img crossorigin="anonymous" src="https://img.kwcdn.com/product/fancy/56097efe-6454-4ba5-958f-3c2a3ff12be2.jpg?imageView2/2/w/800/q/70/format/avif">
+        <div class="card-content">
+          <h3>USB Keyboard & Mouse Combo with Rainbow LED</h3>
+          <p class="short-desc">USB Wired Keyboard And Mouse Combo with Rainbow LED Backlighting</p>
+          <p class="full-desc">Suitable for PCs, Laptops, Gaming, Office Work, Mac, PS4, And Xbox</p>
+          <button class="details-btn" onclick="toggleDetails(this)">Details</button>
+          <div class="price" data-pkr="6885">Rs.6885</div>
+          <a href="https://share.temu.com/dkZhvwqDeCB" class="btn" target="_blank">Buy Now</a>
+        </div>
+      </div>
+
+      <div class="card">
+        <img crossorigin="anonymous" src="https://img.kwcdn.com/product/open/9e097c0b3a5647aa99d831a36e05a44c-goods.jpeg?imageView2/2/w/1300/q/90/format/avif">
+        <div class="card-content">
+          <h3>LED-Backlit Keyboard/Headset/Mouse Bundle</h3>
+          <p class="short-desc">Keyboard and Mouse Set Vibrant LED-Backlit</p>
+          <p class="full-desc">Keyboard/Headset/Mouse/Large Mouse Pad Gaming Peripherals Bundle for Gaming, Esports, Home and Office</p>
+          <button class="details-btn" onclick="toggleDetails(this)">Details</button>
+          <div class="price" data-pkr="12762">Rs.12762</div>
+          <a href="https://share.temu.com/9yUjE3GyTiB" class="btn" target="_blank">Buy Now</a>
+        </div>
+      </div>
+
+      <div class="card">
+        <img crossorigin="anonymous" src="https://img.kwcdn.com/product/fancy/0c806d17-6a96-4ed2-b501-dd7f9e09fb85.jpg?imageView2/2/w/800/q/70/format/avif">
+        <div class="card-content">
+          <h3>Black Luxurious Watch</h3>
+          <p class="short-desc">Women's Sparkling Rhinestone Quartz Watch</p>
+          <p class="full-desc">A 5pcs Set Featuring a Women's Sparkling Rhinestone Quartz Watch</p>
+          <button class="details-btn" onclick="toggleDetails(this)">Details</button>
+          <div class="price" data-pkr="398">Rs.398</div>
+          <a href="https://temu.to/k/eqtmqtnoyoy" class="btn" target="_blank">Buy Now</a>
+        </div>
+      </div>
+
+      <div class="card">
+        <img crossorigin="anonymous" src="https://s.alicdn.com/@sc04/kf/He3348378f7b240c58cfedf4d87491b9fq.jpg?avif=close&webp=close">
+        <div class="card-content">
+          <h3>Gaming Wired Headphone</h3>
+          <p class="short-desc">K2 Gaming Wired Headphone</p>
+          <p class="full-desc">Top Selling Headphone Products K2 Gaming Wired Headphone</p>
+          <button class="details-btn" onclick="toggleDetails(this)">Details</button>
+          <div class="price" data-pkr="3764">Rs.3764</div>
+          <a href="https://offer.alibaba.com/cps/0ciah0q6?bm=cps&src=saf&productId=60702763866" class="btn" target="_blank">Buy Now</a>
+        </div>
+      </div>
+
+      <div class="card">
+        <div class="product-gallery">
+          <img crossorigin="anonymous" src="https://s.alicdn.com/@sc04/kf/H0c37a98adf97413792d7d437de270456G.png?avif=close&webp=close" class="main-image">
+          <div class="thumbnails">
+            <img src="https://s.alicdn.com/@sc04/kf/H0ff9d75a7f8d42818e576fa5fbd2b02dQ.png?avif=close&webp=close" class="thumb active" onclick="changeImage(this)">
+            <img src="https://s.alicdn.com/@sc04/kf/H6b8e9ab9b4494a4aa1222c3dfde83d5bw.png?avif=close&webp=close" class="thumb" onclick="changeImage(this)">
+            <img src="https://s.alicdn.com/@sc04/kf/H5bf84163d0ed4083bc7365f556a605a5r.png?avif=close&webp=close" class="thumb" onclick="changeImage(this)">
+          </div>
+        </div>
+        <div class="card-content">
+          <h3>Intel I7 10th/12th Gen Quad Core Laptop</h3>
+          <p class="short-desc">OEM 15.6 Inch Intel I7 Quad Core SSD Laptop</p>
+          <p class="full-desc">Quad Core SSD Laptop for Gaming and Business, Low Price, New Products Available</p>
+          <button class="details-btn" onclick="toggleDetails(this)">Details</button>
+          <div class="price" data-pkr="80040">Rs.80040</div>
+          <a href="https://offer.alibaba.com/cps/0ciah0q6?bm=cps&src=saf&productId=1601224210243" class="btn" target="_blank">Buy Now</a>
+        </div>
+      </div>
+
+      <div class="card">
+        <div class="product-gallery">
+          <img crossorigin="anonymous" src="https://s.alicdn.com/@sc04/kf/H76cc954420b8467083fbc290cfd4a76fo.jpg?avif=close&webp=close" class="main-image">
+          <div class="thumbnails">
+            <img src="https://s.alicdn.com/@sc04/kf/H76cc954420b8467083fbc290cfd4a76fo.jpg?avif=close&webp=close" class="thumb active" onclick="changeImage(this)">
+            <img src="https://s.alicdn.com/@sc04/kf/Hcd577ccd35534a33885765be00569fd50.jpg?avif=close&webp=close" class="thumb" onclick="changeImage(this)">
+            <img src="https://s.alicdn.com/@sc04/kf/H677966b829b049e5877b8b44158d0845E.jpg?avif=close&webp=close" class="thumb" onclick="changeImage(this)">
+          </div>
+        </div>
+        <div class="card-content">
+          <h3>RGB Gaming Chair with Massage</h3>
+          <p class="short-desc">Computer Adjustable Racing Gaming Chair</p>
+          <p class="full-desc">Fast Shipping Computer Adjustable Racing Gaming Chair with RGB Lighting and Massage</p>
+          <button class="details-btn" onclick="toggleDetails(this)">Details</button>
+          <div class="price" data-pkr="17016">Rs.17016</div>
+          <a href="https://offer.alibaba.com/cps/0ciah0q6?bm=cps&src=saf&productId=1601590820795" class="btn" target="_blank">Buy Now</a>
+        </div>
+      </div>
+
+    </div>
+  </section>
+
+  <!-- ── Gaming ─────────────────────────────────────────────── -->
+  <section class="section" id="gaming">
+    <h2>Gaming Products</h2>
+    <input type="text" class="search-bar" placeholder="Search gaming products..." oninput="searchProducts(this)">
+    <div class="products" id="gaming-products">
+
+      <div class="card">
+        <img crossorigin="anonymous" src="https://www.nintendo.com/eu/media/images/10_share_images/games_15/nintendo_switch_4/2x1_NSwitch_Sifu.jpg">
+        <div class="card-content">
+          <h3>Sifu Epic Games Account</h3>
+          <p class="short-desc">Epic Games Account with Sifu</p>
+          <p class="full-desc">Full Epic Games Account pre-loaded with Sifu. DM on Instagram to purchase.</p>
+          <button class="details-btn" onclick="toggleDetails(this)">Details</button>
+          <div class="price" data-pkr="6972">Rs.6972</div>
+          <a href="https://www.instagram.com/zoro_affiliates?igsh=MXd4ODg3eTlmbW80bw==" class="btn" target="_blank">Buy Now</a>
+        </div>
+      </div>
+
+      <div class="card">
+        <img crossorigin="anonymous" src="https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcTxFQotaUdDW3F-qGFAqX9UVbMLH4kfhgvneg&s">
+        <div class="card-content">
+          <h3>Dead Island 2</h3>
+          <p class="short-desc">Brutal first-person action RPG set in Los Angeles</p>
+          <p class="full-desc">Dead Island 2 is a brutal first-person action RPG set in a quarantined Los Angeles overrun by terrifying zombies. DM on Instagram to buy.</p>
+          <button class="details-btn" onclick="toggleDetails(this)">Details</button>
+          <div class="price" data-pkr="3199">Rs.3199</div>
+          <a href="https://www.instagram.com/zoro_affiliates?igsh=MXd4ODg3eTlmbW80bw==" class="btn" target="_blank">Buy Now</a>
+        </div>
+      </div>
+
+      <div class="card">
+        <img crossorigin="anonymous" src="https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcQjUfqbq1eYXHk_LKa2ThJ7kB-e4WymqNBmdA&s">
+        <div class="card-content">
+          <h3>Lego Star Wars: Skywalker Saga</h3>
+          <p class="short-desc">All nine Star Wars films in one LEGO experience</p>
+          <p class="full-desc">Lego Star Wars: The Skywalker Saga lets you relive all nine main Star Wars films in one epic LEGO experience.</p>
+          <button class="details-btn" onclick="toggleDetails(this)">Details</button>
+          <div class="price" data-pkr="2999">Rs.2999</div>
+          <a href="https://www.instagram.com/zoro_affiliates?igsh=MXd4ODg3eTlmbW80bw==" class="btn" target="_blank">Buy Now</a>
+        </div>
+      </div>
+
+    </div>
+  </section>
+
+  <!-- ── About ──────────────────────────────────────────────── -->
+  <section class="about" id="about">
+    <h2>About Zenova</h2>
+    <p>Zenova is your premium destination for beauty, tech, and gaming products. We partner with trusted brands to bring you the best products through affiliate deals.</p>
+  </section>
+
+  <footer>© 2026 Zenova Store. All rights reserved.</footer>
+
+  <!-- ── Admin Panel ────────────────────────────────────────── -->
+  <div id="admin-panel">
+    <div class="admin-box">
+
+      <button class="admin-close" onclick="closeAdmin()">&#x2715;</button>
+
+      <!-- Login Screen -->
+      <div class="admin-login-screen" id="admin-login-screen">
+        <h2>🔐 Admin Login</h2>
+        <input type="email" id="admin-email" placeholder="Email address">
+        <input type="password" id="admin-password" placeholder="Password">
+        <button class="login-btn" onclick="adminLogin()">Login</button>
+        <div class="login-error" id="login-error"></div>
+      </div>
+
+      <!-- Admin Content (visible after login) -->
+      <div class="admin-content-screen" id="admin-content-screen">
+
+        <button class="logout-btn" onclick="adminLogout()">Logout</button>
+        <h2>⚡ Admin Panel</h2>
+
+        <div class="admin-tabs">
+          <button class="admin-tab active" onclick="switchAdminTab('add')">➕ Add Product</button>
+          <button class="admin-tab" onclick="switchAdminTab('edit')">✏️ Edit / Delete</button>
+        </div>
+
+        <!-- Add Product Tab -->
+        <div id="tab-add">
+
+          <div class="admin-field">
+            <label>Product Name *</label>
+            <input type="text" id="ap-name" placeholder="e.g. Rose Face Serum">
+          </div>
+
+          <div class="admin-field">
+            <label>Category *</label>
+            <select id="ap-section">
+              <option value="beauty">Beauty</option>
+              <option value="tech">Tech</option>
+              <option value="gaming">Gaming</option>
+            </select>
+          </div>
+
+          <!-- FIX 1: ID is now ap-price-pkr (matches Firebase script) -->
+          <div class="admin-field">
+            <label>Price in PKR (Rs.) *</label>
+            <input type="number" id="ap-price-pkr" placeholder="e.g. 999">
+          </div>
+
+          <div class="admin-field">
+            <label>Buy Now Link</label>
+            <input type="url" id="ap-link" placeholder="https://...">
+          </div>
+
+          <div class="admin-field">
+            <label>Short Description</label>
+            <input type="text" id="ap-short" placeholder="One-line summary shown on card">
+          </div>
+
+          <div class="admin-field">
+            <label>Full Description</label>
+            <textarea id="ap-full" placeholder="Detailed product info..."></textarea>
+          </div>
+
+          <div class="admin-field">
+            <label>Main Image URL *</label>
+            <input type="url" id="ap-img" placeholder="https://...">
+            <div id="thumb-fields"></div>
+            <button class="add-thumb-btn" onclick="addThumbField()">+ Add another image</button>
+          </div>
+
+          <input type="hidden" id="ap-edit-id" value="">
+          <button class="admin-submit" id="ap-submit-btn" onclick="submitProduct()">Add Product to Store</button>
+          <div id="admin-msg" class="admin-msg"></div>
+
+        </div>
+
+        <!-- Edit / Delete Tab -->
+        <div id="tab-edit" style="display: none;">
+          <div id="edit-list"></div>
+          <div id="edit-empty">No saved products yet. Add some first!</div>
+        </div>
+
       </div>
     </div>
   </div>
-</div>
 
- <!-- =====================================================
+
+  <!-- =====================================================
        CURRENCY SYSTEM (pure JS — no HTML changes needed)
 
        Flow:
@@ -1324,41 +1348,44 @@ button,a
 
       const DEFAULT = CURRENCIES['PK'];
 
-      // Strip non-numeric chars from price text and return the number
-      function extractPkr(text) {
-        const num = parseFloat(text.replace(/[^\d.]/g, ''));
-        return isNaN(num) ? null : num;
-      }
-
-      // Convert PKR amount to display string in user's currency
-      function formatPrice(pkr, currency) {
+      // Format a PKR number into user's local currency string
+      // e.g. 531 PKR + USD currency = "$1.91"
+      // e.g. 531 PKR + PKR currency = "Rs.531"
+      // Exposed globally so Firebase buildCard can also call it
+      window.convertPrice = function formatPrice(pkr, currency) {
         const val = pkr * currency.rate;
         if (val < 1)  return currency.symbol + val.toFixed(3);
         if (val < 10) return currency.symbol + val.toFixed(2);
         return currency.symbol + Math.round(val).toLocaleString();
-      }
+      };
 
-      // Convert a single .price element, skip if already done or non-PKR
+      // Convert a single .price element using its data-pkr attribute
+      // data-pkr holds the raw PKR number — no text parsing needed
       function convertEl(el, currency) {
         if (el.dataset.converted) return;
 
-        const text  = el.textContent.trim();
-        const isPkr = /Rs|₨|\brs\b/i.test(text);
+        // Read PKR value from data-pkr attribute (set in HTML or by buildCard)
+        const pkr = parseFloat(el.dataset.pkr);
 
-        if (!isPkr) {
-          el.dataset.converted = 'skip';
+        if (!pkr || isNaN(pkr)) {
+          // No data-pkr — try to parse from text as fallback
+          // Remove all non-digit chars except dot, then parse
+          const raw = parseFloat(el.textContent.replace(/[^\d.]/g, ''));
+          if (!raw || isNaN(raw)) {
+            el.dataset.converted = 'skip';
+            return;
+          }
+          el.dataset.pkr = raw;
+          el.dataset.converted = 'yes';
+          el.textContent = window.convertPrice(raw, currency);
           return;
         }
 
-        const pkr = extractPkr(text);
-        if (!pkr) return;
-
-        el.dataset.pkr       = pkr;
         el.dataset.converted = 'yes';
-        el.textContent       = formatPrice(pkr, currency);
+        el.textContent = window.convertPrice(pkr, currency);
       }
 
-      // Convert all .price elements on the page right now
+      // Convert all .price elements currently on the page
       function convertAll(currency) {
         document.querySelectorAll('.price').forEach(el => convertEl(el, currency));
       }
@@ -1868,7 +1895,7 @@ button,a
           <p class="short-desc">${p.shortDesc || ''}</p>
           <p class="full-desc">${p.fullDesc || ''}</p>
           <button class="details-btn" onclick="toggleDetails(this)">Details</button>
-          <div class="price">${priceText}</div>
+          <div class="price" data-pkr="${p.pricePkr || 0}">${priceText}</div>
           <a href="${p.link || '#'}" class="btn" target="_blank">Buy Now</a>
         </div>
       `;
@@ -1881,7 +1908,6 @@ button,a
       return card;
     };
 
-    // window.convertPrice is defined in the currency system above — used everywhere
 
     // Show a temporary message in admin panel
     function showMsg(text) {
@@ -1975,8 +2001,5 @@ button,a
 
   </script>
 
-
-
 </body>
 </html>
-
