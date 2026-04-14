@@ -1458,183 +1458,167 @@
 
 
   <!-- =====================================================
-       CURRENCY SYSTEM (pure JS — no HTML changes needed)
-
+       CURRENCY SYSTEM
        Flow:
-       1. Detect user country via ip-api.com (free, no key)
-       2. Pick matching currency from config table
-       3. Read Rs. prices from all .price elements
-       4. Convert and update price text
-       5. MutationObserver auto-converts Firebase cards too
+       1. formatPrice / convertPrice exposed immediately (sync)
+       2. detectCountry() runs async — tries 3 HTTPS APIs
+       3. Once currency is known, ALL .price[data-price-pkr] elements
+          are (re)rendered from the raw PKR value stored in the attribute
+       4. MutationObserver watches for new Firebase cards and converts them
        ===================================================== -->
   <script>
     (function () {
 
-      // Currency config — rate = value of 1 PKR in that currency
+      // ── Currency table ─────────────────────────────────────────
+      // rate = how many units of that currency equal 1 PKR
       const CURRENCIES = {
-        PK: { code: 'PKR', symbol: 'Rs.', flag: '🇵🇰', rate: 1       },
-        US: { code: 'USD', symbol: '$',   flag: '🇺🇸', rate: 0.0036  },
-        GB: { code: 'GBP', symbol: '£',   flag: '🇬🇧', rate: 0.0028  },
-        DE: { code: 'EUR', symbol: '€',   flag: '🇩🇪', rate: 0.0033  },
-        FR: { code: 'EUR', symbol: '€',   flag: '🇫🇷', rate: 0.0033  },
-        IT: { code: 'EUR', symbol: '€',   flag: '🇮🇹', rate: 0.0033  },
-        ES: { code: 'EUR', symbol: '€',   flag: '🇪🇸', rate: 0.0033  },
-        NL: { code: 'EUR', symbol: '€',   flag: '🇳🇱', rate: 0.0033  },
-        AE: { code: 'AED', symbol: 'AED ',flag: '🇦🇪', rate: 0.013   },
-        SA: { code: 'SAR', symbol: 'SAR ',flag: '🇸🇦', rate: 0.0135  },
-        IN: { code: 'INR', symbol: '₹',   flag: '🇮🇳', rate: 0.30    },
-        CA: { code: 'CAD', symbol: 'CA$', flag: '🇨🇦', rate: 0.0049  },
-        AU: { code: 'AUD', symbol: 'A$',  flag: '🇦🇺', rate: 0.0055  },
-        CN: { code: 'CNY', symbol: '¥',   flag: '🇨🇳', rate: 0.026   },
-        TR: { code: 'TRY', symbol: '₺',   flag: '🇹🇷', rate: 0.12    },
-        BD: { code: 'BDT', symbol: '৳',   flag: '🇧🇩', rate: 0.43    },
-        QA: { code: 'QAR', symbol: 'QAR ',flag: '🇶🇦', rate: 0.013   },
-        KW: { code: 'KWD', symbol: 'KD ', flag: '🇰🇼', rate: 0.0011  },
+        PK: { code: 'PKR', symbol: 'Rs.',  flag: '🇵🇰', rate: 1        },
+        US: { code: 'USD', symbol: '$',    flag: '🇺🇸', rate: 0.0036   },
+        GB: { code: 'GBP', symbol: '£',    flag: '🇬🇧', rate: 0.0028   },
+        DE: { code: 'EUR', symbol: '€',    flag: '🇩🇪', rate: 0.0033   },
+        FR: { code: 'EUR', symbol: '€',    flag: '🇫🇷', rate: 0.0033   },
+        IT: { code: 'EUR', symbol: '€',    flag: '🇮🇹', rate: 0.0033   },
+        ES: { code: 'EUR', symbol: '€',    flag: '🇪🇸', rate: 0.0033   },
+        NL: { code: 'EUR', symbol: '€',    flag: '🇳🇱', rate: 0.0033   },
+        AE: { code: 'AED', symbol: 'AED ', flag: '🇦🇪', rate: 0.013    },
+        SA: { code: 'SAR', symbol: 'SAR ', flag: '🇸🇦', rate: 0.0135   },
+        IN: { code: 'INR', symbol: '₹',    flag: '🇮🇳', rate: 0.30     },
+        CA: { code: 'CAD', symbol: 'CA$',  flag: '🇨🇦', rate: 0.0049   },
+        AU: { code: 'AUD', symbol: 'A$',   flag: '🇦🇺', rate: 0.0055   },
+        CN: { code: 'CNY', symbol: '¥',    flag: '🇨🇳', rate: 0.026    },
+        TR: { code: 'TRY', symbol: '₺',    flag: '🇹🇷', rate: 0.12     },
+        BD: { code: 'BDT', symbol: '৳',    flag: '🇧🇩', rate: 0.43     },
+        QA: { code: 'QAR', symbol: 'QAR ', flag: '🇶🇦', rate: 0.013    },
+        KW: { code: 'KWD', symbol: 'KD ',  flag: '🇰🇼', rate: 0.0011   },
       };
 
       const DEFAULT = CURRENCIES['PK'];
 
-      // Strip non-numeric chars from price text and return the number
-      function extractPkr(text) {
-        const num = parseFloat(text.replace(/[^\d.]/g, ''));
-        return isNaN(num) ? null : num;
-      }
-
-      // Convert PKR amount to display string in user's currency
+      // ── Format a PKR number into the target currency string ────
       function formatPrice(pkr, currency) {
+        if (!pkr || !currency) return 'N/A';
         const val = pkr * currency.rate;
-        if (val < 1)  return currency.symbol + val.toFixed(3);
-        if (val < 10) return currency.symbol + val.toFixed(2);
-        return currency.symbol + Math.round(val).toLocaleString();
-      }
-
-      // Convert a single .price element, skip if already done or non-PKR
-      function convertEl(el, currency) {
-        if (el.dataset.converted) return;
-
-        const text  = el.textContent.trim();
-        const isPkr = /Rs|₨|\brs\b/i.test(text);
-
-        if (!isPkr) {
-          el.dataset.converted = 'skip';
-          return;
+        // Whole-number currencies — never show decimals
+        const wholeOnly = ['PKR', 'INR', 'BDT', 'TRY', 'CNY'];
+        if (wholeOnly.includes(currency.code)) {
+          return currency.symbol + Math.round(val).toLocaleString('en-US');
         }
-
-        const pkr = extractPkr(text);
-        if (!pkr) return;
-
-        el.dataset.pkr       = pkr;
-        el.dataset.converted = 'yes';
-        el.textContent       = formatPrice(pkr, currency);
+        // Small values (e.g. KWD, GBP for cheap items)
+        if (val < 0.01) return currency.symbol + val.toFixed(4);
+        if (val < 1)    return currency.symbol + val.toFixed(3);
+        if (val < 10)   return currency.symbol + val.toFixed(2);
+        return currency.symbol + Math.round(val).toLocaleString('en-US');
       }
 
-      // Convert all .price elements on the page right now
-      function convertAll(currency) {
-        document.querySelectorAll('.price').forEach(el => convertEl(el, currency));
+      // Expose globally — used by buildCard() and renderEditList()
+      window.convertPrice = formatPrice;
+
+      // Start with PKR so cards built before detectCountry() resolves
+      // show a real price (not 0 or N/A)
+      window.userCurrency = DEFAULT;
+
+      // ── Re-render every .price element on the page ─────────────
+      // Reads the raw PKR value from data-price-pkr attribute (set by buildCard)
+      // This works for BOTH static cards and Firebase-built cards
+      function renderAllPrices(currency) {
+        document.querySelectorAll('.price[data-price-pkr]').forEach(el => {
+          const pkr = parseFloat(el.getAttribute('data-price-pkr'));
+          if (!isNaN(pkr) && pkr > 0) {
+            el.textContent = formatPrice(pkr, currency);
+          }
+        });
       }
 
-      // Inject currency flag badge next to logo in header
+      // ── Currency badge next to logo ─────────────────────────────
       function showBadge(currency) {
-        if (document.getElementById('zn-badge')) return;
-
-        const badge = document.createElement('span');
-        badge.id    = 'zn-badge';
-        badge.textContent = currency.flag + ' ' + currency.code;
-        badge.style.cssText = [
-          'font-size:11px',
-          'font-weight:700',
-          'letter-spacing:1px',
-          'color:var(--bg-deep,#0d0205)',
-          'background:var(--accent,#f5c518)',
-          'padding:3px 10px',
-          'border-radius:20px',
-          'margin-left:12px',
-          'vertical-align:middle',
-          'font-family:Orbitron,monospace',
-          'white-space:nowrap',
-        ].join(';');
-
-        const logo   = document.querySelector('.logo');
-        const header = document.querySelector('header');
-
-        if (logo && logo.parentNode) {
-          logo.parentNode.insertBefore(badge, logo.nextSibling);
-        } else if (header) {
-          header.appendChild(badge);
+        let badge = document.getElementById('zn-badge');
+        if (!badge) {
+          badge = document.createElement('span');
+          badge.id = 'zn-badge';
+          badge.style.cssText = [
+            'font-size:11px', 'font-weight:700', 'letter-spacing:1px',
+            'color:var(--bg-deep,#0d0205)', 'background:var(--accent,#f5c518)',
+            'padding:3px 10px', 'border-radius:20px', 'margin-left:12px',
+            'vertical-align:middle', 'font-family:Orbitron,monospace', 'white-space:nowrap',
+          ].join(';');
+          const logo = document.querySelector('.logo');
+          if (logo && logo.parentNode) logo.parentNode.insertBefore(badge, logo.nextSibling);
+          else { const h = document.querySelector('header'); if (h) h.appendChild(badge); }
         }
+        badge.textContent = currency.flag + ' ' + currency.code;
       }
 
-      // Watch for new cards added dynamically by Firebase and convert them
-      function watchNewCards(currency) {
-        const observer = new MutationObserver(mutations => {
-          mutations.forEach(mutation => {
-            mutation.addedNodes.forEach(node => {
-              if (node.nodeType !== 1) return;
-
-              if (node.classList && node.classList.contains('price')) {
-                convertEl(node, currency);
-              }
-
-              node.querySelectorAll && node.querySelectorAll('.price').forEach(el => {
-                convertEl(el, currency);
-              });
-            });
+      // ── Watch for new Firebase cards and convert them instantly ─
+      function watchNewCards() {
+        const observer = new MutationObserver(() => {
+          const currency = window.userCurrency || DEFAULT;
+          document.querySelectorAll('.price[data-price-pkr]:not([data-rendered])').forEach(el => {
+            const pkr = parseFloat(el.getAttribute('data-price-pkr'));
+            if (!isNaN(pkr) && pkr > 0) {
+              el.textContent = formatPrice(pkr, currency);
+              el.setAttribute('data-rendered', '1');
+            }
           });
         });
-
         observer.observe(document.body, { childList: true, subtree: true });
       }
 
-      // Entry point: detect country then run everything
-      // Tries 3 different free APIs in order — if one fails, tries next
+      // ── Country detection — 3 HTTPS APIs in order ──────────────
       async function detectCountry() {
-        // API 1: ipapi.co — HTTPS, free, no key needed
+        // API 1: ipwho.is
         try {
-          const res  = await fetch('https://ipapi.co/json/', { signal: AbortSignal.timeout(4000) });
-          const data = await res.json();
-          if (data.country_code) return data.country_code;
+          const r = await fetch('https://ipwho.is/', { signal: AbortSignal.timeout(5000) });
+          const d = await r.json();
+          if (d.country_code) return d.country_code;
         } catch (e) {}
 
-        // API 2: freeipapi.com — HTTPS, free backup
+        // API 2: ipapi.co (plain text endpoint — less rate-limited)
         try {
-          const res  = await fetch('https://freeipapi.com/api/json', { signal: AbortSignal.timeout(4000) });
-          const data = await res.json();
-          if (data.countryCode) return data.countryCode;
+          const r = await fetch('https://ipapi.co/country/', { signal: AbortSignal.timeout(5000) });
+          const t = (await r.text()).trim();
+          if (t.length === 2) return t;
         } catch (e) {}
 
-        // API 3: ip-api.com — HTTP fallback (works on HTTP sites)
+        // API 3: ip.seeip.org
         try {
-          const res  = await fetch('http://ip-api.com/json/?fields=countryCode', { signal: AbortSignal.timeout(4000) });
-          const data = await res.json();
-          if (data.countryCode) return data.countryCode;
+          const r = await fetch('https://ip.seeip.org/geoip', { signal: AbortSignal.timeout(5000) });
+          const d = await r.json();
+          if (d.country_code) return d.country_code;
         } catch (e) {}
 
-        return null; // All APIs failed — will use default PKR
+        return null;
       }
 
+      // ── Main init ───────────────────────────────────────────────
       async function init() {
-        let currency = DEFAULT;
+        // Start the DOM watcher immediately so new Firebase cards get stamped
+        watchNewCards();
 
+        let currency = DEFAULT;
         try {
-          const countryCode = await detectCountry();
-          if (countryCode) {
-            currency = CURRENCIES[countryCode] || DEFAULT;
+          const code = await detectCountry();
+          if (code) {
+            currency = CURRENCIES[code] || DEFAULT;
           } else {
-            console.warn('[Zenova] All currency APIs failed, using PKR.');
+            console.warn('[Zenova] Currency detection failed — showing PKR.');
           }
         } catch (e) {
-          console.warn('[Zenova] Currency detection error:', e);
+          console.warn('[Zenova] Currency error:', e);
         }
 
-        // Store globally so Firebase buildCard and formatPrice can use it
+        // Update global — buildCard uses this for any cards rendered after this point
         window.userCurrency = currency;
 
+        // Update badge and re-render ALL price elements with correct currency
         showBadge(currency);
-        convertAll(currency);
-        watchNewCards(currency);
+        renderAllPrices(currency);
+
+        // Mark all already-rendered prices so watcher skips them
+        document.querySelectorAll('.price[data-price-pkr]').forEach(el => {
+          el.setAttribute('data-rendered', '1');
+        });
       }
 
-      // Wait for DOM if still loading, otherwise run immediately
       if (document.readyState === 'loading') {
         document.addEventListener('DOMContentLoaded', init);
       } else {
@@ -2132,7 +2116,7 @@ function applyTheme(themeName) {
           <p class="short-desc">${p.shortDesc || ''}</p>
           <p class="full-desc">${p.fullDesc || ''}</p>
           <button class="details-btn" onclick="toggleDetails(this)">Details</button>
-          <div class="price">${priceText}</div>
+          <div class="price" data-price-pkr="${p.pricePkr || ''}">${priceText}</div>
           <a href="${p.link || '#'}" class="btn" target="_blank">Buy Now</a>
         </div>
       `;
