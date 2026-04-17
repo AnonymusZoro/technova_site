@@ -1952,14 +1952,32 @@
       return str ? str.charAt(0).toUpperCase() + str.slice(1) : '';
     }
 
-    // Ctrl + Shift + A → Admin panel
-    document.addEventListener('keydown', e => {
-      if (e.ctrlKey && e.shiftKey && e.key.toLowerCase() === 'a') {
-        e.preventDefault();
-        document.getElementById('admin-panel').classList.add('open');
-      }
-    });
+   // Ctrl + Shift + A → Admin panel (desktop)
+document.addEventListener('keydown', e => {
+  if (e.ctrlKey && e.shiftKey && e.key.toLowerCase() === 'a') {
+    e.preventDefault();
+    document.getElementById('admin-panel').classList.add('open');
+  }
+});
 
+// Triple-tap on logo → Admin panel (mobile)
+(function () {
+  let tapCount = 0;
+  let tapTimer = null;
+  const logo = document.querySelector('.logo-wrap');
+  if (!logo) return;
+  logo.addEventListener('click', () => {
+    tapCount++;
+    clearTimeout(tapTimer);
+    tapTimer = setTimeout(() => { tapCount = 0; }, 600);
+    if (tapCount >= 3) {
+      tapCount = 0;
+      clearTimeout(tapTimer);
+      document.getElementById('admin-panel').classList.add('open');
+    }
+  });
+})();
+  
     // Auto-convert images to JPG
     window.convertToJpg = function (imageUrl) {
       return new Promise((resolve) => {
