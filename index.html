@@ -1674,214 +1674,6 @@
 </script>
 
 <!-- ── Firebase Module ── -->
-<script type="module">
-  import { initializeApp }                          from "https://www.gstatic.com/firebasejs/12.12.0/firebase-app.js";
-  import { getAuth, onAuthStateChanged,
-           signInWithEmailAndPassword, signOut }    from "https://www.gstatic.com/firebasejs/12.12.0/firebase-auth.js";
-  import { getFirestore, collection, onSnapshot,
-           addDoc, updateDoc, deleteDoc, doc }      from "https://www.gstatic.com/firebasejs/12.12.0/firebase-firestore.js";
-
-  const firebaseConfig = {
-    apiKey:            "AIzaSyBxIMqoSaZ1pQSarkaxD0Voe28B1gY5orA",
-    authDomain:        "zenova-beauty.firebaseapp.com",
-    projectId:         "zenova-beauty",
-    storageBucket:     "zenova-beauty.firebasestorage.app",
-    messagingSenderId: "923228663946",
-    appId:             "1:923228663946:web:7b0a8d7b3cefc80a7e3d73",
-    measurementId:     "G-NRP1ETHDZN"
-  };
-
-  const app  = initializeApp(firebaseConfig);
-  const auth = getAuth(app);
-  const db   = getFirestore(app);
-  const col  = collection(db, 'products');
-
-  window.firestoreProducts = [];
-
-  onAuthStateChanged(auth, (user) => {
-    document.getElementById('admin-login-screen').style.display   = user ? 'none'  : 'block';
-    document.getElementById('admin-content-screen').style.display = user ? 'block' : 'none';
-  });
-
-  onSnapshot(col, (snapshot) => {
-    window.firestoreProducts = [];
-    snapshot.forEach(d => window.firestoreProducts.push({ id: d.id, ...d.data() }));
-    renderHomeGrid();
-    renderCategoryCards();
-    const loader = document.getElementById('home-loading');
-    if (loader) loader.style.display = 'none';
-  });
-
-  
-
-  function renderCategoryCards() {
-    ['skincare', 'nails', 'hair'].forEach(section => {
-      const grid = document.getElementById(section + '-products');
-      if (!grid) return;
-      grid.querySelectorAll('.card[data-firestore]').forEach(c => c.remove());
-      window.firestoreProducts
-        .filter(p => p.section === section)
-        .forEach(p => {
-          const card = window.buildCard(p, p.id);
-          card.setAttribute('data-firestore', '1');
-          grid.appendChild(card);
-        });
-    });
-    function renderHomeGrid() {
-    const grid = document.getElementById('home-products');
-    if (!grid) return;
-
-    // Remove previously injected cards (both firestore and static-clones)
-    grid.querySelectorAll('.card[data-firestore], .card[data-static-clone]').forEach(c => c.remove());
-
-    // Clone static cards from skincare/nails/hair sections
-    const staticClones = [];
-    ['skincare-products', 'nails-products', 'hair-products'].forEach(secId => {
-      document.getElementById(secId)
-        ?.querySelectorAll('.card:not([data-firestore]):not([data-static-clone])')
-        .forEach(card => {
-          const clone = card.cloneNode(true);
-          clone.setAttribute('data-static-clone', '1');
-          staticClones.push(clone);
-        });
-    });
-
-    // Build Firestore cards
-    const fsCards = window.firestoreProducts.map(p => {
-      const card = window.buildCard(p, p.id);
-      card.setAttribute('data-firestore', '1');
-      return card;
-    });
-
-    // Merge + shuffle
-    const all = [...staticClones, ...fsCards];
-    for (let i = all.length - 1; i > 0; i--) {
-      const j = Math.floor(Math.random() * (i + 1));
-      [all[i], all[j]] = [all[j], all[i]];
-    }
-
-    grid.innerHTML = '';
-    all.forEach(card => grid.appendChild(card));
-  }
-  }
-
-  window._fb.adminLogin = function () {
-    const email = document.getElementById('admin-email').value.trim();
-    const pass  = document.getElementById('admin-password').value;
-    const errEl = document.getElementById('login-error');
-    errEl.style.display = 'none';
-    signInWithEmailAndPassword(auth, email, pass)
-      .then(() => {
-        document.getElementById('admin-email').value    = '';
-        document.getElementById('admin-password').value = '';
-      })
-      .catch(err => {
-        const msgs = {
-          'auth/invalid-email':      'Invalid email address.',
-          'auth/user-not-found':     'No account found.',
-          'auth/wrong-password':     'Incorrect password.',
-          'auth/invalid-credential': 'Invalid email or password.',
-          'auth/too-many-requests':  'Too many attempts. Try later.',
-        };
-        errEl.textContent   = msgs[err.code] || 'Login failed.';
-        errEl.style.display = 'block';
-      });
-  };
-
-  window._fb.adminLogout = function () {
-    signOut(auth).then(() => { closeAdmin(); showMsg('Logged out.'); });
-  };
-
-  window._fb.submitProduct = async function () {
-    const name      = document.getElementById('ap-name').value.trim();
-    const pricePkr  = parseFloat(document.getElementById('ap-price-pkr').value);
-    const section   = document.getElementById('ap-section').value;
-    const link      = document.getElementById('ap-link').value.trim();
-    const shortDesc = document.getElementById('ap-short').value.trim();
-    const fullDesc  = document.getElementById('ap-full').value.trim();
-    const mainImg   = document.getElementById('ap-img').value.trim();
-    const editId    = document.getElementById('ap-edit-id').value;
-    const tag       = document.getElementById('ap-tag').value;
-    if (!name || !mainImg || !pricePkr) { alert('Name, Image URL, and Price are required.'); return; }
-    const extraImgs = Array.from(document.querySelectorAll('.admin-thumb-input'))
-      .map(i => i.value.trim()).filter(Boolean);
-    const product = { name, pricePkr, section, link, shortDesc, fullDesc, mainImg, extraImgs, tag, createdAt: Date.now() };
-    try {
-      if (editId) {
-        await updateDoc(doc(db, 'products', editId), product);
-        showMsg('✓ "' + name + '" updated!');
-      } else {
-        await addDoc(col, product);
-        openSection(section);
-        showMsg('✓ "' + name + '" added to collection!');
-      }
-      clearAdminForm();
-    } catch (e) { console.error(e); alert('Could not save product.'); }
-  };
-
-  window._fb.editProduct = function (docId) {
-    const p = window.firestoreProducts.find(x => x.id === docId);
-    if (!p) return;
-    switchAdminTab('add');
-    document.getElementById('ap-name').value      = p.name      || '';
-    document.getElementById('ap-price-pkr').value = p.pricePkr  || '';
-    document.getElementById('ap-section').value   = p.section   || 'skincare';
-    document.getElementById('ap-link').value      = p.link      || '';
-    document.getElementById('ap-short').value     = p.shortDesc || '';
-    document.getElementById('ap-full').value      = p.fullDesc  || '';
-    document.getElementById('ap-img').value       = p.mainImg   || '';
-    document.getElementById('ap-edit-id').value   = docId;
-    document.getElementById('ap-tag').value       = p.tag       || '';
-    document.getElementById('ap-submit-btn').textContent = 'Save Changes';
-    const thumbContainer = document.getElementById('thumb-fields');
-    thumbContainer.innerHTML = '';
-    (p.extraImgs || []).forEach(src => {
-      const wrap  = document.createElement('div');
-      wrap.style.marginTop = '8px';
-      const input = document.createElement('input');
-      input.type = 'url'; input.className = 'admin-thumb-input';
-      input.value = src;
-      input.style.cssText = 'width:100%;padding:10px 14px;background:var(--cream);border:1px solid var(--border-gold);color:var(--text-dark);font-size:13px;outline:none;';
-      wrap.appendChild(input);
-      thumbContainer.appendChild(wrap);
-    });
-  };
-
-  window._fb.deleteProduct = async function (docId) {
-    if (!confirm('Delete this product permanently?')) return;
-    try {
-      await deleteDoc(doc(db, 'products', docId));
-      if (window._fb.renderEditList) window._fb.renderEditList();
-      showMsg('Product deleted.');
-    } catch (e) { console.error(e); alert('Delete failed.'); }
-  };
-
-  window._fb.renderEditList = function () {
-    const list  = document.getElementById('edit-list');
-    const empty = document.getElementById('edit-empty');
-    list.innerHTML = '';
-    if (!window.firestoreProducts.length) { empty.style.display = 'block'; return; }
-    empty.style.display = 'none';
-    window.firestoreProducts.forEach(p => {
-      const currency     = window.userCurrency || { symbol: 'Rs.', rate: 1 };
-      const displayPrice = p.pricePkr ? window.convertPrice(p.pricePkr, currency) : 'N/A';
-      const item = document.createElement('div');
-      item.className = 'edit-item';
-      item.innerHTML = `
-        <img src="${p.mainImg}" onerror="this.src='https://placehold.co/52x52/fdf6f0/8b2635?text=?'">
-        <div class="edit-item-info">
-          <strong>${p.name}</strong>
-          <span>${p.section} · ${displayPrice}</span>
-        </div>
-        <div class="edit-item-btns">
-          <button class="edit-btn edit" onclick="editProduct('${p.id}')">Edit</button>
-          <button class="edit-btn del"  onclick="deleteProduct('${p.id}')">Delete</button>
-        </div>
-      `;
-      list.appendChild(item);
-    });
-  };
-</script>
   <!-- ── Vanilla JS Helpers ── -->
   <script>
     function openSection(id) {
@@ -1895,7 +1687,24 @@
         el.classList.add('active');
         window.scrollTo({ top: el.getBoundingClientRect().top + window.scrollY - 80, behavior: 'smooth' });
       }
+    }function renderHomeGrid() {
+    const grid = document.getElementById('home-products');
+    if (!grid) return;
+    grid.querySelectorAll('.card[data-firestore]').forEach(c => c.remove());
+    const fsCards = window.firestoreProducts.map(p => {
+      const card = window.buildCard(p, p.id);
+      card.setAttribute('data-firestore', '1');
+      return card;
+    });
+    const staticCards = Array.from(grid.querySelectorAll('.card:not([data-firestore])'));
+    const all = [...staticCards, ...fsCards];
+    for (let i = all.length - 1; i > 0; i--) {
+      const j = Math.floor(Math.random() * (i + 1));
+      [all[i], all[j]] = [all[j], all[i]];
     }
+    grid.innerHTML = '';
+    all.forEach(card => grid.appendChild(card));
+  }
 
     function toggleDetails(btn) {
       const fd = btn.closest('.card-content').querySelector('.full-desc');
