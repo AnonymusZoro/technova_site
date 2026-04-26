@@ -3,12 +3,11 @@
 <head>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <meta name="p:domain_verify" content="ab1dbb95aad553daa10672922c36e53c"/>
   <title>Zenova Beauty | Luxury Beauty Store</title>
   <link href="https://fonts.googleapis.com/css2?family=Cormorant+Garamond:ital,wght@0,300;0,400;0,600;1,300;1,400&family=Montserrat:wght@300;400;500;600;700&family=Playfair+Display:ital,wght@0,400;0,700;1,400&display=swap" rel="stylesheet">
 
   <style>
-    /* ── Root Variables — Charlotte Tilbury / Sephora palette ── */
+    /* ── Root Variables ── */
     :root {
       --cream:        #fdf6f0;
       --cream-mid:    #f5e8de;
@@ -29,7 +28,6 @@
     }
 
     * { margin: 0; padding: 0; box-sizing: border-box; }
-
     html { scroll-behavior: smooth; }
 
     body {
@@ -40,7 +38,6 @@
       overflow-x: hidden;
     }
 
-    /* ── Noise texture overlay ── */
     body::before {
       content: '';
       position: fixed;
@@ -77,11 +74,7 @@
       background: linear-gradient(90deg, transparent, var(--champagne), transparent);
     }
 
-    .logo-wrap {
-      display: flex;
-      flex-direction: column;
-      line-height: 1;
-    }
+    .logo-wrap { display: flex; flex-direction: column; line-height: 1; cursor: pointer; }
 
     .logo {
       font-family: 'Cormorant Garamond', serif;
@@ -102,11 +95,7 @@
       font-weight: 500;
     }
 
-    nav {
-      display: flex;
-      align-items: center;
-      gap: 32px;
-    }
+    nav { display: flex; align-items: center; gap: 32px; }
 
     nav a {
       color: var(--text-mid);
@@ -142,7 +131,7 @@
       align-items: center;
       overflow: hidden;
       background:
-        linear-gradient(135deg, rgba(253, 246, 240, 0.85) 0%, rgba(245, 232, 222, 0.7) 50%, rgba(242, 196, 184, 0.6) 100%),
+        linear-gradient(135deg, rgba(253,246,240,0.85) 0%, rgba(245,232,222,0.7) 50%, rgba(242,196,184,0.6) 100%),
         url("https://images.unsplash.com/photo-1522335789203-aabd1fc54bc9?q=80&w=1920") center/cover no-repeat;
     }
 
@@ -150,10 +139,9 @@
       content: '';
       position: absolute;
       inset: 0;
-      background: radial-gradient(ellipse at 70% 50%, rgba(212, 169, 106, 0.15) 0%, transparent 60%);
+      background: radial-gradient(ellipse at 70% 50%, rgba(212,169,106,0.15) 0%, transparent 60%);
     }
 
-    /* Decorative rose petals / circles */
     .hero-deco {
       position: absolute;
       right: 8%;
@@ -162,26 +150,28 @@
       width: 420px;
       height: 420px;
       border-radius: 50%;
-      border: 1px solid rgba(196, 98, 106, 0.15);
+      border: 1px solid rgba(196,98,106,0.15);
       display: flex;
       align-items: center;
       justify-content: center;
     }
+
     .hero-deco::before {
       content: '';
       position: absolute;
       width: 340px;
       height: 340px;
       border-radius: 50%;
-      border: 1px solid rgba(212, 169, 106, 0.2);
+      border: 1px solid rgba(212,169,106,0.2);
     }
+
     .hero-deco::after {
       content: '';
       position: absolute;
       width: 260px;
       height: 260px;
       border-radius: 50%;
-      background: radial-gradient(circle, rgba(242, 196, 184, 0.35) 0%, transparent 70%);
+      background: radial-gradient(circle, rgba(242,196,184,0.35) 0%, transparent 70%);
     }
 
     .hero-content {
@@ -192,7 +182,6 @@
     }
 
     .hero-eyebrow {
-      font-family: 'Montserrat', sans-serif;
       font-size: 10px;
       letter-spacing: 5px;
       text-transform: uppercase;
@@ -223,10 +212,7 @@
       letter-spacing: 1px;
     }
 
-    .hero h1 em {
-      font-style: italic;
-      color: var(--rose-deep);
-    }
+    .hero h1 em { font-style: italic; color: var(--rose-deep); }
 
     .hero-sub {
       font-size: 13px;
@@ -238,11 +224,7 @@
       max-width: 380px;
     }
 
-    .hero-cta {
-      display: flex;
-      gap: 16px;
-      flex-wrap: wrap;
-    }
+    .hero-cta { display: flex; gap: 16px; flex-wrap: wrap; }
 
     .btn-primary {
       padding: 14px 38px;
@@ -279,30 +261,19 @@
       font-family: 'Montserrat', sans-serif;
     }
 
-    .btn-outline:hover {
-      background: var(--rose-dark);
-      color: var(--cream);
-    }
+    .btn-outline:hover { background: var(--rose-dark); color: var(--cream); }
 
-    /* ── Category strip ── */
-    .categories-strip {
-      background: var(--rose-dark);
-      padding: 0;
-      overflow: hidden;
-    }
+    /* ── Category Strip ── */
+    .categories-strip { background: var(--rose-dark); padding: 0; overflow: hidden; }
 
-    .categories-strip-inner {
-      display: flex;
-      justify-content: center;
-      gap: 0;
-    }
+    .categories-strip-inner { display: flex; justify-content: center; }
 
     .cat-btn {
       padding: 18px 42px;
       background: transparent;
       border: none;
       border-right: 1px solid rgba(255,255,255,0.1);
-      color: rgba(253, 246, 240, 0.6);
+      color: rgba(253,246,240,0.6);
       font-family: 'Montserrat', sans-serif;
       font-size: 10px;
       font-weight: 600;
@@ -327,29 +298,14 @@
       transition: width .3s;
     }
 
-    .cat-btn:hover,
-    .cat-btn.active {
-      color: var(--gold-light);
-    }
-
-    .cat-btn:hover::after,
-    .cat-btn.active::after {
-      width: 40%;
-    }
+    .cat-btn:hover, .cat-btn.active { color: var(--gold-light); }
+    .cat-btn:hover::after, .cat-btn.active::after { width: 40%; }
 
     /* ── Section ── */
-    .section {
-      padding: 90px 5%;
-      display: none;
-      position: relative;
-    }
-
+    .section { padding: 90px 5%; display: none; position: relative; }
     .section.active { display: block; }
 
-    .section-header {
-      text-align: center;
-      margin-bottom: 64px;
-    }
+    .section-header { text-align: center; margin-bottom: 64px; }
 
     .section-eyebrow {
       font-size: 10px;
@@ -382,17 +338,13 @@
     }
 
     /* ── Search ── */
-    .search-wrap {
-      max-width: 400px;
-      margin: 0 auto 50px;
-      position: relative;
-    }
+    .search-wrap { max-width: 400px; margin: 0 auto 50px; position: relative; }
 
     .search-bar {
       width: 100%;
       padding: 14px 50px 14px 20px;
       border: 1px solid var(--border-gold);
-      background: rgba(253, 246, 240, 0.8);
+      background: rgba(253,246,240,0.8);
       color: var(--text-dark);
       font-family: 'Montserrat', sans-serif;
       font-size: 13px;
@@ -404,7 +356,7 @@
 
     .search-bar:focus {
       border-color: var(--champagne);
-      box-shadow: 0 0 0 3px rgba(212, 169, 106, 0.1);
+      box-shadow: 0 0 0 3px rgba(212,169,106,0.1);
     }
 
     .search-bar::placeholder { color: var(--text-muted); }
@@ -420,17 +372,13 @@
     }
 
     /* ── Products Grid ── */
-    .products {
-      display: grid;
-      grid-template-columns: repeat(auto-fill, minmax(270px, 1fr));
-      gap: 32px;
-    }
+    .products { display: grid; grid-template-columns: repeat(auto-fill, minmax(270px, 1fr)); gap: 32px; }
 
     /* ── Product Card ── */
     .card {
       background: #fff;
       overflow: hidden;
-      border: 1px solid rgba(212, 169, 106, 0.15);
+      border: 1px solid rgba(212,169,106,0.15);
       transition: transform .4s cubic-bezier(.25,.46,.45,.94), box-shadow .4s;
       box-shadow: var(--card-shadow);
       position: relative;
@@ -452,7 +400,7 @@
 
     .card:hover {
       transform: translateY(-8px);
-      box-shadow: 0 20px 60px rgba(139, 38, 53, 0.18), 0 8px 20px rgba(139, 38, 53, 0.08);
+      box-shadow: 0 20px 60px rgba(139,38,53,0.18), 0 8px 20px rgba(139,38,53,0.08);
     }
 
     .card:hover::before { opacity: 1; }
@@ -490,9 +438,7 @@
       z-index: 3;
     }
 
-    .card-content {
-      padding: 24px 22px 22px;
-    }
+    .card-content { padding: 24px 22px 22px; }
 
     .card-content h3 {
       font-family: 'Cormorant Garamond', serif;
@@ -519,7 +465,7 @@
       margin-bottom: 12px;
       padding: 10px 14px;
       border-left: 2px solid var(--rose-blush);
-      background: rgba(242, 196, 184, 0.1);
+      background: rgba(242,196,184,0.1);
       letter-spacing: 0.3px;
     }
 
@@ -529,7 +475,7 @@
       justify-content: space-between;
       margin-top: 16px;
       padding-top: 16px;
-      border-top: 1px solid rgba(212, 169, 106, 0.15);
+      border-top: 1px solid rgba(212,169,106,0.15);
     }
 
     .price {
@@ -557,10 +503,7 @@
       display: block;
     }
 
-    .details-btn:hover {
-      color: var(--rose-dark);
-      border-bottom-color: var(--rose-dark);
-    }
+    .details-btn:hover { color: var(--rose-dark); border-bottom-color: var(--rose-dark); }
 
     .btn {
       display: inline-block;
@@ -583,7 +526,7 @@
     }
 
     /* ── Gallery ── */
-    .product-gallery { width: 100%; }
+    .product-gallery { width: 100%; position: relative; }
 
     .main-image {
       width: 100%;
@@ -613,11 +556,7 @@
     }
 
     .thumb:hover { opacity: 0.85; }
-
-    .thumb.active {
-      opacity: 1;
-      border-color: var(--champagne);
-    }
+    .thumb.active { opacity: 1; border-color: var(--champagne); }
 
     /* ── Loading ── */
     .loading-overlay {
@@ -673,7 +612,7 @@
     .feature-banner p {
       font-size: 13px;
       letter-spacing: 1px;
-      color: rgba(253, 246, 240, 0.7);
+      color: rgba(253,246,240,0.7);
       max-width: 480px;
       margin: 0 auto 32px;
       line-height: 1.9;
@@ -688,18 +627,9 @@
       position: relative;
     }
 
-    .feature-item {
-      text-align: center;
-      flex: 1;
-      min-width: 160px;
-      max-width: 200px;
-    }
+    .feature-item { text-align: center; flex: 1; min-width: 160px; max-width: 200px; }
 
-    .feature-icon {
-      font-size: 28px;
-      margin-bottom: 12px;
-      display: block;
-    }
+    .feature-icon { font-size: 28px; margin-bottom: 12px; display: block; }
 
     .feature-item h4 {
       font-family: 'Cormorant Garamond', serif;
@@ -711,14 +641,14 @@
 
     .feature-item p {
       font-size: 11px;
-      color: rgba(253, 246, 240, 0.55);
+      color: rgba(253,246,240,0.55);
       letter-spacing: 0.5px;
       line-height: 1.7;
       margin: 0;
       max-width: unset;
     }
 
-    /* ── About / Brand Story ── */
+    /* ── About ── */
     .about {
       padding: 100px 5%;
       background: linear-gradient(180deg, #fdf6f0 0%, #f5e8de 100%);
@@ -760,7 +690,7 @@
     /* ── Footer ── */
     footer {
       background: var(--text-dark);
-      color: rgba(253, 246, 240, 0.4);
+      color: rgba(253,246,240,0.4);
       padding: 32px 5%;
       display: flex;
       align-items: center;
@@ -773,7 +703,7 @@
       font-family: 'Cormorant Garamond', serif;
       font-size: 18px;
       letter-spacing: 5px;
-      color: rgba(253, 246, 240, 0.6);
+      color: rgba(253,246,240,0.6);
     }
 
     footer p { font-size: 11px; letter-spacing: 1px; }
@@ -784,7 +714,7 @@
       position: fixed;
       inset: 0;
       z-index: 9999;
-      background: rgba(42, 26, 26, 0.85);
+      background: rgba(42,26,26,0.85);
       backdrop-filter: blur(10px);
       align-items: center;
       justify-content: center;
@@ -800,7 +730,7 @@
       max-width: 520px;
       max-height: 92vh;
       overflow-y: auto;
-      box-shadow: 0 30px 80px rgba(139, 38, 53, 0.3);
+      box-shadow: 0 30px 80px rgba(139,38,53,0.3);
       position: relative;
     }
 
@@ -865,12 +795,7 @@
 
     .login-btn:hover { background: var(--rose-deep); }
 
-    .login-error {
-      color: #c0392b;
-      font-size: 12px;
-      margin-top: 10px;
-      display: none;
-    }
+    .login-error { color: #c0392b; font-size: 12px; margin-top: 10px; display: none; }
 
     .admin-content-screen { display: none; }
 
@@ -903,11 +828,7 @@
       transition: all .2s;
     }
 
-    .admin-tab.active {
-      background: var(--rose-dark);
-      color: var(--cream);
-      font-weight: 700;
-    }
+    .admin-tab.active { background: var(--rose-dark); color: var(--cream); font-weight: 700; }
 
     .admin-field { margin-bottom: 18px; }
 
@@ -973,10 +894,7 @@
       transition: background .3s, box-shadow .3s;
     }
 
-    .admin-submit:hover {
-      background: var(--rose-deep);
-      box-shadow: 0 4px 20px var(--glow-rose);
-    }
+    .admin-submit:hover { background: var(--rose-deep); box-shadow: 0 4px 20px var(--glow-rose); }
 
     .admin-msg {
       text-align: center;
@@ -1004,13 +922,7 @@
 
     .logout-btn:hover { border-color: var(--rose-dark); color: var(--rose-dark); }
 
-    #edit-list {
-      display: flex;
-      flex-direction: column;
-      gap: 10px;
-      max-height: 400px;
-      overflow-y: auto;
-    }
+    #edit-list { display: flex; flex-direction: column; gap: 10px; max-height: 400px; overflow-y: auto; }
 
     .edit-item {
       background: var(--cream);
@@ -1021,24 +933,11 @@
       gap: 12px;
     }
 
-    .edit-item img {
-      width: 52px;
-      height: 52px;
-      object-fit: cover;
-      flex-shrink: 0;
-      border: 1px solid var(--border-gold);
-    }
+    .edit-item img { width: 52px; height: 52px; object-fit: cover; flex-shrink: 0; border: 1px solid var(--border-gold); }
 
     .edit-item-info { flex: 1; min-width: 0; }
 
-    .edit-item-info strong {
-      display: block;
-      color: var(--text-dark);
-      font-size: 13px;
-      white-space: nowrap;
-      overflow: hidden;
-      text-overflow: ellipsis;
-    }
+    .edit-item-info strong { display: block; color: var(--text-dark); font-size: 13px; white-space: nowrap; overflow: hidden; text-overflow: ellipsis; }
 
     .edit-item-info span { color: var(--text-muted); font-size: 11px; }
 
@@ -1056,28 +955,12 @@
       text-transform: uppercase;
     }
 
-    .edit-btn.edit {
-      background: transparent;
-      color: var(--rose-dark);
-      border-color: var(--rose-dark);
-    }
-
+    .edit-btn.edit { background: transparent; color: var(--rose-dark); border-color: var(--rose-dark); }
     .edit-btn.edit:hover { background: var(--rose-dark); color: var(--cream); }
-
-    .edit-btn.del {
-      background: transparent;
-      color: var(--text-muted);
-      border-color: var(--border);
-    }
-
+    .edit-btn.del { background: transparent; color: var(--text-muted); border-color: var(--border); }
     .edit-btn.del:hover { background: #c0392b; color: #fff; border-color: #c0392b; }
 
-    #edit-empty {
-      text-align: center;
-      color: var(--text-muted);
-      font-size: 13px;
-      padding: 30px 0;
-    }
+    #edit-empty { text-align: center; color: var(--text-muted); font-size: 13px; padding: 30px 0; }
 
     /* ── Currency badge ── */
     #zn-badge {
@@ -1091,6 +974,25 @@
       font-family: 'Montserrat', sans-serif !important;
       white-space: nowrap !important;
     }
+
+    /* ── Product Badge Tags ── */
+    .product-badge {
+      position: absolute;
+      top: 12px;
+      left: 12px;
+      padding: 5px 12px;
+      font-family: 'Montserrat', sans-serif;
+      font-size: 9px;
+      font-weight: 700;
+      letter-spacing: 2px;
+      text-transform: uppercase;
+      z-index: 10;
+      pointer-events: none;
+    }
+
+    .badge-trending { background: var(--rose-dark); color: #fff; }
+    .badge-bestseller { background: var(--gold); color: #fff; }
+    .badge-new { background: var(--rose-deep); color: #fff; }
 
     /* ── Responsive ── */
     @media (max-width: 768px) {
@@ -1108,38 +1010,6 @@
     @media (max-width: 480px) {
       .products { grid-template-columns: 1fr; }
       .hero h1 { font-size: 34px; }
-    }
-
-    /* ── Product Badge Tags ── */
-    .card-img-wrap, .product-gallery { position: relative; }
-
-    .product-badge {
-      position: absolute;
-      top: 12px;
-      left: 12px;
-      padding: 5px 12px;
-      font-family: 'Montserrat', sans-serif;
-      font-size: 9px;
-      font-weight: 700;
-      letter-spacing: 2px;
-      text-transform: uppercase;
-      z-index: 10;
-      pointer-events: none;
-    }
-
-    .badge-trending {
-      background: var(--rose-dark);
-      color: #fff;
-    }
-
-    .badge-bestseller {
-      background: var(--gold);
-      color: #fff;
-    }
-
-    .badge-new {
-      background: var(--rose-deep);
-      color: #fff;
     }
 
     /* ── Page Load Animation ── */
@@ -1180,7 +1050,7 @@
       <p class="hero-sub">Discover curated luxury beauty products — skincare, nails & hair — crafted to elevate your everyday ritual.</p>
       <div class="hero-cta">
         <button class="btn-primary" onclick="openSection('home')">Shop Collection</button>
-        <button class="btn-outline" href="#about">Our Story</button>
+        <button class="btn-outline" onclick="document.getElementById('about').scrollIntoView({behavior:'smooth'})">Our Story</button>
       </div>
     </div>
   </section>
@@ -1195,7 +1065,7 @@
     </div>
   </div>
 
-  <!-- ── ALL Products ── -->
+  <!-- ── ALL Products (home) — static cards live here, Firebase cards get appended ── -->
   <section class="section active" id="home">
     <div class="section-header">
       <div class="section-eyebrow">Curated For You</div>
@@ -1208,22 +1078,11 @@
     <div class="loading-overlay" id="home-loading">
       <div class="spinner"></div><br>Loading collection...
     </div>
-    <div class="products" id="home-products"></div>
-  </section>
+    <!-- Static home cards (copies of all static products for "All" view) -->
+    <div class="products" id="home-products">
 
-  <!-- ── Skincare ── -->
-  <section class="section" id="skincare">
-    <div class="section-header">
-      <div class="section-eyebrow">Glow & Protect</div>
-      <h2>Skincare</h2>
-    </div>
-    <div class="search-wrap">
-      <input type="text" class="search-bar" placeholder="Search skincare..." oninput="searchProducts(this)">
-      <span class="search-icon">⚲</span>
-    </div>
-    <div class="products" id="skincare-products">
-
-      <div class="card">
+      <!-- Skincare -->
+      <div class="card" data-category="skincare">
         <div class="card-img-wrap">
           <img crossorigin="anonymous" src="https://img.kwcdn.com/product/fancy/41f85bba-b3b3-4533-9f33-b0ed6a1cbbe1.jpg?imageView2/2/w/800/q/70/format/avif" alt="King Love Beauty Sunscreen">
           <span class="card-badge">SPF 60</span>
@@ -1240,9 +1099,9 @@
         </div>
       </div>
 
-      <div class="card">
+      <div class="card" data-category="skincare">
         <div class="card-img-wrap">
-          <img crossorigin="anonymous" src="https://img.kwcdn.com/product/fancy/5cf28654-2751-4f28-a410-f6567430330b.jpg?imageView2/2/w/800/q/70/format/avif" alt="Clarity Isolation Protection Cream">
+          <img crossorigin="anonymous" src="https://img.kwcdn.com/product/fancy/5cf28654-2751-4f28-a410-f6567430330b.jpg?imageView2/2/w/800/q/70/format/avif" alt="Clarity Protection Cream">
         </div>
         <div class="card-content">
           <h3>Clarity Protection Cream</h3>
@@ -1256,7 +1115,7 @@
         </div>
       </div>
 
-      <div class="card">
+      <div class="card" data-category="skincare">
         <div class="card-img-wrap">
           <img crossorigin="anonymous" src="https://img.kwcdn.com/product/fancy/f5707130-079b-4ab2-aa98-03a60dff3abb.jpg?imageView2/2/w/800/q/70/format/avif" alt="Coconut Tanning Oil">
           <span class="card-badge">Bestseller</span>
@@ -1273,22 +1132,8 @@
         </div>
       </div>
 
-    </div>
-  </section>
-
-  <!-- ── Nails ── -->
-  <section class="section" id="nails">
-    <div class="section-header">
-      <div class="section-eyebrow">Polish &amp; Perfection</div>
-      <h2>Nails &amp; Polish</h2>
-    </div>
-    <div class="search-wrap">
-      <input type="text" class="search-bar" placeholder="Search nail products..." oninput="searchProducts(this)">
-      <span class="search-icon">⚲</span>
-    </div>
-    <div class="products" id="nails-products">
-
-      <div class="card">
+      <!-- Nails -->
+      <div class="card" data-category="nails">
         <div class="card-img-wrap">
           <img crossorigin="anonymous" src="https://img.kwcdn.com/product/fancy/c6c11aec-30ce-4a25-b5e2-18d8b9fb6d12.jpg?imageView2/2/w/1300/q/90/format/avif" alt="Easter Fake Nail Set">
           <span class="card-badge">New</span>
@@ -1305,7 +1150,7 @@
         </div>
       </div>
 
-      <div class="card">
+      <div class="card" data-category="nails">
         <div class="card-img-wrap">
           <img crossorigin="anonymous" src="https://img.kwcdn.com/product/fancy/ba46f935-de74-4468-bba6-7cfaa9affe27.jpg?imageView2/2/w/800/q/70/format/avif" alt="Red Cat Eye Nails">
           <span class="card-badge">Trendy</span>
@@ -1322,7 +1167,7 @@
         </div>
       </div>
 
-      <div class="card">
+      <div class="card" data-category="nails">
         <div class="card-img-wrap">
           <img crossorigin="anonymous" src="https://img.kwcdn.com/product/fancy/f6ff69c8-8eb4-4dae-9d89-1beac4470597.jpg?imageView2/2/w/800/q/70/format/avif" alt="Easter Bunny Nails">
         </div>
@@ -1338,22 +1183,8 @@
         </div>
       </div>
 
-    </div>
-  </section>
-
-  <!-- ── Hair ── -->
-  <section class="section" id="hair">
-    <div class="section-header">
-      <div class="section-eyebrow">Nourish &amp; Transform</div>
-      <h2>Hair Care</h2>
-    </div>
-    <div class="search-wrap">
-      <input type="text" class="search-bar" placeholder="Search hair products..." oninput="searchProducts(this)">
-      <span class="search-icon">⚲</span>
-    </div>
-    <div class="products" id="hair-products">
-
-      <div class="card">
+      <!-- Hair -->
+      <div class="card" data-category="hair">
         <div class="card-img-wrap">
           <img crossorigin="anonymous" src="https://s.alicdn.com/@sc04/kf/H1d2213e1d17e42d3b64cde39adbeaf76b.jpg?avif=close&webp=close" alt="Keratin Treatment">
           <span class="card-badge">Pro Formula</span>
@@ -1370,7 +1201,7 @@
         </div>
       </div>
 
-      <div class="card">
+      <div class="card" data-category="hair">
         <div class="card-img-wrap">
           <img crossorigin="anonymous" src="https://s.alicdn.com/@sc04/kf/H23f7a5c36f1b4c58a6648e771ecd1dc65.jpg?avif=close&webp=close" alt="Hair Touch Up Stick">
         </div>
@@ -1386,7 +1217,7 @@
         </div>
       </div>
 
-      <div class="card">
+      <div class="card" data-category="hair">
         <div class="card-img-wrap">
           <img crossorigin="anonymous" src="https://s.alicdn.com/@sc04/kf/H6c4a7006354d487890e4a19212aa92b4S.jpg?avif=close&webp=close" alt="Rosemary Shampoo">
           <span class="card-badge">Natural</span>
@@ -1403,7 +1234,7 @@
         </div>
       </div>
 
-      <div class="card">
+      <div class="card" data-category="hair">
         <div class="card-img-wrap">
           <img crossorigin="anonymous" src="https://s.alicdn.com/@sc04/kf/H8f83b699c6c644b99904a3d298e4f452a.jpg?avif=close&webp=close" alt="Hair Dye">
         </div>
@@ -1419,6 +1250,204 @@
         </div>
       </div>
 
+    </div>
+  </section>
+
+  <!-- ── Skincare Section ── -->
+  <section class="section" id="skincare">
+    <div class="section-header">
+      <div class="section-eyebrow">Glow & Protect</div>
+      <h2>Skincare</h2>
+    </div>
+    <div class="search-wrap">
+      <input type="text" class="search-bar" placeholder="Search skincare..." oninput="searchProducts(this)">
+      <span class="search-icon">⚲</span>
+    </div>
+    <div class="products" id="skincare-products">
+      <div class="card">
+        <div class="card-img-wrap">
+          <img crossorigin="anonymous" src="https://img.kwcdn.com/product/fancy/41f85bba-b3b3-4533-9f33-b0ed6a1cbbe1.jpg?imageView2/2/w/800/q/70/format/avif" alt="King Love Beauty Sunscreen">
+          <span class="card-badge">SPF 60</span>
+        </div>
+        <div class="card-content">
+          <h3>King Love Beauty Sunscreen</h3>
+          <p class="short-desc">Vitamin C Sunscreen SPF60, waterproof &amp; moisturizing</p>
+          <p class="full-desc">150g Vitamin C Sunscreen, Broad Spectrum SPF60PA+++, Suitable for Dry and Oily Skin, Moisturizing Formula, Waterproof Protection</p>
+          <button class="details-btn" onclick="toggleDetails(this)">View Details</button>
+          <div class="card-footer">
+            <div class="price" data-price-pkr="2755">Rs.2,755</div>
+            <a href="https://share.temu.com/mDNnjKj9S7B" class="btn" target="_blank">Buy Now</a>
+          </div>
+        </div>
+      </div>
+      <div class="card">
+        <div class="card-img-wrap">
+          <img crossorigin="anonymous" src="https://img.kwcdn.com/product/fancy/5cf28654-2751-4f28-a410-f6567430330b.jpg?imageView2/2/w/800/q/70/format/avif" alt="Clarity Protection Cream">
+        </div>
+        <div class="card-content">
+          <h3>Clarity Protection Cream</h3>
+          <p class="short-desc">Clear &amp; Non-Irritating Isolation Protection</p>
+          <p class="full-desc">Essential for Going Out, Moisturizing And Clear Facial Sunscreen</p>
+          <button class="details-btn" onclick="toggleDetails(this)">View Details</button>
+          <div class="card-footer">
+            <div class="price" data-price-pkr="983">Rs.983</div>
+            <a href="https://share.temu.com/JiaAMDViAPB" class="btn" target="_blank">Buy Now</a>
+          </div>
+        </div>
+      </div>
+      <div class="card">
+        <div class="card-img-wrap">
+          <img crossorigin="anonymous" src="https://img.kwcdn.com/product/fancy/f5707130-079b-4ab2-aa98-03a60dff3abb.jpg?imageView2/2/w/800/q/70/format/avif" alt="Coconut Tanning Oil">
+          <span class="card-badge">Bestseller</span>
+        </div>
+        <div class="card-content">
+          <h3>Coconut Tanning Oil</h3>
+          <p class="short-desc">100ml Waterproof &amp; Long-Lasting Tan</p>
+          <p class="full-desc">Suitable for Indoor Use, with Moisturizing And Hydrating Properties. Free from Oxybenzone</p>
+          <button class="details-btn" onclick="toggleDetails(this)">View Details</button>
+          <div class="card-footer">
+            <div class="price" data-price-pkr="2837">Rs.2,837</div>
+            <a href="https://share.temu.com/ymgAKWDK8FB" class="btn" target="_blank">Buy Now</a>
+          </div>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- ── Nails Section ── -->
+  <section class="section" id="nails">
+    <div class="section-header">
+      <div class="section-eyebrow">Polish &amp; Perfection</div>
+      <h2>Nails &amp; Polish</h2>
+    </div>
+    <div class="search-wrap">
+      <input type="text" class="search-bar" placeholder="Search nail products..." oninput="searchProducts(this)">
+      <span class="search-icon">⚲</span>
+    </div>
+    <div class="products" id="nails-products">
+      <div class="card">
+        <div class="card-img-wrap">
+          <img crossorigin="anonymous" src="https://img.kwcdn.com/product/fancy/c6c11aec-30ce-4a25-b5e2-18d8b9fb6d12.jpg?imageView2/2/w/1300/q/90/format/avif" alt="Easter Fake Nail Set">
+          <span class="card-badge">New</span>
+        </div>
+        <div class="card-content">
+          <h3>Easter Macaron Nail Set</h3>
+          <p class="short-desc">24pcs Easter Theme Fake Nails, Macaron Bunny Design</p>
+          <p class="full-desc">Glossy Finish, 12 Sizes with Jelly Glue and Nail File, Artistic False Nails for Girls and Women</p>
+          <button class="details-btn" onclick="toggleDetails(this)">View Details</button>
+          <div class="card-footer">
+            <div class="price" data-price-pkr="531">Rs.531</div>
+            <a href="https://share.temu.com/p4VuXYgXsEB" class="btn" target="_blank">Buy Now</a>
+          </div>
+        </div>
+      </div>
+      <div class="card">
+        <div class="card-img-wrap">
+          <img crossorigin="anonymous" src="https://img.kwcdn.com/product/fancy/ba46f935-de74-4468-bba6-7cfaa9affe27.jpg?imageView2/2/w/800/q/70/format/avif" alt="Red Cat Eye Nails">
+          <span class="card-badge">Trendy</span>
+        </div>
+        <div class="card-content">
+          <h3>Red Cat Eye Nails</h3>
+          <p class="short-desc">10pcs Red Cat-Eye Short Square Fake Nails</p>
+          <p class="full-desc">Glossy Acrylic Nails, Reusable Acrylic Home Nails Suitable for Autumn And Winter Nail Decoration</p>
+          <button class="details-btn" onclick="toggleDetails(this)">View Details</button>
+          <div class="card-footer">
+            <div class="price" data-price-pkr="331">Rs.331</div>
+            <a href="https://share.temu.com/d64lMod7mtB" class="btn" target="_blank">Buy Now</a>
+          </div>
+        </div>
+      </div>
+      <div class="card">
+        <div class="card-img-wrap">
+          <img crossorigin="anonymous" src="https://img.kwcdn.com/product/fancy/f6ff69c8-8eb4-4dae-9d89-1beac4470597.jpg?imageView2/2/w/800/q/70/format/avif" alt="Easter Bunny Nails">
+        </div>
+        <div class="card-content">
+          <h3>Easter Pastel Bunny Nails</h3>
+          <p class="short-desc">24pcs Easter Pastel Bunny False Nails</p>
+          <p class="full-desc">Polka Dot Stripe Cute Artificial Nails, Suitable for Women's Spring and Summer Decorative Styling</p>
+          <button class="details-btn" onclick="toggleDetails(this)">View Details</button>
+          <div class="card-footer">
+            <div class="price" data-price-pkr="682">Rs.682</div>
+            <a href="https://share.temu.com/zi8og73hl8B" class="btn" target="_blank">Buy Now</a>
+          </div>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- ── Hair Section ── -->
+  <section class="section" id="hair">
+    <div class="section-header">
+      <div class="section-eyebrow">Nourish &amp; Transform</div>
+      <h2>Hair Care</h2>
+    </div>
+    <div class="search-wrap">
+      <input type="text" class="search-bar" placeholder="Search hair products..." oninput="searchProducts(this)">
+      <span class="search-icon">⚲</span>
+    </div>
+    <div class="products" id="hair-products">
+      <div class="card">
+        <div class="card-img-wrap">
+          <img crossorigin="anonymous" src="https://s.alicdn.com/@sc04/kf/H1d2213e1d17e42d3b64cde39adbeaf76b.jpg?avif=close&webp=close" alt="Keratin Treatment">
+          <span class="card-badge">Pro Formula</span>
+        </div>
+        <div class="card-content">
+          <h3>Brazilian Keratin Treatment</h3>
+          <p class="short-desc">Natural Keratin Hair Smoothing Cream 800ml</p>
+          <p class="full-desc">Wholesale by Carton 800ml Hair Smoothing Cream Product. Professional Brazilian Natural Keratin Treatment</p>
+          <button class="details-btn" onclick="toggleDetails(this)">View Details</button>
+          <div class="card-footer">
+            <div class="price" data-price-pkr="20241">Rs.20,241</div>
+            <a href="https://offer.alibaba.com/cps/0ciah0q6?bm=cps&src=saf&productId=1601418772610" class="btn" target="_blank">Buy Now</a>
+          </div>
+        </div>
+      </div>
+      <div class="card">
+        <div class="card-img-wrap">
+          <img crossorigin="anonymous" src="https://s.alicdn.com/@sc04/kf/H23f7a5c36f1b4c58a6648e771ecd1dc65.jpg?avif=close&webp=close" alt="Hair Touch Up Stick">
+        </div>
+        <div class="card-content">
+          <h3>Root Touch-Up Hair Stick</h3>
+          <p class="short-desc">Waterproof 2-in-1 Comb &amp; Color, Gray Hair Cover</p>
+          <p class="full-desc">OEM Waterproof Root Touch Up Hair Dye Stick — 2 in 1 Comb &amp; Color, Quick Gray Hair Cover Up, Ammonia Free Portable</p>
+          <button class="details-btn" onclick="toggleDetails(this)">View Details</button>
+          <div class="card-footer">
+            <div class="price" data-price-pkr="258">Rs.258</div>
+            <a href="https://offer.alibaba.com/cps/0ciah0q6?bm=cps&src=saf&productId=1601594093666" class="btn" target="_blank">Buy Now</a>
+          </div>
+        </div>
+      </div>
+      <div class="card">
+        <div class="card-img-wrap">
+          <img crossorigin="anonymous" src="https://s.alicdn.com/@sc04/kf/H6c4a7006354d487890e4a19212aa92b4S.jpg?avif=close&webp=close" alt="Rosemary Shampoo">
+          <span class="card-badge">Natural</span>
+        </div>
+        <div class="card-content">
+          <h3>Rosemary Mint Shampoo</h3>
+          <p class="short-desc">Rosemary Extract &amp; Peppermint Oil Formula</p>
+          <p class="full-desc">Refreshing Oil-Control Rosemary Shampoo with Rosemary Extract and Peppermint Oil</p>
+          <button class="details-btn" onclick="toggleDetails(this)">View Details</button>
+          <div class="card-footer">
+            <div class="price" data-price-pkr="703">Rs.703</div>
+            <a href="https://offer.alibaba.com/cps/0ciah0q6?bm=cps&src=saf&productId=1601661844082" class="btn" target="_blank">Buy Now</a>
+          </div>
+        </div>
+      </div>
+      <div class="card">
+        <div class="card-img-wrap">
+          <img crossorigin="anonymous" src="https://s.alicdn.com/@sc04/kf/H8f83b699c6c644b99904a3d298e4f452a.jpg?avif=close&webp=close" alt="Hair Dye">
+        </div>
+        <div class="card-content">
+          <h3>Organic Salon Hair Colour</h3>
+          <p class="short-desc">Professional Permanent Hair Dye — Salon Grade</p>
+          <p class="full-desc">Professional Hair Dye Permanent Hair Color — Organic Professional Salon Grade</p>
+          <button class="details-btn" onclick="toggleDetails(this)">View Details</button>
+          <div class="card-footer">
+            <div class="price" data-price-pkr="314">Rs.314</div>
+            <a href="https://offer.alibaba.com/cps/0ciah0q6?bm=cps&src=saf&productId=1601252719587" class="btn" target="_blank">Buy Now</a>
+          </div>
+        </div>
+      </div>
     </div>
   </section>
 
@@ -1542,7 +1571,9 @@
   </div>
 
 
-  <!-- ── Currency System ── -->
+  <!-- ══════════════════════════════════════════
+       SCRIPT 1 — Currency System
+  ══════════════════════════════════════════ -->
   <script>
     (function () {
       const CURRENCIES = {
@@ -1651,35 +1682,304 @@
     })();
   </script>
 
-  <!-- ── Global Firebase Dispatcher ── -->
- <!-- ── Global Firebase Dispatcher ── -->
-<script>
-  window._fb = {};
+  <!-- ══════════════════════════════════════════
+       SCRIPT 2 — Firebase Dispatcher
+  ══════════════════════════════════════════ -->
+  <script>
+    window._fb = {};
 
-  async function waitForFb(fn, arg) {
-    let tries = 0;
-    while (!window._fb[fn] && tries < 40) {
-      await new Promise(r => setTimeout(r, 150));
-      tries++;
+    async function waitForFb(fn, arg) {
+      let tries = 0;
+      while (!window._fb[fn] && tries < 40) {
+        await new Promise(r => setTimeout(r, 150));
+        tries++;
+      }
+      if (window._fb[fn]) window._fb[fn](arg);
+      else alert('Firebase load nahi hua. Page refresh karo.');
     }
-    if (window._fb[fn]) window._fb[fn](arg);
-    else alert('Firebase load nahi hua. Page refresh karo.');
-  }
 
-  function submitProduct()   { waitForFb('submitProduct'); }
-  function adminLogin()      { waitForFb('adminLogin'); }
-  function adminLogout()     { window._fb.adminLogout ? window._fb.adminLogout() : null; }
-  function editProduct(id)   { waitForFb('editProduct', id); }
-  function deleteProduct(id) { waitForFb('deleteProduct', id); }
-</script>
+    // These are the global onclick handlers — they delegate to Firebase module
+    function submitProduct()   { waitForFb('submitProduct'); }
+    function adminLogin()      { waitForFb('adminLogin'); }
+    function adminLogout()     { window._fb.adminLogout ? window._fb.adminLogout() : null; }
+    function editProduct(id)   { waitForFb('editProduct', id); }
+    function deleteProduct(id) { waitForFb('deleteProduct', id); }
+  </script>
 
-<!-- ── Firebase Module ── -->
-  <!-- ── Vanilla JS Helpers ── -->
+  <!-- ══════════════════════════════════════════
+       SCRIPT 3 — Firebase Module (Auth + Firestore)
+  ══════════════════════════════════════════ -->
+  <script type="module">
+    // ── PASTE YOUR FIREBASE CONFIG HERE ──
+    import { initializeApp }                           from 'https://www.gstatic.com/firebasejs/10.12.2/firebase-app.js';
+    import { getAuth, signInWithEmailAndPassword,
+             signOut, onAuthStateChanged }             from 'https://www.gstatic.com/firebasejs/10.12.2/firebase-auth.js';
+    import { getFirestore, collection, addDoc,
+             updateDoc, deleteDoc, doc, onSnapshot,
+             query, orderBy }                          from 'https://www.gstatic.com/firebasejs/10.12.2/firebase-firestore.js';
+
+    // ── YOUR FIREBASE CONFIG — replace with your real values ──
+    const firebaseConfig = {
+      apiKey:            "YOUR_API_KEY",
+      authDomain:        "YOUR_PROJECT.firebaseapp.com",
+      projectId:         "YOUR_PROJECT_ID",
+      storageBucket:     "YOUR_PROJECT.appspot.com",
+      messagingSenderId: "YOUR_SENDER_ID",
+      appId:             "YOUR_APP_ID"
+    };
+
+    const app  = initializeApp(firebaseConfig);
+    const auth = getAuth(app);
+    const db   = getFirestore(app);
+
+    // ── State ──
+    window.firestoreProducts = [];
+    let unsubscribeProducts  = null;
+
+    // ── Auth state watcher ──
+    onAuthStateChanged(auth, user => {
+      const loginScreen   = document.getElementById('admin-login-screen');
+      const contentScreen = document.getElementById('admin-content-screen');
+      if (user) {
+        loginScreen.style.display   = 'none';
+        contentScreen.style.display = 'block';
+        startProductListener();
+      } else {
+        loginScreen.style.display   = 'block';
+        contentScreen.style.display = 'none';
+        if (unsubscribeProducts) { unsubscribeProducts(); unsubscribeProducts = null; }
+      }
+    });
+
+    // ── Real-time products listener ──
+    function startProductListener() {
+      if (unsubscribeProducts) return;
+      const q = query(collection(db, 'products'), orderBy('createdAt', 'desc'));
+      unsubscribeProducts = onSnapshot(q, snapshot => {
+        window.firestoreProducts = snapshot.docs.map(d => ({ id: d.id, ...d.data() }));
+        renderFirestoreCards();
+        if (document.getElementById('tab-edit').style.display !== 'none') {
+          window._fb.renderEditList();
+        }
+        // Hide loading spinner once we've received data
+        const loading = document.getElementById('home-loading');
+        if (loading) loading.style.display = 'none';
+      });
+    }
+
+    // ── Render Firestore cards into the correct grids ──
+    function renderFirestoreCards() {
+      // Remove old Firestore cards from all grids
+      document.querySelectorAll('.card[data-firestore]').forEach(c => c.remove());
+
+      window.firestoreProducts.forEach(p => {
+        const sections = p.section === 'skincare' ? ['home', 'skincare']
+                       : p.section === 'nails'    ? ['home', 'nails']
+                       : p.section === 'hair'     ? ['home', 'hair']
+                       : ['home'];
+
+        sections.forEach(sectionId => {
+          const gridId = sectionId === 'home' ? 'home-products' : `${sectionId}-products`;
+          const grid   = document.getElementById(gridId);
+          if (!grid) return;
+
+          const card = window.buildCard(p, p.id);
+          card.setAttribute('data-firestore', '1');
+          card.setAttribute('data-section', sectionId);
+          grid.appendChild(card);
+        });
+      });
+
+      // Shuffle the home grid
+      shuffleHomeGrid();
+
+      // Re-apply currency to new cards
+      const currency = window.userCurrency;
+      if (currency) {
+        document.querySelectorAll('.price[data-price-pkr]:not([data-rendered])').forEach(el => {
+          const pkr = parseFloat(el.getAttribute('data-price-pkr'));
+          if (!isNaN(pkr)) {
+            el.textContent = window.convertPrice(pkr, currency);
+            el.setAttribute('data-rendered', '1');
+          }
+        });
+      }
+    }
+
+    function shuffleHomeGrid() {
+      const grid = document.getElementById('home-products');
+      if (!grid) return;
+      const cards = Array.from(grid.querySelectorAll('.card'));
+      // Fisher-Yates shuffle
+      for (let i = cards.length - 1; i > 0; i--) {
+        const j = Math.floor(Math.random() * (i + 1));
+        grid.appendChild(cards[j]);
+        cards.splice(j, 1, cards[i]);
+      }
+    }
+
+    // ── Admin Login ──
+    window._fb.adminLogin = async function () {
+      const email    = document.getElementById('admin-email').value.trim();
+      const password = document.getElementById('admin-password').value;
+      const errEl    = document.getElementById('login-error');
+      errEl.style.display = 'none';
+      if (!email || !password) {
+        errEl.textContent   = 'Email aur password dono required hain.';
+        errEl.style.display = 'block';
+        return;
+      }
+      try {
+        await signInWithEmailAndPassword(auth, email, password);
+        // onAuthStateChanged will handle UI switch
+      } catch (err) {
+        errEl.textContent   = 'Login failed: ' + (err.message || 'Wrong credentials');
+        errEl.style.display = 'block';
+      }
+    };
+
+    // ── Admin Logout ──
+    window._fb.adminLogout = async function () {
+      await signOut(auth);
+    };
+
+    // ── Submit (Add or Edit) Product ──
+    window._fb.submitProduct = async function () {
+      const name    = document.getElementById('ap-name').value.trim();
+      const section = document.getElementById('ap-section').value;
+      const tag     = document.getElementById('ap-tag').value;
+      const pricePkr= parseFloat(document.getElementById('ap-price-pkr').value);
+      const link    = document.getElementById('ap-link').value.trim();
+      const short   = document.getElementById('ap-short').value.trim();
+      const full    = document.getElementById('ap-full').value.trim();
+      const mainImg = document.getElementById('ap-img').value.trim();
+      const editId  = document.getElementById('ap-edit-id').value;
+
+      if (!name || !section || isNaN(pricePkr) || !mainImg) {
+        showMsg('Name, category, price aur image URL required hain!');
+        return;
+      }
+
+      const extraImgs = Array.from(document.querySelectorAll('.admin-thumb-input'))
+        .map(i => i.value.trim()).filter(Boolean);
+
+      const data = {
+        name, section, tag, pricePkr, link,
+        shortDesc: short, fullDesc: full,
+        mainImg, extraImgs,
+        createdAt: editId ? undefined : Date.now()
+      };
+
+      // Remove undefined keys
+      Object.keys(data).forEach(k => data[k] === undefined && delete data[k]);
+
+      try {
+        if (editId) {
+          await updateDoc(doc(db, 'products', editId), data);
+          showMsg('✓ Product updated!');
+        } else {
+          await addDoc(collection(db, 'products'), data);
+          showMsg('✓ Product added!');
+        }
+        clearAdminForm();
+        switchAdminTab('edit');
+      } catch (err) {
+        showMsg('Error: ' + err.message);
+      }
+    };
+
+    // ── Edit Product (load into form) ──
+    window._fb.editProduct = function (id) {
+      const p = window.firestoreProducts.find(x => x.id === id);
+      if (!p) return;
+
+      document.getElementById('ap-name').value      = p.name || '';
+      document.getElementById('ap-section').value   = p.section || 'skincare';
+      document.getElementById('ap-tag').value       = p.tag || '';
+      document.getElementById('ap-price-pkr').value = p.pricePkr || '';
+      document.getElementById('ap-link').value      = p.link || '';
+      document.getElementById('ap-short').value     = p.shortDesc || '';
+      document.getElementById('ap-full').value      = p.fullDesc || '';
+      document.getElementById('ap-img').value       = p.mainImg || '';
+      document.getElementById('ap-edit-id').value   = id;
+      document.getElementById('ap-submit-btn').textContent = 'Update Product';
+
+      // Load extra images
+      const thumbContainer = document.getElementById('thumb-fields');
+      thumbContainer.innerHTML = '';
+      (p.extraImgs || []).forEach((src, i) => {
+        const wrap  = document.createElement('div');
+        wrap.style.marginTop = '8px';
+        const input = document.createElement('input');
+        input.type = 'url'; input.className = 'admin-thumb-input';
+        input.value = src;
+        input.placeholder = 'Extra image URL ' + (i + 2);
+        input.style.cssText = 'width:100%;padding:10px 14px;background:var(--cream);border:1px solid var(--border-gold);color:var(--text-dark);font-size:13px;outline:none;';
+        wrap.appendChild(input);
+        thumbContainer.appendChild(wrap);
+      });
+
+      switchAdminTab('add');
+    };
+
+    // ── Delete Product ──
+    window._fb.deleteProduct = async function (id) {
+      if (!confirm('Is product ko permanently delete karna chahte ho?')) return;
+      try {
+        await deleteDoc(doc(db, 'products', id));
+        showMsg('✓ Deleted!');
+      } catch (err) {
+        showMsg('Error: ' + err.message);
+      }
+    };
+
+    // ── Render Edit List ──
+    window._fb.renderEditList = function () {
+      const list    = document.getElementById('edit-list');
+      const empty   = document.getElementById('edit-empty');
+      const products = window.firestoreProducts;
+      list.innerHTML = '';
+
+      if (!products.length) {
+        empty.style.display = 'block';
+        return;
+      }
+      empty.style.display = 'none';
+
+      products.forEach(p => {
+        const item = document.createElement('div');
+        item.className = 'edit-item';
+        item.innerHTML = `
+          <img src="${p.mainImg || ''}" onerror="this.src=''" alt="">
+          <div class="edit-item-info">
+            <strong>${p.name}</strong>
+            <span>${p.section} · Rs.${p.pricePkr || 'N/A'}</span>
+          </div>
+          <div class="edit-item-btns">
+            <button class="edit-btn edit" onclick="editProduct('${p.id}')">Edit</button>
+            <button class="edit-btn del"  onclick="deleteProduct('${p.id}')">Del</button>
+          </div>
+        `;
+        list.appendChild(item);
+      });
+    };
+
+    // ── On page load: hide spinner if no Firebase config yet ──
+    // If config is real, the onSnapshot will hide it; otherwise hide after timeout
+    setTimeout(() => {
+      const loading = document.getElementById('home-loading');
+      if (loading) loading.style.display = 'none';
+    }, 4000);
+  </script>
+
+  <!-- ══════════════════════════════════════════
+       SCRIPT 4 — Vanilla JS Helpers
+  ══════════════════════════════════════════ -->
   <script>
     function openSection(id) {
       document.querySelectorAll('.section').forEach(s => s.classList.remove('active'));
+      const map = { home: 'all', skincare: 'skincare', nails: 'nails & polish', hair: 'hair care' };
       document.querySelectorAll('.cat-btn').forEach(b => {
-        const map = { home: 'all', skincare: 'skincare', nails: 'nails & polish', hair: 'hair care' };
         b.classList.toggle('active', b.textContent.trim().toLowerCase() === (map[id] || id));
       });
       const el = document.getElementById(id);
@@ -1687,24 +1987,7 @@
         el.classList.add('active');
         window.scrollTo({ top: el.getBoundingClientRect().top + window.scrollY - 80, behavior: 'smooth' });
       }
-    }function renderHomeGrid() {
-    const grid = document.getElementById('home-products');
-    if (!grid) return;
-    grid.querySelectorAll('.card[data-firestore]').forEach(c => c.remove());
-    const fsCards = window.firestoreProducts.map(p => {
-      const card = window.buildCard(p, p.id);
-      card.setAttribute('data-firestore', '1');
-      return card;
-    });
-    const staticCards = Array.from(grid.querySelectorAll('.card:not([data-firestore])'));
-    const all = [...staticCards, ...fsCards];
-    for (let i = all.length - 1; i > 0; i--) {
-      const j = Math.floor(Math.random() * (i + 1));
-      [all[i], all[j]] = [all[j], all[i]];
     }
-    grid.innerHTML = '';
-    all.forEach(card => grid.appendChild(card));
-  }
 
     function toggleDetails(btn) {
       const fd = btn.closest('.card-content').querySelector('.full-desc');
@@ -1733,24 +2016,22 @@
       });
     }
 
+    // buildCard — used by Firebase module to create dynamic cards
     window.buildCard = function (p, docId) {
       const allImgs     = [p.mainImg, ...(p.extraImgs || [])].filter(Boolean);
       const hasMultiple = allImgs.length > 1;
       const currency    = window.userCurrency || { symbol: 'Rs.', rate: 1 };
       const priceText   = p.pricePkr ? window.convertPrice(p.pricePkr, currency) : 'N/A';
 
-      const badgeHtml = p.tag === 'trending'
-        ? `<span class="product-badge badge-trending">🔥 Trending</span>`
-        : p.tag === 'bestseller'
-        ? `<span class="product-badge badge-bestseller">⭐ Best Seller</span>`
-        : p.tag === 'new'
-        ? `<span class="product-badge badge-new">✨ New</span>`
-        : '';
+      const badgeHtml = p.tag === 'trending'   ? `<span class="product-badge badge-trending">🔥 Trending</span>`
+                      : p.tag === 'bestseller' ? `<span class="product-badge badge-bestseller">⭐ Best Seller</span>`
+                      : p.tag === 'new'        ? `<span class="product-badge badge-new">✨ New</span>`
+                      : '';
 
-      let imgHtml = hasMultiple
+      const imgHtml = hasMultiple
         ? `<div class="product-gallery">
              ${badgeHtml}
-             <img src="${p.mainImg}" class="main-image" crossorigin="anonymous">
+             <img src="${p.mainImg}" class="main-image" crossorigin="anonymous" alt="${p.name}">
              <div class="thumbnails">
                ${allImgs.map((src, i) => `<img src="${src}" class="thumb ${i === 0 ? 'active' : ''}" crossorigin="anonymous" onclick="changeImage(this)">`).join('')}
              </div>
@@ -1831,71 +2112,29 @@
       }
     }
 
-    function capitalize(str) {
-      return str ? str.charAt(0).toUpperCase() + str.slice(1) : '';
-    }
+    // Ctrl + Shift + A → Admin panel (desktop)
+    document.addEventListener('keydown', e => {
+      if (e.ctrlKey && e.shiftKey && e.key.toLowerCase() === 'a') {
+        e.preventDefault();
+        document.getElementById('admin-panel').classList.add('open');
+      }
+    });
 
-   // Ctrl + Shift + A → Admin panel (desktop)
-document.addEventListener('keydown', e => {
-  if (e.ctrlKey && e.shiftKey && e.key.toLowerCase() === 'a') {
-    e.preventDefault();
-    document.getElementById('admin-panel').classList.add('open');
-  }
-});
-
-// Triple-tap on logo → Admin panel (mobile)
-(function () {
-  let tapCount = 0;
-  let tapTimer = null;
-  const logo = document.querySelector('.logo-wrap');
-  if (!logo) return;
-  logo.addEventListener('click', () => {
-    tapCount++;
-    clearTimeout(tapTimer);
-    tapTimer = setTimeout(() => { tapCount = 0; }, 600);
-    if (tapCount >= 3) {
-      tapCount = 0;
-      clearTimeout(tapTimer);
-      document.getElementById('admin-panel').classList.add('open');
-    }
-  });
-})();
-  
-    // Auto-convert images to JPG
-    window.convertToJpg = function (imageUrl) {
-      return new Promise((resolve) => {
-        const img = new Image();
-        img.crossOrigin = 'anonymous';
-        img.onload = function () {
-          try {
-            const canvas = document.createElement('canvas');
-            canvas.width = img.naturalWidth; canvas.height = img.naturalHeight;
-            canvas.getContext('2d').drawImage(img, 0, 0);
-            resolve(canvas.toDataURL('image/jpeg', 0.92));
-          } catch (e) { resolve(imageUrl); }
-        };
-        img.onerror = () => resolve(imageUrl);
-        img.src = imageUrl;
+    // Triple-tap on logo → Admin panel (mobile)
+    (function () {
+      let tapCount = 0, tapTimer = null;
+      const logo = document.querySelector('.logo-wrap');
+      if (!logo) return;
+      logo.addEventListener('click', () => {
+        tapCount++;
+        clearTimeout(tapTimer);
+        tapTimer = setTimeout(() => { tapCount = 0; }, 600);
+        if (tapCount >= 3) {
+          tapCount = 0;
+          clearTimeout(tapTimer);
+          document.getElementById('admin-panel').classList.add('open');
+        }
       });
-    };
-
-    window.convertPageImagesToJpg = async function () {
-      document.querySelectorAll('.card img.main-image, .card > img, .card-img-wrap > img').forEach(async (img) => {
-        if (img.dataset.jpgConverted) return;
-        const jpgUrl = await window.convertToJpg(img.src);
-        if (jpgUrl !== img.src && jpgUrl.startsWith('data:image/jpeg')) img.src = jpgUrl;
-        img.dataset.jpgConverted = 'yes';
-      });
-    };
-
-    window.addEventListener('load', () => setTimeout(() => window.convertPageImagesToJpg(), 1500));
-
-    (function watchForNewImages() {
-      const observer = new MutationObserver(() => {
-        clearTimeout(window._jpgTimer);
-        window._jpgTimer = setTimeout(() => window.convertPageImagesToJpg(), 800);
-      });
-      observer.observe(document.body, { childList: true, subtree: true });
     })();
   </script>
 
